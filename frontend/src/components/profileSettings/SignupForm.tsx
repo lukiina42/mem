@@ -4,6 +4,10 @@ import { useForm } from "react-hook-form";
 import { CgClose } from "react-icons/cg";
 import { useMutation } from "react-query";
 
+import { createUser } from "@/clientApi/userApi";
+import InputError from "./InputError";
+import { ContextInterface } from "@/auth/AuthProvider";
+
 interface FormData {
   email: string;
   password: string;
@@ -11,8 +15,11 @@ interface FormData {
   passwordAgain: string;
 }
 
-export default function LoginForm(props: { setShowModal: (e: any) => void }) {
-  const { setShowModal } = props;
+export default function SignupForm(props: {
+  resetMenu: () => void;
+  auth: ContextInterface;
+}) {
+  const { resetMenu, auth } = props;
   const {
     register,
     handleSubmit,
@@ -20,22 +27,11 @@ export default function LoginForm(props: { setShowModal: (e: any) => void }) {
     formState: { errors },
   } = useForm();
 
-  const deleteQuizMutation = useMutation(
-    (variables: { email: string; password: string; username: string }) => {
-      return fetch(`http://localhost:8080/users`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(variables),
-      })
-        .then((response) => console.log(response.status))
-        .catch((e) => console.log(e));
+  const createUserMutation = useMutation(createUser, {
+    onSuccess: () => {
+      resetMenu();
     },
-    {
-      onSuccess: () => {},
-    }
-  );
+  });
 
   const onSubmit = async (data: any) => {
     const formData: FormData = { ...data };
@@ -43,16 +39,15 @@ export default function LoginForm(props: { setShowModal: (e: any) => void }) {
       setError("passwordAgain", { type: "passwordsDifferent" });
       return;
     }
-    deleteQuizMutation.mutate(formData);
-    const fields = { fields: data };
+    createUserMutation.mutate(formData);
   };
 
   return (
-    <div className="bg-white px-8 pb-8 rounded-xl m-4 flex flex-col gap-4 pt-4">
+    <div className="bg-white px-8 pb-8 rounded-xl m-4 flex flex-col gap-4 pt-4 min-w-[500px] w-[500px]">
       <div className="w-full flex justify-end">
         <div
           className="hover:cursor-pointer hover:bg-slate-300 p-1 rounded-full"
-          onClick={() => setShowModal(false)}
+          onClick={() => resetMenu()}
         >
           <CgClose />
         </div>
@@ -62,7 +57,9 @@ export default function LoginForm(props: { setShowModal: (e: any) => void }) {
         <div className="max-w-lg">
           <label className="text-gray-600 font-medium">E-mail</label>
           <input
-            className="border-solid border-gray-300 border py-2 px-4 rounded text-gray-700 min-w-full"
+            className={`${
+              errors.email && "border border-red-600"
+            } border-solid border-gray-300 border py-2 px-4 rounded text-gray-700 min-w-full`}
             type={"email"}
             autoFocus
             {...register("email", {
@@ -76,7 +73,9 @@ export default function LoginForm(props: { setShowModal: (e: any) => void }) {
 
           <label className="text-gray-600 font-medium mt-3">Username</label>
           <input
-            className="border-solid border-gray-300 border py-2 px-4 rounded text-gray-700 min-w-full"
+            className={`${
+              errors.username && "border border-red-600"
+            } border-solid border-gray-300 border py-2 px-4 rounded text-gray-700 min-w-full`}
             type={"text"}
             autoFocus
             {...register("username", {
@@ -90,7 +89,9 @@ export default function LoginForm(props: { setShowModal: (e: any) => void }) {
 
           <label className="text-gray-600 font-medium mt-3">Password</label>
           <input
-            className="border-solid border-gray-300 border py-2 px-4 rounded text-gray-700 min-w-full"
+            className={`${
+              errors.password && "border border-red-600"
+            } border-solid border-gray-300 border py-2 px-4 rounded text-gray-700 min-w-full`}
             type="password"
             {...register("password", {
               required: true,
@@ -105,7 +106,9 @@ export default function LoginForm(props: { setShowModal: (e: any) => void }) {
             Password (again)
           </label>
           <input
-            className="border-solid border-gray-300 border py-2 px-4 rounded text-gray-700 min-w-full"
+            className={`${
+              errors.passwordAgain && "border border-red-600"
+            } border-solid border-gray-300 border py-2 px-4 rounded text-gray-700 min-w-full`}
             type="password"
             {...register("passwordAgain", {
               required: true,
@@ -127,28 +130,3 @@ export default function LoginForm(props: { setShowModal: (e: any) => void }) {
     </div>
   );
 }
-
-const InputError = (props: {
-  type: "required" | "pattern" | "minLength" | "passwordsDifferent" | any;
-  min?: number;
-}) => {
-  const { type, min } = props;
-  let errorText;
-  switch (type) {
-    case "required":
-      errorText = "This field is required";
-      break;
-    case "minLength":
-      errorText = `Insert at least ${min} characters`;
-      break;
-    case "pattern":
-      errorText = "This email is not valid";
-      break;
-    case "passwordsDifferent":
-      errorText = "The passwords must match";
-      break;
-    default:
-      throw new Error("Unknown form error type");
-  }
-  return <p className="text-red-600">{errorText}</p>;
-};

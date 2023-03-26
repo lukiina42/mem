@@ -1,6 +1,6 @@
 import "./globals.css";
 
-import Header from "./components/Header";
+import Header from "@/components/header/Header";
 
 export const metadata = {
   title: "Twitter FE clone",
@@ -16,9 +16,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <main>
+        <main className="h-screen w-screen flex flex-row">
           <Header />
-          {children}
+          <div className="lg:max-w-[50rem] lg:min-w-[50rem] min-w-0 w-3/4">
+            {children}
+          </div>
+          <div className="grow hidden lg:block">The right sidebar</div>
         </main>
       </body>
     </html>
