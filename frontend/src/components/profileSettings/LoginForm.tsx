@@ -8,6 +8,8 @@ import { loginUser } from "@/clientApi/userApi";
 import InputError from "./InputError";
 import { ContextInterface } from "@/auth/AuthProvider";
 
+import { signIn } from "next-auth/react";
+
 interface FormData {
   email: string;
   password: string;
@@ -33,7 +35,18 @@ export default function LoginForm(props: {
 
   const onSubmit = async (data: any) => {
     const formData: FormData = { ...data };
-    loginUserMutation.mutate(formData);
+    //loginUserMutation.mutate(formData);
+    try {
+      const data = await signIn("credentials", {
+        redirect: false,
+        email: formData.email,
+        password: formData.password,
+      });
+
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

@@ -20,8 +20,6 @@ export default function Profile() {
 
   const auth = useAuth();
 
-  console.log(auth);
-
   const router = useRouter();
 
   return (

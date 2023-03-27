@@ -3,6 +3,9 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
-}
+  env: {
+    NEXTAUTH_SECRET: "SECRET",
+  },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
