@@ -1,6 +1,7 @@
 import React from "react";
 import ProfileWrapper from "../profileSettings/ProfileWrapper";
 import CustomLink from "./CustomLink";
+import SidebarLinksWrapper from "./sidebarLinks/SidebarLinksWrapper";
 
 export default function Header() {
   return (
@@ -10,12 +11,7 @@ export default function Header() {
           <CustomLink href="/">
             <div className="ml-4">Rettiwt</div>
           </CustomLink>
-          <CustomLink href="/bookmarks">
-            <div className="ml-4">Bookmarks</div>
-          </CustomLink>
-          <CustomLink href="/notifications">
-            <div className="ml-4">Notifications</div>
-          </CustomLink>
+          <SidebarLinksWrapper />
         </div>
         <div className="mr-5">
           <ProfileWrapper />

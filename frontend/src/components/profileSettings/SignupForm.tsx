@@ -15,11 +15,8 @@ interface FormData {
   passwordAgain: string;
 }
 
-export default function SignupForm(props: {
-  resetMenu: () => void;
-  auth: ContextInterface;
-}) {
-  const { resetMenu, auth } = props;
+export default function SignupForm(props: { resetMenu: () => void }) {
+  const { resetMenu } = props;
   const {
     register,
     handleSubmit,

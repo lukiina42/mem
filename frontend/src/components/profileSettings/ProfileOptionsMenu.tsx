@@ -18,13 +18,19 @@ export default function ProfileOptionsMenu({
       {!signedIn ? (
         <>
           <div
-            onClick={() => setShowModal("signup")}
+            onClick={() => {
+              setShowModal("signup");
+              setShowMenu!(false);
+            }}
             className="font-bold rounded-t-lg border-b border-blue-500 w-full text-center hover:cursor-pointer hover:bg-blue-300 py-2 transition-all duration-200"
           >
             Sign up
           </div>
           <div
-            onClick={() => setShowModal("login")}
+            onClick={() => {
+              setShowModal("login");
+              setShowMenu!(false);
+            }}
             className="font-bold rounded-b-lg w-full text-center hover:cursor-pointer hover:bg-blue-300 py-2"
           >
             Log in
@@ -35,8 +41,7 @@ export default function ProfileOptionsMenu({
           <div
             onClick={() => {
               signOut!();
-              setShowMenu!(false);
-              redirect!("/bookmarks");
+              redirect!("");
             }}
             className="font-bold rounded-t-lg w-full text-center hover:cursor-pointer hover:bg-blue-300 py-2 transition-all duration-200"
           >

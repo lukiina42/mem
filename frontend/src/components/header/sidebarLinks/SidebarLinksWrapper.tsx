@@ -1,12 +1,12 @@
 "use client";
 
 import { SessionProvider } from "next-auth/react";
-import Profile from "./ProfileSettings";
+import SidebarLinks from "./SidebarLinks";
 
-export default function ProfileWrapper() {
+export default function SidebarLinksWrapper() {
   return (
     <SessionProvider>
-      <Profile />
+      <SidebarLinks />
     </SessionProvider>
   );
 }

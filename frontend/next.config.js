@@ -5,6 +5,7 @@ const nextConfig = {
   },
   env: {
     NEXTAUTH_SECRET: "SECRET",
+    HOME_URL: "http:/localhost:3000",
   },
 };
 
