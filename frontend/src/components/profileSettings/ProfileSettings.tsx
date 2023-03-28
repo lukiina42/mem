@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { CgProfile } from "react-icons/cg";
+import { MdOutlinePersonOutline } from "react-icons/md";
 import ProfileOptionsMenu from "./profileOptionsMenu/ProfileOptionsMenu";
 import FormsWrapper from "./forms/FormsWrapper";
 import { useRouter } from "next/navigation";
@@ -25,14 +25,25 @@ export default function Profile() {
 
   const router = useRouter();
 
+  const username = session?.user?.name ? session.user.name : "";
+
   return (
     <>
-      <div className="relative mb-5">
-        <CgProfile
-          size={50}
-          className="text-blue-600 hover:cursor-pointer hover:bg-blue-200 rounded-full transition-all duration-200"
+      <div className="relative mt-4">
+        <div
+          className="relative ml-4 flex @[180px]:justify-between justify-end gap-2 hover:text-blue-500 hover:cursor-pointer transition-all duration-200 group"
           onClick={() => setShowMenu((currMenu) => !currMenu)}
-        />
+        >
+          <div className="text-xl @[180px]:block hidden">{username}</div>
+          <MdOutlinePersonOutline size={30} />
+          <span
+            className={`sidebar-tooltip left-[4.5rem] -bottom-2 group-hover:scale-100 @[180px]:hidden block ${
+              !username && "hidden"
+            }`}
+          >
+            {username}
+          </span>
+        </div>
         {!session?.user ? (
           <>
             {showModal !== "none" ? (
@@ -45,7 +56,7 @@ export default function Profile() {
             ) : null}
             {showMenu && (
               <div
-                className={`absolute bottom-1/4 left-[150%] bg-base-100 w-56 border border-blue-500 rounded-lg flex flex-col justify-evenly`}
+                className={`absolute top-0 left-[115%] bg-base-100 w-56 border border-blue-500 rounded-lg flex flex-col justify-evenly`}
               >
                 <ProfileOptionsMenu
                   setShowModal={setShowModal}
@@ -58,7 +69,7 @@ export default function Profile() {
           <>
             {showMenu && (
               <div
-                className={`absolute bottom-1/4 left-[150%] bg-base-100 w-56 border border-blue-500 rounded-lg flex flex-col justify-evenly`}
+                className={`absolute bottom-0 left-[115%] bg-base-100 w-56 border border-blue-500 rounded-lg flex flex-col justify-evenly`}
               >
                 <ProfileOptionsMenu
                   signOut={signOut}
