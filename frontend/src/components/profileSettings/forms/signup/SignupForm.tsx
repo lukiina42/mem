@@ -3,10 +3,11 @@
 import { useForm } from "react-hook-form";
 import { CgClose } from "react-icons/cg";
 import { useMutation } from "react-query";
-import { toast } from "react-toastify";
 
 import { createUser } from "@/clientApi/userApi";
 import InputError from "../helper/InputError";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface FormData {
   email: string;
@@ -21,8 +22,13 @@ const responseErrorMessage = {
   EMAILNAME: "EmailNameExist",
 };
 
-export default function SignupForm(props: { resetMenu: () => void }) {
-  const { resetMenu } = props;
+interface SignupFormProps {
+  resetMenu: () => void;
+  signUpToLoginChange: () => void;
+}
+
+export default function SignupForm(props: SignupFormProps) {
+  const { resetMenu, signUpToLoginChange } = props;
   const {
     register,
     handleSubmit,
@@ -32,8 +38,16 @@ export default function SignupForm(props: { resetMenu: () => void }) {
 
   const createUserMutation = useMutation(createUser, {
     onSuccess: () => {
-      resetMenu();
-      toast.info("You were successfully signed up, you can now login");
+      toast.success("You were successfully signed up, you can now login", {
+        position: "bottom-center",
+        autoClose: 7000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      signUpToLoginChange();
     },
     onError: (e: Error) => {
       const error = JSON.parse(e.message);
