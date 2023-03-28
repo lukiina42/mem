@@ -1,6 +1,6 @@
 import React from "react";
 import ProfileWrapper from "../profileSettings/ProfileWrapper";
-import CustomLink from "./CustomLink";
+import CustomLink from "./helper/CustomLink";
 import SidebarLinksWrapper from "./sidebarLinks/SidebarLinksWrapper";
 
 export default function Header() {

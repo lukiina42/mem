@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useSelectedLayoutSegment } from "next/navigation";
-import CustomLink from "../CustomLink";
+import CustomLink from "../helper/CustomLink";
 
 export default function SidebarLinks() {
   const segment = useSelectedLayoutSegment();

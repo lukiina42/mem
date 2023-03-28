@@ -1,8 +1,9 @@
 "use client";
 
-import LoginForm from "./LoginForm";
-import SignupForm from "./SignupForm";
+import LoginForm from "./login/LoginForm";
+import SignupForm from "./signup/SignupForm";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ToastContainer } from "react-toastify";
 
 interface FormsWrapperProps {
   resetMenu: () => void;
@@ -16,6 +17,18 @@ export default function FormsWrapper(props: FormsWrapperProps) {
   const { resetMenu, showModal, redirect } = props;
   return (
     <>
+      <ToastContainer
+        position="top-center"
+        autoClose={false}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <div className="relative w-auto my-6 mx-auto max-w-3xl">
           {/*content*/}

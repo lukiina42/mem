@@ -20,8 +20,12 @@ export class UsersService {
     return this.usersRepository.findOneById(id);
   }
 
-  findOneByEmail(email: string): Promise<User> {
+  async findOneByEmail(email: string): Promise<User> {
     return this.usersRepository.findOneBy({ email });
+  }
+
+  async findOneByUsername(username: string): Promise<User> {
+    return this.usersRepository.findOneBy({ username });
   }
 
   async loginUser(email: string, password: string): Promise<boolean> {

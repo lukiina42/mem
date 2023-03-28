@@ -2,8 +2,8 @@
 
 import React from "react";
 import { CgProfile } from "react-icons/cg";
-import ProfileOptionsMenu from "./ProfileOptionsMenu";
-import FormsWrapper from "./FormsWrapper";
+import ProfileOptionsMenu from "./profileOptionsMenu/ProfileOptionsMenu";
+import FormsWrapper from "./forms/FormsWrapper";
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 

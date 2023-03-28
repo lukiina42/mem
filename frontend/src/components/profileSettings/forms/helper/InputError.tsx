@@ -1,12 +1,22 @@
 "use client";
 
 const InputError = (props: {
-  type: "required" | "pattern" | "minLength" | "passwordsDifferent" | any;
+  type:
+    | "required"
+    | "pattern"
+    | "minLength"
+    | "passwordsDifferent"
+    | "exists"
+    | any;
   min?: number;
+  message?: string;
 }) => {
-  const { type, min } = props;
+  const { type, min, message } = props;
   let errorText;
   switch (type) {
+    case "exists":
+      errorText = message;
+      break;
     case "required":
       errorText = "This field is required";
       break;

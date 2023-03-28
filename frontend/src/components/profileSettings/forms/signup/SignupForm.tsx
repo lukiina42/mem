@@ -3,10 +3,10 @@
 import { useForm } from "react-hook-form";
 import { CgClose } from "react-icons/cg";
 import { useMutation } from "react-query";
+import { toast } from "react-toastify";
 
 import { createUser } from "@/clientApi/userApi";
-import InputError from "./InputError";
-import { ContextInterface } from "@/auth/AuthProvider";
+import InputError from "../helper/InputError";
 
 interface FormData {
   email: string;
@@ -14,6 +14,12 @@ interface FormData {
   username: string;
   passwordAgain: string;
 }
+
+const responseErrorMessage = {
+  EMAIL: "EmailExists",
+  NAME: "NameExists",
+  EMAILNAME: "EmailNameExist",
+};
 
 export default function SignupForm(props: { resetMenu: () => void }) {
   const { resetMenu } = props;
@@ -27,6 +33,37 @@ export default function SignupForm(props: { resetMenu: () => void }) {
   const createUserMutation = useMutation(createUser, {
     onSuccess: () => {
       resetMenu();
+      toast.info("You were successfully signed up, you can now login");
+    },
+    onError: (e: Error) => {
+      const error = JSON.parse(e.message);
+      switch (error.message) {
+        case responseErrorMessage.EMAIL:
+          console.log("email exists");
+          setError("email", {
+            type: "exists",
+            message: "This email already exists",
+          });
+          break;
+        case responseErrorMessage.NAME:
+          setError("username", {
+            type: "exists",
+            message: "This username already exists",
+          });
+          break;
+        case responseErrorMessage.EMAILNAME:
+          setError("username", {
+            type: "exists",
+            message: "This username already exists",
+          });
+          setError("email", {
+            type: "exists",
+            message: "This email already exists",
+          });
+          break;
+        default:
+          throw new Error("Something went wrong on the server");
+      }
     },
   });
 
@@ -66,7 +103,14 @@ export default function SignupForm(props: { resetMenu: () => void }) {
               required: true,
             })}
           />
-          {errors.email && <InputError type={errors.email.type} min={7} />}
+          {errors.email && (
+            <InputError
+              type={errors.email.type}
+              min={7}
+              //@ts-ignore
+              message={errors.email.message || ""}
+            />
+          )}
 
           <label className="text-gray-600 font-medium mt-3">Username</label>
           <input
@@ -81,7 +125,11 @@ export default function SignupForm(props: { resetMenu: () => void }) {
             })}
           />
           {errors.username && (
-            <InputError type={errors.username.type} min={4} />
+            <InputError
+              type={errors.username.type}
+              min={4} //@ts-ignore
+              message={errors.username.message || ""}
+            />
           )}
 
           <label className="text-gray-600 font-medium mt-3">Password</label>

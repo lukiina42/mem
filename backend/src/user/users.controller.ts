@@ -41,6 +41,23 @@ export class UsersController {
     if (!password || !username || !email) {
       throw new BadRequestException('All fields must be filled');
     }
-    await this.userService.createUser(new User(username, email, password));
+
+    const userByEmail = await this.userService.findOneByEmail(email);
+    const userByName = await this.userService.findOneByUsername(username);
+    if (!userByEmail) {
+      if (!userByName)
+        await this.userService.createUser(new User(username, email, password));
+      return;
+    }
+
+    if (userByEmail && userByName) {
+      throw new BadRequestException('EmailNameExist');
+    }
+    if (userByName) {
+      throw new BadRequestException('NameExists');
+    }
+    if (userByEmail) {
+      throw new BadRequestException('EmailExists');
+    }
   }
 }

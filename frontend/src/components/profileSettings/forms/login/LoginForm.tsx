@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { CgClose } from "react-icons/cg";
-import InputError from "./InputError";
+import InputError from "../helper/InputError";
 
 import { signIn } from "next-auth/react";
 
@@ -41,7 +41,7 @@ export default function LoginForm(props: {
       <div className="w-full flex justify-end">
         <div
           className="hover:cursor-pointer hover:bg-slate-300 p-1 rounded-full"
-          onClick={() => resetMenu}
+          onClick={() => resetMenu()}
         >
           <CgClose />
         </div>
