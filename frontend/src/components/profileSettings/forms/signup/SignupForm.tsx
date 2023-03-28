@@ -5,8 +5,9 @@ import { CgClose } from "react-icons/cg";
 import { useMutation } from "react-query";
 
 import { createUser } from "@/clientApi/userApi";
-import InputError from "./InputError";
-import { ContextInterface } from "@/auth/AuthProvider";
+import InputError from "../helper/InputError";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface FormData {
   email: string;
@@ -15,11 +16,19 @@ interface FormData {
   passwordAgain: string;
 }
 
-export default function SignupForm(props: {
+const responseErrorMessage = {
+  EMAIL: "EmailExists",
+  NAME: "NameExists",
+  EMAILNAME: "EmailNameExist",
+};
+
+interface SignupFormProps {
   resetMenu: () => void;
-  auth: ContextInterface;
-}) {
-  const { resetMenu, auth } = props;
+  signUpToLoginChange: () => void;
+}
+
+export default function SignupForm(props: SignupFormProps) {
+  const { resetMenu, signUpToLoginChange } = props;
   const {
     register,
     handleSubmit,
@@ -29,7 +38,46 @@ export default function SignupForm(props: {
 
   const createUserMutation = useMutation(createUser, {
     onSuccess: () => {
-      resetMenu();
+      toast.success("You were successfully signed up, you can now login", {
+        position: "bottom-center",
+        autoClose: 7000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      signUpToLoginChange();
+    },
+    onError: (e: Error) => {
+      const error = JSON.parse(e.message);
+      switch (error.message) {
+        case responseErrorMessage.EMAIL:
+          console.log("email exists");
+          setError("email", {
+            type: "exists",
+            message: "This email already exists",
+          });
+          break;
+        case responseErrorMessage.NAME:
+          setError("username", {
+            type: "exists",
+            message: "This username already exists",
+          });
+          break;
+        case responseErrorMessage.EMAILNAME:
+          setError("username", {
+            type: "exists",
+            message: "This username already exists",
+          });
+          setError("email", {
+            type: "exists",
+            message: "This email already exists",
+          });
+          break;
+        default:
+          throw new Error("Something went wrong on the server");
+      }
     },
   });
 
@@ -69,7 +117,14 @@ export default function SignupForm(props: {
               required: true,
             })}
           />
-          {errors.email && <InputError type={errors.email.type} min={7} />}
+          {errors.email && (
+            <InputError
+              type={errors.email.type}
+              min={7}
+              //@ts-ignore
+              message={errors.email.message || ""}
+            />
+          )}
 
           <label className="text-gray-600 font-medium mt-3">Username</label>
           <input
@@ -84,7 +139,11 @@ export default function SignupForm(props: {
             })}
           />
           {errors.username && (
-            <InputError type={errors.username.type} min={4} />
+            <InputError
+              type={errors.username.type}
+              min={4} //@ts-ignore
+              message={errors.username.message || ""}
+            />
           )}
 
           <label className="text-gray-600 font-medium mt-3">Password</label>

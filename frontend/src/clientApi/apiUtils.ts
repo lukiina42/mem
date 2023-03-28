@@ -2,7 +2,6 @@ export async function handleResponseWithJson(
   response: Response,
   expectedSuccessCode: number
 ) {
-  console.log(response.status);
   if (response.status === expectedSuccessCode) return response.json();
   if (response.status !== expectedSuccessCode) {
     // So, a server-side validation error occurred.

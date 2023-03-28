@@ -2,11 +2,9 @@
 
 import { useForm } from "react-hook-form";
 import { CgClose } from "react-icons/cg";
-import { useMutation } from "react-query";
+import InputError from "../helper/InputError";
 
-import { loginUser } from "@/clientApi/userApi";
-import InputError from "./InputError";
-import { ContextInterface } from "@/auth/AuthProvider";
+import { signIn } from "next-auth/react";
 
 interface FormData {
   email: string;
@@ -15,25 +13,27 @@ interface FormData {
 
 export default function LoginForm(props: {
   resetMenu: () => void;
-  auth: ContextInterface;
+  redirect: (url: string) => void;
 }) {
-  const { resetMenu, auth } = props;
+  const { resetMenu, redirect } = props;
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const loginUserMutation = useMutation(loginUser, {
-    onSuccess: (payload) => {
-      auth.signin(payload);
-      resetMenu();
-    },
-  });
-
   const onSubmit = async (data: any) => {
     const formData: FormData = { ...data };
-    loginUserMutation.mutate(formData);
+    try {
+      const data = await signIn("credentials", {
+        redirect: false,
+        email: formData.email,
+        password: formData.password,
+      });
+      redirect("/home");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -41,7 +41,7 @@ export default function LoginForm(props: {
       <div className="w-full flex justify-end">
         <div
           className="hover:cursor-pointer hover:bg-slate-300 p-1 rounded-full"
-          onClick={() => resetMenu}
+          onClick={() => resetMenu()}
         >
           <CgClose />
         </div>
