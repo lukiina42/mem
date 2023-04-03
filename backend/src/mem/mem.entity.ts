@@ -1,33 +1,22 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  OneToOne,
-  JoinColumn,
-} from 'typeorm';
+import { User } from 'src/user/user.entity';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
 @Entity()
-export class User {
-  constructor(username: string, email: string, password: string) {
-    this.username = username;
-    this.email = email;
-    this.password = password;
+export class Mem {
+  constructor(content: string, imageKey: string) {
+    this.content = content;
+    this.imageKey = imageKey;
   }
 
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
-  username: string;
-
-  @Column({ unique: true })
-  email: string;
-
   @Column()
-  password: string;
-}
+  content: string;
 
-//   @OneToOne(() => HighScores, (highScores) => highScores.owner)
-//   @JoinColumn()
-//   highScores: HighScores
-// }
+  @Column({ unique: true })
+  imageKey: string;
+
+  @ManyToOne(() => User, (user) => user.mems)
+  owner: User;
+}

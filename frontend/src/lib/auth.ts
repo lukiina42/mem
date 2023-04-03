@@ -31,6 +31,8 @@ export const AuthOptions = {
           token: userData.token,
         };
 
+        console.log(user);
+
         return user;
       },
     }),
@@ -51,6 +53,7 @@ export const AuthOptions = {
   },
   pages: {
     signIn: "/",
+    error: "/",
   },
   secret: process.env.NEXTAUTH_SECRET,
 };

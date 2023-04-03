@@ -26,11 +26,10 @@ export default function LoginForm(props: {
     const formData: FormData = { ...data };
     try {
       const data = await signIn("credentials", {
-        redirect: false,
+        callbackUrl: "/home",
         email: formData.email,
         password: formData.password,
       });
-      redirect("/home");
     } catch (error) {
       console.log(error);
     }
