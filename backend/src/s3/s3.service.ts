@@ -3,8 +3,6 @@ import {
   S3Client,
   PutObjectCommand,
   GetObjectCommand,
-  ListObjectsCommand,
-  ListObjectsV2Command,
 } from '@aws-sdk/client-s3';
 
 @Injectable()

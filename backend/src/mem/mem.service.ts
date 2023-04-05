@@ -3,13 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Mem } from './mem.entity';
 import { UsersService } from 'src/user/users.service';
-import {
-  S3Client,
-  PutObjectCommand,
-  GetObjectCommand,
-  ListObjectsCommand,
-  ListObjectsV2Command,
-} from '@aws-sdk/client-s3';
 import { S3Service } from 'src/s3/s3.service';
 import { nanoid } from 'nanoid';
 

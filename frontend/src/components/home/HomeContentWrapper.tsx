@@ -2,7 +2,7 @@
 
 import { SessionProvider } from "next-auth/react";
 import NewTweetForm from "./newTweetForm/NewTweetForm";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClientProvider } from "react-query";
 import { queryClient } from "@/lib/queryClient";
 import { ToastContainer } from "react-toastify";
 
