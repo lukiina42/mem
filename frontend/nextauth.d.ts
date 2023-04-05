@@ -1,9 +1,6 @@
 import { DefaultSession, DefaultUser } from "next-auth";
 
 interface IUser extends DefaultUser {
-  /**
-   * Role of user
-   */
   token: string;
 }
 declare module "next-auth" {

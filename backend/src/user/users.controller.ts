@@ -6,7 +6,6 @@ import {
   Body,
   HttpCode,
   BadRequestException,
-  Patch,
   NotFoundException,
   ClassSerializerInterceptor,
   UseInterceptors,

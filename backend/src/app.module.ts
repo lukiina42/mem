@@ -9,6 +9,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthService } from './auth/auth.service';
 import { UsersService } from './user/users.service';
 import { JwtService } from '@nestjs/jwt';
+import { Mem } from './mem/mem.entity';
+import { MemsModule } from './mem/mem.module';
 
 @Module({
   imports: [
@@ -22,12 +24,13 @@ import { JwtService } from '@nestjs/jwt';
         username: configService.get<string>('DB_USER'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        entities: [User],
+        entities: [User, Mem],
         synchronize: true,
       }),
       inject: [ConfigService],
     }),
     UsersModule,
+    MemsModule,
     AuthModule,
   ],
   controllers: [AppController],
