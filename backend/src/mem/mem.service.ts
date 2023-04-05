@@ -6,6 +6,10 @@ import { UsersService } from 'src/user/users.service';
 import { S3Service } from 'src/s3/s3.service';
 import { nanoid } from 'nanoid';
 
+export interface MemFE extends Mem {
+  imageUrl: string;
+}
+
 @Injectable()
 export class MemsService {
   constructor(
@@ -42,5 +46,17 @@ export class MemsService {
     const mem = await this.memRepository.save(newMem);
 
     return mem.id;
+  }
+
+  async getRelevantMems(userId: number) {
+    const mems = await this.memRepository
+      .createQueryBuilder('mem')
+      .leftJoinAndSelect('mem.owner', 'owner')
+      .where('mem.owner.id = :id', { id: userId })
+      .orderBy('mem.createdDate', 'ASC')
+      .limit(10)
+      .getMany();
+
+    return await this.s3Service.retrieveMems(mems);
   }
 }

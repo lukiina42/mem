@@ -16,8 +16,12 @@ export class UsersService {
   }
 
   async findOneById(id: number): Promise<User> {
-    //const user = await this.usersRepository.createQueryBuilder("user").leftJoinAndSelect("user.highScores", "highScores").where("user.id = :id", { id: id }).getOne()
-    return this.usersRepository.findOneById(id);
+    const user = await this.usersRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.mems', 'mems')
+      .where('user.id = :id', { id })
+      .getOne();
+    return user;
   }
 
   async findOneByEmail(email: string): Promise<User> {

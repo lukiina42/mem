@@ -3,3 +3,12 @@ export interface User {
   email: string;
   id: string;
 }
+
+export interface Mem {
+  content: string;
+  id: number;
+  createdDate: Date;
+  updatedDate: Date;
+  owner: User;
+  imageUrl: string;
+}
