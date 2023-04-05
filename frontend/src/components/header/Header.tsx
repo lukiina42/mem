@@ -11,7 +11,11 @@ export default function Header() {
           <Link href="/">
             <div className="ml-4 w-full flex justify-center">
               <div className="relative @[180px]:h-[64px] @[180px]:w-[64px] w-[50px] h-[50px] mr-4">
-                <Image src="/logo.png" sizes="50px" fill alt="logo" />
+                <img // eslint-disable-line @next/next/no-img-element
+                  src="/logo.png"
+                  className="w-full"
+                  alt="logo"
+                />
               </div>
             </div>
           </Link>

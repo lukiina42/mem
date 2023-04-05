@@ -21,12 +21,9 @@ export default function NewTweetForm() {
   const [file, setFile] = useState<File | null>(null);
   const [inputContent, setInputContent] = useState("");
 
-  const { data, status } = useSession();
-  console.log(status);
+  const { data } = useSession();
 
   const user = data?.user as User;
-
-  console.log(user);
 
   const fileSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -36,7 +33,7 @@ export default function NewTweetForm() {
 
   const createMemMutation = useMutation(createMem, {
     onSuccess: () => {
-      toast.success("You were successfully signed up, you can now login", {
+      toast.success("You successfully memd", {
         position: "bottom-center",
         autoClose: 7000,
         hideProgressBar: false,

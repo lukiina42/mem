@@ -5,7 +5,6 @@ import {
   Param,
   Body,
   HttpCode,
-  BadRequestException,
   NotFoundException,
   ClassSerializerInterceptor,
   UseInterceptors,
@@ -37,6 +36,6 @@ export class MemsController {
     @Body('userEmail') userEmail: string,
     @UploadedFile() image: Express.Multer.File,
   ) {
-    console.log(content, userEmail, image);
+    return await this.memService.createMem(image, content, userEmail);
   }
 }
