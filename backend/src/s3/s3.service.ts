@@ -3,7 +3,12 @@ import {
   S3Client,
   PutObjectCommand,
   GetObjectCommand,
+  ListObjectsV2Command,
 } from '@aws-sdk/client-s3';
+
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { Mem } from 'src/mem/mem.entity';
+import { MemFE } from 'src/mem/mem.service';
 
 @Injectable()
 export class S3Service {
@@ -34,5 +39,29 @@ export class S3Service {
     const command = new PutObjectCommand(params);
 
     await this.s3.send(command);
+  }
+
+  async retrieveMems(mems: Mem[]) {
+    const memsWithImageUrl: MemFE[] = [];
+    for (const mem of mems) {
+      const bucketName = process.env.AWS_BUCKET_NAME;
+
+      const getObjectParams = {
+        Bucket: bucketName,
+        Key: mem.imageKey,
+      };
+
+      const getObjectCommand = new GetObjectCommand(getObjectParams);
+
+      const url = await getSignedUrl(this.s3, getObjectCommand, {
+        expiresIn: 24000,
+      });
+
+      memsWithImageUrl.push({
+        ...mem,
+        imageUrl: url,
+      });
+    }
+    return memsWithImageUrl;
   }
 }

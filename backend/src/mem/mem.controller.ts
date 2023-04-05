@@ -10,10 +10,12 @@ import {
   UseInterceptors,
   UploadedFile,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { MemsService } from './mem.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JWTReqUser } from 'src/types';
 
 @Controller('/mems')
 export class MemsController {
@@ -33,9 +35,15 @@ export class MemsController {
   @HttpCode(204)
   async createMem(
     @Body('content') content: string,
-    @Body('userEmail') userEmail: string,
+    @Request() req: JWTReqUser,
     @UploadedFile() image: Express.Multer.File,
   ) {
-    return await this.memService.createMem(image, content, userEmail);
+    return await this.memService.createMem(image, content, req.user.email);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/')
+  async getRelevantMems(@Request() req: JWTReqUser) {
+    return await this.memService.getRelevantMems(req.user.userId);
   }
 }
