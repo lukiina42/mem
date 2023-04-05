@@ -10,6 +10,7 @@ import {
   ListObjectsCommand,
   ListObjectsV2Command,
 } from '@aws-sdk/client-s3';
+import { S3Service } from 'src/s3/s3.service';
 import { nanoid } from 'nanoid';
 
 @Injectable()
@@ -18,6 +19,7 @@ export class MemsService {
     @InjectRepository(Mem)
     private memRepository: Repository<Mem>,
     private usersService: UsersService,
+    private s3Service: S3Service,
   ) {}
 
   async findOneById(id: number): Promise<Mem> {
@@ -33,31 +35,7 @@ export class MemsService {
 
     const id = nanoid(40);
 
-    const bucketName = process.env.AWS_BUCKET_NAME;
-    const bucketRegion = process.env.AWS_BUCKET_REGION;
-    const accessKey = process.env.AWS_ACCESS_KEY;
-    const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
-
-    console.log({ bucketName, bucketRegion, accessKey, secretAccessKey });
-
-    const s3 = new S3Client({
-      credentials: {
-        accessKeyId: accessKey,
-        secretAccessKey: secretAccessKey,
-      },
-      region: bucketRegion,
-    });
-
-    const params = {
-      Bucket: bucketName,
-      Key: id,
-      Body: image.buffer,
-      ContentType: image.mimetype,
-    };
-
-    const command = new PutObjectCommand(params);
-
-    await s3.send(command);
+    await this.s3Service.storeMemImage(image, id);
 
     // const sharp = await import('sharp');
 
