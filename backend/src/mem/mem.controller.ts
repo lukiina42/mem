@@ -11,6 +11,7 @@ import {
   UploadedFile,
   UseGuards,
   Request,
+  Delete,
 } from '@nestjs/common';
 import { MemsService } from './mem.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -45,5 +46,12 @@ export class MemsController {
   @Get('/')
   async getRelevantMems(@Request() req: JWTReqUser) {
     return await this.memService.getRelevantMems(req.user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('/delete/:id')
+  @HttpCode(204)
+  async deleteMem(@Request() req: JWTReqUser, @Param('id') id: string) {
+    return await this.memService.deleteMem(req.user.userId, id);
   }
 }
