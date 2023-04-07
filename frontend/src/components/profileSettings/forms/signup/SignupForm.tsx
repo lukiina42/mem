@@ -8,6 +8,7 @@ import { createUser } from "@/clientApi/userApi";
 import InputError from "../helper/InputError";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { displayToast } from "@/components/util/toast";
 
 interface FormData {
   email: string;
@@ -38,15 +39,11 @@ export default function SignupForm(props: SignupFormProps) {
 
   const createUserMutation = useMutation(createUser, {
     onSuccess: () => {
-      toast.success("You were successfully signed up, you can now login", {
-        position: "bottom-center",
-        autoClose: 7000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      displayToast(
+        "You were successfully signed up, you can now login",
+        "bottom-center",
+        "success"
+      );
       signUpToLoginChange();
     },
     onError: (e: Error) => {

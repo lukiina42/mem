@@ -5,11 +5,11 @@ import { useState } from "react";
 import { ImFilePicture } from "react-icons/im";
 import { GrClose } from "react-icons/gr";
 import { useMutation } from "react-query";
-import { toast } from "react-toastify";
 import { createMem } from "@/clientApi/memApi";
 import { useSession } from "next-auth/react";
 import { User } from "next-auth";
-import Loading from "../utils/Loading";
+import LoadingSpinner from "../../util/Loading";
+import { displayToast } from "@/components/util/toast";
 
 //lazy solution
 const getAmountOfRows = (input: string) => {
@@ -34,28 +34,16 @@ export default function NewTweetForm() {
 
   const createMemMutation = useMutation(createMem, {
     onSuccess: () => {
-      toast.success("You successfully memd", {
-        position: "bottom-center",
-        autoClose: 7000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      displayToast("You successfully memd", "bottom-center", "success");
       setFile(null);
       setInputContent("");
     },
     onError: () => {
-      toast.error("Something went wrong, please try again", {
-        position: "bottom-center",
-        autoClose: 7000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      displayToast(
+        "Something went wrong, please try again",
+        "bottom-center",
+        "error"
+      );
     },
   });
 
@@ -73,7 +61,7 @@ export default function NewTweetForm() {
   return (
     <div className="h-fit w-full flex justify-center items-center">
       {loading ? (
-        <Loading />
+        <LoadingSpinner />
       ) : (
         <div className="relative flex flex-col h-full w-4/5 pb-1">
           <div className="font-bold text-lg">Insert some mem!</div>
@@ -96,7 +84,7 @@ export default function NewTweetForm() {
                 />
               </div>
               <img // eslint-disable-line @next/next/no-img-element
-                width={"100%"}
+                className="w-fit max-w-[100%]"
                 alt="submitted picture"
                 src={URL.createObjectURL(file)}
               />
