@@ -3,7 +3,7 @@ import {
   S3Client,
   PutObjectCommand,
   GetObjectCommand,
-  ListObjectsV2Command,
+  DeleteObjectCommand,
 } from '@aws-sdk/client-s3';
 
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
@@ -43,9 +43,8 @@ export class S3Service {
 
   async retrieveMems(mems: Mem[]) {
     const memsWithImageUrl: MemFE[] = [];
+    const bucketName = process.env.AWS_BUCKET_NAME;
     for (const mem of mems) {
-      const bucketName = process.env.AWS_BUCKET_NAME;
-
       const getObjectParams = {
         Bucket: bucketName,
         Key: mem.imageKey,
@@ -63,5 +62,17 @@ export class S3Service {
       });
     }
     return memsWithImageUrl;
+  }
+
+  async deleteMemImage(mem: Mem) {
+    const bucketName = process.env.AWS_BUCKET_NAME;
+    const deleteObjectParams = {
+      Bucket: bucketName,
+      Key: mem.imageKey,
+    };
+
+    const deleteObjectCommand = new DeleteObjectCommand(deleteObjectParams);
+
+    await this.s3.send(deleteObjectCommand);
   }
 }

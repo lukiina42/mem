@@ -1,4 +1,3 @@
-import { User } from "@/types";
 import {
   handleError,
   handleResponseWithoutJson,
@@ -26,6 +25,21 @@ export const createMem = (variables: {
     },
 
     body: formData,
+  })
+    .then((response) => handleResponseWithoutJson(response, 204))
+    .catch(handleError);
+};
+
+export const deleteMem = (variables: {
+  memId: number;
+  token: string;
+}): Promise<string | void> => {
+  return fetch(`http://localhost:8080/mems/delete/${variables.memId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${variables.token}`,
+      "Content-type": "application/json",
+    },
   })
     .then((response) => handleResponseWithoutJson(response, 204))
     .catch(handleError);

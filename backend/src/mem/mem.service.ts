@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Mem } from './mem.entity';
@@ -53,10 +53,28 @@ export class MemsService {
       .createQueryBuilder('mem')
       .leftJoinAndSelect('mem.owner', 'owner')
       .where('mem.owner.id = :id', { id: userId })
-      .orderBy('mem.createdDate', 'ASC')
+      .orderBy('mem.createdDate', 'DESC')
       .limit(10)
       .getMany();
 
     return await this.s3Service.retrieveMems(mems);
+  }
+
+  async deleteMem(userId: number, id: string) {
+    const idNumber = parseInt(id);
+    const memOwner = await this.usersService.findOneById(userId);
+
+    if (!memOwner.mems.some((mem) => mem.id === idNumber)) {
+      throw new BadRequestException(
+        'The user attempted to delete mem which is not theirs',
+      );
+    }
+    const memToDelete = await this.memRepository.findOneBy({ id: idNumber });
+    if (!memToDelete)
+      throw new BadRequestException(
+        'The mem which should be deleted does not exist',
+      );
+    await this.s3Service.deleteMemImage(memToDelete);
+    await this.memRepository.remove(memToDelete);
   }
 }
