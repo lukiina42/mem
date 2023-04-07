@@ -40,9 +40,11 @@ export default function MemItem({
           )}
         </div>
         <div>{mem.content}</div>
+        {/* dunno if I should have some min w here, small pictures are kinda small ngl xd */}
         <img // eslint-disable-line @next/next/no-img-element
           src={mem.imageUrl}
           alt="Some mem idk"
+          className="w-fit max-w-[100%]"
         />
         <div className="w-full h-12 bg-slate-200"></div>
       </div>

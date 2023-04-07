@@ -4,11 +4,11 @@ import { Mem } from "@/types";
 import { useSession } from "next-auth/react";
 import { useMutation } from "react-query";
 import { deleteMem } from "@/clientApi/memApi";
-import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import ConfirmationModal from "./deleteMemModal/ConfirmationModal";
+import ConfirmationModal from "../../util/ConfirmationModal";
 import React from "react";
 import MemItem from "./memItem/MemItem";
+import { displayToast } from "@/components/util/toast";
 
 export default function MemsContainer({ mems }: { mems: Mem[] }) {
   const user = useSession().data?.user;
@@ -18,27 +18,19 @@ export default function MemsContainer({ mems }: { mems: Mem[] }) {
 
   const createMemMutation = useMutation(deleteMem, {
     onSuccess: () => {
-      toast.success("The mem was successfully deleted", {
-        position: "bottom-center",
-        autoClose: 7000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      displayToast(
+        "The mem was successfully deleted",
+        "bottom-center",
+        "success"
+      );
       router.refresh();
     },
     onError: () => {
-      toast.error("Something went wrong, please try again", {
-        position: "bottom-center",
-        autoClose: 7000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      displayToast(
+        "Something went wrong, please try again",
+        "bottom-center",
+        "error"
+      );
     },
   });
 
