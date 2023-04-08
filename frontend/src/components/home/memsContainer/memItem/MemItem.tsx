@@ -52,13 +52,16 @@ export default function MemItem({
       <div className="flex flex-col gap-1 grow">
         <div className="flex justify-between">
           <div className="font-bold text-lg">{mem.owner.username}</div>
-          {user?.name === mem.owner.username && (
-            <BsFillTrashFill
-              size={30}
-              className="text-red-500 p-1 rounded-full hover:bg-gray-200 duration-150 transition-all hover:cursor-pointer"
-              onClick={() => handleDeleteMemClick(mem.id)}
-            />
-          )}
+          <div className="flex gap-2 items-center">
+            <div className="text-sm">{mem.lastUpdated}</div>
+            {user?.name === mem.owner.username && (
+              <BsFillTrashFill
+                size={30}
+                className="text-red-500 p-1 rounded-full hover:bg-gray-200 duration-150 transition-all hover:cursor-pointer"
+                onClick={() => handleDeleteMemClick(mem.id)}
+              />
+            )}
+          </div>
         </div>
         <div>{mem.content}</div>
         {/* dunno if I should have some min w here, small pictures are kinda small ngl xd */}
