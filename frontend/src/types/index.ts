@@ -11,4 +11,6 @@ export interface Mem {
   updatedDate: Date;
   owner: User;
   imageUrl: string;
+  heartedByCurrentUser: boolean;
+  heartedBy: User[];
 }

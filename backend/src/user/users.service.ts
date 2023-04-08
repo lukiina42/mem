@@ -15,10 +15,15 @@ export class UsersService {
     return this.usersRepository.find();
   }
 
+  async updateUser(user: User) {
+    await this.usersRepository.save(user);
+  }
+
   async findOneById(id: number): Promise<User> {
     const user = await this.usersRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.mems', 'mems')
+      .leftJoinAndSelect('user.heartedMems', 'heartedMems')
       .where('user.id = :id', { id })
       .getOne();
     return user;
@@ -49,6 +54,7 @@ export class UsersService {
     const salt = await genSalt(10);
     // now we set user password to hashed password
     user.password = await hash(user.password, salt);
+    user.heartedMems = [];
     await this.usersRepository.insert(user);
   }
 }

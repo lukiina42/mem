@@ -44,3 +44,18 @@ export const deleteMem = (variables: {
     .then((response) => handleResponseWithoutJson(response, 204))
     .catch(handleError);
 };
+
+export const heartMem = (variables: {
+  memId: number;
+  token: string;
+}): Promise<string | void> => {
+  const { memId, token } = variables;
+  return fetch(`http://localhost:8080/mems/heart/${memId}`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((response) => handleResponseWithoutJson(response, 204))
+    .catch(handleError);
+};

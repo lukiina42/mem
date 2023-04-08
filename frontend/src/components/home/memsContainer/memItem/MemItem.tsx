@@ -4,12 +4,15 @@ import { Mem } from "@/types";
 import { CgProfile } from "react-icons/cg";
 import { BsFillTrashFill } from "react-icons/bs";
 import { User } from "next-auth";
+import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
+import React from "react";
 
 interface MemItemInterface {
   mem: Mem;
   user: User | undefined;
   handleDeleteMemClick: (id: number) => void;
   displayBorder: boolean;
+  handleHeartMem: (memId: number) => void;
 }
 
 export default function MemItem({
@@ -17,7 +20,25 @@ export default function MemItem({
   user,
   handleDeleteMemClick,
   displayBorder,
+  handleHeartMem,
 }: MemItemInterface) {
+  const [heartChanged, setHeartChanged] = React.useState(false);
+
+  const isHearted = !heartChanged
+    ? mem.heartedByCurrentUser
+    : !mem.heartedByCurrentUser;
+
+  const amountOfHearts = !heartChanged
+    ? mem.heartedBy.length
+    : mem.heartedByCurrentUser
+    ? mem.heartedBy.length - 1
+    : mem.heartedBy.length + 1;
+
+  const handleHeartClick = (id: number) => {
+    setHeartChanged(!heartChanged);
+    handleHeartMem(id);
+  };
+
   return (
     <div
       className={`w-full flex mt-3 pb-3 pr-2 ${displayBorder && "border-b"}`}
@@ -46,7 +67,24 @@ export default function MemItem({
           alt="Some mem idk"
           className="w-fit max-w-[100%]"
         />
-        <div className="w-full h-12 bg-slate-200"></div>
+        <div className="w-full h-8 flex mt-1">
+          <div className="flex gap-1 items-center">
+            {isHearted ? (
+              <AiFillHeart
+                size={30}
+                className="text-red-400 hover:text-red-600 hover:cursor-pointer"
+                onClick={() => handleHeartClick(mem.id)}
+              />
+            ) : (
+              <AiOutlineHeart
+                size={30}
+                className="text-red-400 hover:text-red-600 hover:cursor-pointer"
+                onClick={() => handleHeartClick(mem.id)}
+              />
+            )}
+            <div className="font-bold text-xl">{amountOfHearts}</div>
+          </div>
+        </div>
       </div>
     </div>
   );

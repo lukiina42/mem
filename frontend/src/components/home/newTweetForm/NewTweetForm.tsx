@@ -21,6 +21,7 @@ const getAmountOfRows = (input: string) => {
 export default function NewTweetForm() {
   const [file, setFile] = useState<File | null>(null);
   const [inputContent, setInputContent] = useState("");
+  const [error, setError] = useState(false);
 
   const { data } = useSession();
 
@@ -28,6 +29,7 @@ export default function NewTweetForm() {
 
   const fileSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
+      error && setError(false);
       event.target.files[0] && setFile(event.target.files[0]);
     }
   };
@@ -47,9 +49,18 @@ export default function NewTweetForm() {
     },
   });
 
+  const handleContentInputChange = (text: string) => {
+    error && setError(false);
+    setInputContent(text);
+  };
+
   const loading = createMemMutation.status === "loading";
 
   const onSubmit = () => {
+    if (!inputContent && !file) {
+      setError(true);
+      return;
+    }
     createMemMutation.mutate({
       content: inputContent,
       image: file,
@@ -66,11 +77,17 @@ export default function NewTweetForm() {
         <div className="relative flex flex-col h-full w-4/5 pb-1">
           <div className="font-bold text-lg">Insert some mem!</div>
           <textarea
-            className="text-xl active:border-none focus:outline-none py-2 resize-none"
+            className={`text-xl active:border-none focus:outline-none py-2 resize-none ${
+              error ? "placeholder:text-red-300" : "placeholder:text-gray-400"
+            }`}
             rows={getAmountOfRows(inputContent)}
-            placeholder="Remember, only funny, no cringe"
+            placeholder={
+              error
+                ? "Insert image or text first"
+                : "Remember, only funny, no cringe"
+            }
             value={inputContent}
-            onChange={(e) => setInputContent(e.target.value)}
+            onChange={(e) => handleContentInputChange(e.target.value)}
           />
           {file && (
             <div className="w-full h-full relative pb-2">

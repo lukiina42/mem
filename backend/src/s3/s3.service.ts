@@ -41,27 +41,20 @@ export class S3Service {
     await this.s3.send(command);
   }
 
-  async retrieveMems(mems: Mem[]) {
-    const memsWithImageUrl: MemFE[] = [];
+  async retrieveMemImage(mem: MemFE) {
     const bucketName = process.env.AWS_BUCKET_NAME;
-    for (const mem of mems) {
-      const getObjectParams = {
-        Bucket: bucketName,
-        Key: mem.imageKey,
-      };
+    const getObjectParams = {
+      Bucket: bucketName,
+      Key: mem.imageKey,
+    };
 
-      const getObjectCommand = new GetObjectCommand(getObjectParams);
+    const getObjectCommand = new GetObjectCommand(getObjectParams);
 
-      const url = await getSignedUrl(this.s3, getObjectCommand, {
-        expiresIn: 24000,
-      });
+    const url = await getSignedUrl(this.s3, getObjectCommand, {
+      expiresIn: 24000,
+    });
 
-      memsWithImageUrl.push({
-        ...mem,
-        imageUrl: url,
-      });
-    }
-    return memsWithImageUrl;
+    return url;
   }
 
   async deleteMemImage(mem: Mem) {
