@@ -12,6 +12,7 @@ import {
   UseGuards,
   Request,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { MemsService } from './mem.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -53,5 +54,12 @@ export class MemsController {
   @HttpCode(204)
   async deleteMem(@Request() req: JWTReqUser, @Param('id') id: string) {
     return await this.memService.deleteMem(req.user.userId, id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('/heart/:id')
+  @HttpCode(204)
+  async heartMem(@Request() req: JWTReqUser, @Param('id') id: string) {
+    return await this.memService.heartMem(req.user.userId, id);
   }
 }

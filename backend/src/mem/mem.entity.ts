@@ -6,6 +6,7 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToMany,
 } from 'typeorm';
 
 @Entity()
@@ -29,6 +30,9 @@ export class Mem {
 
   @UpdateDateColumn()
   updatedDate: Date;
+
+  @ManyToMany(() => User, (user) => user.heartedMems)
+  heartedBy: User[];
 
   @ManyToOne(() => User, (user) => user.mems)
   owner: User;

@@ -1,5 +1,12 @@
 import { Mem } from 'src/mem/mem.entity';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
 
 @Entity()
 export class User {
@@ -18,9 +25,15 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ select: false })
   password: string;
 
   @OneToMany(() => Mem, (mem) => mem.owner)
   mems: Mem[];
+
+  @ManyToMany(() => Mem, (mem) => mem.heartedBy, {
+    cascade: ['insert'],
+  })
+  @JoinTable()
+  heartedMems: Mem[];
 }

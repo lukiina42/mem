@@ -15,7 +15,8 @@ const getMems = async () => {
     next: { revalidate: 0 },
   });
   if (response.status !== 200) {
-    throw new Error("The fetch wasn't successful");
+    console.log(response);
+    throw new Error(`The fetch wasn't successful ${response.status}`);
   }
   return await response.json();
 };

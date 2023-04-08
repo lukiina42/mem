@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Mem } from './mem.entity';
@@ -7,7 +11,9 @@ import { S3Service } from 'src/s3/s3.service';
 import { nanoid } from 'nanoid';
 
 export interface MemFE extends Mem {
-  imageUrl: string;
+  imageUrl?: string;
+  heartedByCurrentUser?: boolean;
+  hearts?: number;
 }
 
 @Injectable()
@@ -49,20 +55,45 @@ export class MemsService {
   }
 
   async getRelevantMems(userId: number) {
+    const user = await this.usersService.findOneById(userId);
+    if (!user) throw new NotFoundException('User was not found');
+
     const mems = await this.memRepository
       .createQueryBuilder('mem')
       .leftJoinAndSelect('mem.owner', 'owner')
       .where('mem.owner.id = :id', { id: userId })
       .orderBy('mem.createdDate', 'DESC')
+      .leftJoinAndSelect('mem.heartedBy', 'heartedBy')
       .limit(10)
       .getMany();
 
-    return await this.s3Service.retrieveMems(mems);
+    const memsFe = [];
+
+    for (let i = 0; i < mems.length; i++) {
+      const mem: MemFE = mems[i];
+      const imageUrl = await this.s3Service.retrieveMemImage(mem);
+      mem.imageUrl = imageUrl;
+
+      if (!user.heartedMems) {
+        mem.heartedByCurrentUser = false;
+      } else {
+        if (user.heartedMems.find((userMem) => mem.id === userMem.id)) {
+          mem.heartedByCurrentUser = true;
+        } else {
+          mem.heartedByCurrentUser = false;
+        }
+      }
+
+      memsFe.push(mem);
+    }
+
+    return memsFe;
   }
 
   async deleteMem(userId: number, id: string) {
     const idNumber = parseInt(id);
     const memOwner = await this.usersService.findOneById(userId);
+    if (!memOwner) throw new BadRequestException('The user was not found');
 
     if (!memOwner.mems.some((mem) => mem.id === idNumber)) {
       throw new BadRequestException(
@@ -76,5 +107,30 @@ export class MemsService {
       );
     await this.s3Service.deleteMemImage(memToDelete);
     await this.memRepository.remove(memToDelete);
+  }
+
+  async heartMem(userId: number, id: string) {
+    const idNumber = parseInt(id);
+    const likedByUser = await this.usersService.findOneById(userId);
+    if (!likedByUser) throw new BadRequestException('The user was not found');
+
+    const memToLike = await this.findOneById(idNumber);
+    if (!memToLike)
+      throw new NotFoundException('The mem to like was not found');
+
+    if (!likedByUser.heartedMems) likedByUser.heartedMems = [];
+
+    const userMemeAlreadyLiked = likedByUser.heartedMems.find(
+      (mem) => mem.id === memToLike.id,
+    );
+
+    if (!userMemeAlreadyLiked) {
+      likedByUser.heartedMems.push(memToLike);
+    } else
+      likedByUser.heartedMems = likedByUser.heartedMems.filter(
+        (mem) => mem.id !== memToLike.id,
+      );
+
+    await this.usersService.updateUser(likedByUser);
   }
 }

@@ -3,7 +3,7 @@
 import { Mem } from "@/types";
 import { useSession } from "next-auth/react";
 import { useMutation } from "react-query";
-import { deleteMem } from "@/clientApi/memApi";
+import { deleteMem, heartMem } from "@/clientApi/memApi";
 import { useRouter } from "next/navigation";
 import ConfirmationModal from "../../util/ConfirmationModal";
 import React from "react";
@@ -14,9 +14,10 @@ export default function MemsContainer({ mems }: { mems: Mem[] }) {
   const user = useSession().data?.user;
   const router = useRouter();
 
+  ////delete mem
   const [memIdToDelete, setMemIdToDelete] = React.useState(0);
 
-  const createMemMutation = useMutation(deleteMem, {
+  const deleteMemMutation = useMutation(deleteMem, {
     onSuccess: () => {
       displayToast(
         "The mem was successfully deleted",
@@ -37,12 +38,30 @@ export default function MemsContainer({ mems }: { mems: Mem[] }) {
   const handleDeleteMemClick = (id: number) => setMemIdToDelete(id);
 
   const handleDeleteMem = () => {
-    createMemMutation.mutate({ memId: memIdToDelete, token: user!.token });
+    deleteMemMutation.mutate({ memId: memIdToDelete, token: user!.token });
     setMemIdToDelete(0);
   };
 
   const handleCancelDeleteMem = () => {
     setMemIdToDelete(0);
+  };
+  ////
+
+  ////heart mem
+  const heartMemMutation = useMutation(heartMem, {
+    onSuccess: () => {},
+    onError: () => {
+      displayToast(
+        "Something went wrong while hearting mem, please try again",
+        "bottom-center",
+        "error"
+      );
+    },
+  });
+
+  const handleHeartMem = (memId: number) => {
+    //optimistic update here
+    heartMemMutation.mutate({ memId, token: user!.token });
   };
 
   return (
@@ -65,6 +84,7 @@ export default function MemsContainer({ mems }: { mems: Mem[] }) {
             user={user}
             handleDeleteMemClick={handleDeleteMemClick}
             displayBorder={i !== mems.length - 1}
+            handleHeartMem={handleHeartMem}
           />
         );
       })}
