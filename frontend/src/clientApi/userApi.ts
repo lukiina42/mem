@@ -38,3 +38,14 @@ export const loginUser = (variables: {
     .then((response) => handleResponseWithJson(response, 201))
     .catch(handleError);
 };
+
+export const getUser = (variables: { id: number }): Promise<User> => {
+  return fetch(`http://localhost:8080/users/${variables.id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => handleResponseWithJson(response, 200))
+    .catch(handleError);
+};

@@ -8,7 +8,7 @@ import { S3Service } from 'src/s3/s3.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Mem]), UsersModule],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, MemsService],
   providers: [MemsService, S3Service],
   controllers: [MemsController],
 })

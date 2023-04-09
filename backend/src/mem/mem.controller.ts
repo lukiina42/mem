@@ -13,6 +13,7 @@ import {
   Request,
   Delete,
   Put,
+  Query,
 } from '@nestjs/common';
 import { MemsService } from './mem.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -41,6 +42,14 @@ export class MemsController {
     @UploadedFile() image: Express.Multer.File,
   ) {
     return await this.memService.createMem(image, content, req.user.email);
+  }
+
+  @Get('/user/:id')
+  async getMemsOfUser(
+    @Param('id') userId: string,
+    @Query() query: { requestingUser: string },
+  ) {
+    return await this.memService.getMemsOfUser(userId, query.requestingUser);
   }
 
   @UseGuards(JwtAuthGuard)

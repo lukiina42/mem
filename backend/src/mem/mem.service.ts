@@ -90,6 +90,49 @@ export class MemsService {
     return memsFe;
   }
 
+  async getMemsOfUser(userId: string, requestingUserId: string) {
+    const id = parseInt(userId);
+    const idOfRequestingUser = parseInt(requestingUserId);
+
+    const requestingUser = await this.usersService.findOneById(
+      idOfRequestingUser,
+    );
+    if (!requestingUser) throw new NotFoundException('User was not found');
+
+    const mems = await this.memRepository
+      .createQueryBuilder('mem')
+      .leftJoinAndSelect('mem.owner', 'owner')
+      .where('mem.owner.id = :id', { id })
+      .orderBy('mem.createdDate', 'DESC')
+      .leftJoinAndSelect('mem.heartedBy', 'heartedBy')
+      .limit(10)
+      .getMany();
+
+    const memsFe = [];
+
+    for (let i = 0; i < mems.length; i++) {
+      const mem: MemFE = mems[i];
+      const imageUrl = await this.s3Service.retrieveMemImage(mem);
+      mem.imageUrl = imageUrl;
+
+      if (!requestingUser.heartedMems) {
+        mem.heartedByCurrentUser = false;
+      } else {
+        if (
+          requestingUser.heartedMems.find((userMem) => mem.id === userMem.id)
+        ) {
+          mem.heartedByCurrentUser = true;
+        } else {
+          mem.heartedByCurrentUser = false;
+        }
+      }
+
+      memsFe.push(mem);
+    }
+
+    return memsFe;
+  }
+
   async deleteMem(userId: number, id: string) {
     const idNumber = parseInt(id);
     const memOwner = await this.usersService.findOneById(userId);

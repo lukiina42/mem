@@ -2,6 +2,8 @@ export interface User {
   username: string;
   email: string;
   id: string;
+  mems: Mem[];
+  heartedMems?: Mem[];
 }
 
 export interface MemBE {
