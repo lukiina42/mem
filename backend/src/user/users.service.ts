@@ -26,6 +26,15 @@ export class UsersService {
       .leftJoinAndSelect('user.heartedMems', 'heartedMems')
       .where('user.id = :id', { id })
       .getOne();
+
+    return user;
+  }
+
+  async getProfileInfoWithoutMems(id: number): Promise<User> {
+    const user = await this.usersRepository
+      .createQueryBuilder('user')
+      .where('user.id = :id', { id })
+      .getOne();
     return user;
   }
 

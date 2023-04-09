@@ -20,8 +20,8 @@ export class UsersController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
   async getUser(@Param('id') id: number) {
-    const user = await this.userService.findOneById(id);
-    console.log(user);
+    const user = await this.userService.getProfileInfoWithoutMems(id);
+
     if (!user) throw new NotFoundException(`User with id ${id} was not found`);
     return user;
   }
