@@ -56,7 +56,7 @@ export class MemsService {
   }
 
   async getRelevantMems(userId: number) {
-    const user = await this.usersService.findOneById(userId);
+    const user = await this.usersService.findOneByIdWithMems(userId);
     if (!user) throw new NotFoundException('User was not found');
 
     const mems = await this.memRepository
@@ -106,7 +106,9 @@ export class MemsService {
 
     let requestingUser: null | User = null;
     if (requestingUserId) {
-      requestingUser = await this.usersService.findOneById(idOfRequestingUser);
+      requestingUser = await this.usersService.findOneByIdWithMems(
+        idOfRequestingUser,
+      );
       if (!requestingUser) throw new NotFoundException('User was not found');
     }
 
@@ -153,7 +155,7 @@ export class MemsService {
 
   async deleteMem(userId: number, id: string) {
     const idNumber = parseInt(id);
-    const memOwner = await this.usersService.findOneById(userId);
+    const memOwner = await this.usersService.findOneByIdWithMems(userId);
     if (!memOwner) throw new BadRequestException('The user was not found');
 
     if (!memOwner.mems.some((mem) => mem.id === idNumber)) {
@@ -172,7 +174,7 @@ export class MemsService {
 
   async heartMem(userId: number, id: string) {
     const idNumber = parseInt(id);
-    const likedByUser = await this.usersService.findOneById(userId);
+    const likedByUser = await this.usersService.findOneByIdWithMems(userId);
     if (!likedByUser) throw new BadRequestException('The user was not found');
 
     const memToLike = await this.findOneById(idNumber);

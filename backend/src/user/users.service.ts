@@ -22,7 +22,7 @@ export class UsersService {
     await this.usersRepository.save(user);
   }
 
-  async findOneById(id: number): Promise<User> {
+  async findOneByIdWithMems(id: number): Promise<User> {
     const user = await this.usersRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.mems', 'mems')
@@ -33,8 +33,7 @@ export class UsersService {
     return user;
   }
 
-  //retrive signed image url here
-  async getProfileInfoWithoutMems(id: number): Promise<User> {
+  async findOneByIdWithAvatar(id: number): Promise<User> {
     const user = await this.usersRepository
       .createQueryBuilder('user')
       .where('user.id = :id', { id })
@@ -46,6 +45,15 @@ export class UsersService {
       );
       user.avatarImageUrl = avatarImageUrl;
     }
+
+    return user;
+  }
+
+  async findOneByIdRaw(id: number): Promise<User> {
+    const user = await this.usersRepository
+      .createQueryBuilder('user')
+      .where('user.id = :id', { id })
+      .getOne();
 
     return user;
   }
@@ -80,7 +88,7 @@ export class UsersService {
   }
 
   async updateAvatar(userId: number, image: Express.Multer.File) {
-    const user = await this.getProfileInfoWithoutMems(userId);
+    const user = await this.findOneByIdRaw(userId);
     if (!user)
       throw new NotFoundException(
         'The user who made the request was not found',
