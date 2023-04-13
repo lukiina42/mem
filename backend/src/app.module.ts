@@ -11,6 +11,7 @@ import { UsersService } from './user/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { Mem } from './mem/mem.entity';
 import { MemsModule } from './mem/mem.module';
+import { S3Service } from './s3/s3.service';
 
 @Module({
   imports: [
@@ -34,6 +35,6 @@ import { MemsModule } from './mem/mem.module';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService, AuthService, UsersService, JwtService],
+  providers: [AppService, AuthService, UsersService, JwtService, S3Service],
 })
 export class AppModule {}

@@ -7,6 +7,7 @@ import { UsersService } from 'src/user/users.service';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './jwt.strategy';
+import { S3Service } from 'src/s3/s3.service';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { JwtStrategy } from './jwt.strategy';
     UsersService,
     ConfigService,
     JwtStrategy,
+    S3Service,
   ],
   exports: [AuthService],
 })

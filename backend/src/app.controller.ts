@@ -11,6 +11,7 @@ export class AppController {
   @Post('/auth/login')
   async login(@Request() req) {
     const token = await this.authService.login(req.user);
+    console.log(token);
     return {
       token: token.access_token,
       user: req.user,

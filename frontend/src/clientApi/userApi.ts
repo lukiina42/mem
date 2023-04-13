@@ -49,3 +49,24 @@ export const getUser = (variables: { id: number }): Promise<User> => {
     .then((response) => handleResponseWithJson(response, 200))
     .catch(handleError);
 };
+
+export const updateAvatar = (variables: {
+  file: File | null;
+  token: string;
+}): Promise<string | void> => {
+  let formData = null;
+  if (variables.file) {
+    formData = new FormData();
+    formData.append("image", variables.file as File);
+  }
+
+  return fetch(`http://localhost:8080/users/avatar`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${variables.token}`,
+    },
+    body: formData,
+  })
+    .then((response) => handleResponseWithoutJson(response, 204))
+    .catch(handleError);
+};

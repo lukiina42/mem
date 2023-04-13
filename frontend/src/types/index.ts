@@ -4,6 +4,7 @@ export interface User {
   id: string;
   mems: Mem[];
   heartedMems?: Mem[];
+  avatarImageUrl?: string;
 }
 
 export interface MemBE {

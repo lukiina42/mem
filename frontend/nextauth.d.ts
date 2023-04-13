@@ -2,6 +2,7 @@ import { DefaultSession, DefaultUser } from "next-auth";
 
 interface IUser extends DefaultUser {
   token: string;
+  avatarImageKey: string;
 }
 declare module "next-auth" {
   interface User extends IUser {}

@@ -1,20 +1,28 @@
 "use client";
 
+import { User } from "next-auth";
+
 export default function ProfileOptionsMenu({
   setShowModal,
-  signedIn,
   signOut,
   redirect,
   setShowMenu,
+  user,
 }: {
   setShowModal(modal: "signup" | "login" | "none"): void;
   setShowMenu?: (i: boolean) => void;
   signedIn?: boolean;
   signOut?: () => void;
   redirect?: (url: string) => void;
+  user: User | null;
 }) {
+  const signedIn = user !== null;
+
+  console.log(user);
   return (
-    <>
+    <div
+      className={`absolute -top-[80%] left-[105%] bg-base-100 w-56 border-[2px] bg-white border-slate-200 shadow-lg rounded-lg flex flex-col justify-evenly`}
+    >
       {!signedIn ? (
         <>
           <div
@@ -22,7 +30,7 @@ export default function ProfileOptionsMenu({
               setShowModal("signup");
               setShowMenu!(false);
             }}
-            className="font-bold rounded-t-lg border-b border-blue-500 w-full text-center hover:cursor-pointer hover:bg-blue-300 py-2 transition-all duration-200"
+            className="font-bold rounded-t-lg border-blue-500 w-full text-center hover:cursor-pointer hover:bg-blue-300 py-2 transition-all duration-200"
           >
             Sign up
           </div>
@@ -40,15 +48,24 @@ export default function ProfileOptionsMenu({
         <>
           <div
             onClick={() => {
+              redirect!(`/${user.id}`);
+              setShowMenu!(false);
+            }}
+            className="font-bold rounded-t-lg w-full text-center hover:cursor-pointer hover:bg-blue-300 py-2 transition-all duration-200"
+          >
+            Profile
+          </div>
+          <div
+            onClick={() => {
               signOut!();
               redirect!("");
             }}
-            className="font-bold rounded-t-lg w-full text-center hover:cursor-pointer hover:bg-blue-300 py-2 transition-all duration-200"
+            className="font-bold rounded-b-lg w-full text-center hover:cursor-pointer hover:bg-blue-300 py-2 transition-all duration-200"
           >
             Log out
           </div>
         </>
       )}
-    </>
+    </div>
   );
 }

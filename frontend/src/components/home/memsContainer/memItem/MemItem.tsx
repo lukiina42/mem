@@ -44,10 +44,18 @@ export default function MemItem({
       className={`w-full flex mt-3 pb-3 pr-2 ${displayBorder && "border-b"}`}
     >
       <div className="min-w-[4rem] flex justify-center mt-2">
-        <CgProfile
-          size={40}
-          className="rounded-full bg-gray-400 p-1 text-gray-300"
-        />
+        {mem.owner.avatarImageUrl ? (
+          <img // eslint-disable-line @next/next/no-img-element
+            className="w-[3.5rem] h-[3.5rem] rounded-full object-cover"
+            alt="submitted picture"
+            src={mem.owner.avatarImageUrl}
+          />
+        ) : (
+          <CgProfile
+            size={40}
+            className="rounded-full bg-gray-400 p-1 text-gray-300"
+          />
+        )}
       </div>
       <div className="flex flex-col gap-1 grow">
         <div className="flex justify-between">

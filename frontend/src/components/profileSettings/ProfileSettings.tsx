@@ -55,30 +55,23 @@ export default function Profile() {
               />
             ) : null}
             {showMenu && (
-              <div
-                className={`absolute top-0 left-[115%] bg-base-100 w-56 border border-blue-500 rounded-lg flex flex-col justify-evenly`}
-              >
-                <ProfileOptionsMenu
-                  setShowModal={setShowModal}
-                  setShowMenu={setShowMenu}
-                />
-              </div>
+              <ProfileOptionsMenu
+                setShowModal={setShowModal}
+                setShowMenu={setShowMenu}
+                user={null}
+              />
             )}
           </>
         ) : (
           <>
             {showMenu && (
-              <div
-                className={`absolute bottom-0 left-[115%] bg-base-100 w-56 border border-blue-500 rounded-lg flex flex-col justify-evenly`}
-              >
-                <ProfileOptionsMenu
-                  signOut={signOut}
-                  signedIn
-                  setShowModal={setShowModal}
-                  redirect={router.push}
-                  setShowMenu={setShowMenu}
-                />
-              </div>
+              <ProfileOptionsMenu
+                signOut={signOut}
+                user={session.user}
+                setShowModal={setShowModal}
+                redirect={router.push}
+                setShowMenu={setShowMenu}
+              />
             )}
           </>
         )}

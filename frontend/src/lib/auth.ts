@@ -29,9 +29,8 @@ export const AuthOptions = {
           name: userData.user.username,
           id: userData.user.id.toString(),
           token: userData.token,
+          avatarImageKey: userData.user.avatarImageKey,
         };
-
-        console.log(user);
 
         return user;
       },
@@ -41,12 +40,15 @@ export const AuthOptions = {
     async jwt({ token, user }: any) {
       if (user) {
         token.token = user.token;
+        token.avatarImageKey = user.avatarImageKey;
       }
       return token;
     },
     session({ session, token }: any) {
       if (token && session.user) {
         session.user.token = token.token;
+        session.user.id = token.sub;
+        session.user.avatarImageKey = token.avatarImageKey;
       }
       return session;
     },
