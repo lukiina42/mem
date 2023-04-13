@@ -1,14 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { genSalt, hash, compare as comparePasswords } from 'bcrypt';
+import { S3Service } from 'src/s3/s3.service';
+import { nanoid } from 'nanoid';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    private s3Service: S3Service,
   ) {}
 
   findAll(): Promise<User[]> {
@@ -19,7 +22,7 @@ export class UsersService {
     await this.usersRepository.save(user);
   }
 
-  async findOneById(id: number): Promise<User> {
+  async findOneByIdWithMems(id: number): Promise<User> {
     const user = await this.usersRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.mems', 'mems')
@@ -30,11 +33,28 @@ export class UsersService {
     return user;
   }
 
-  async getProfileInfoWithoutMems(id: number): Promise<User> {
+  async findOneByIdWithAvatar(id: number): Promise<User> {
     const user = await this.usersRepository
       .createQueryBuilder('user')
       .where('user.id = :id', { id })
       .getOne();
+
+    if (user.avatarImageKey) {
+      const avatarImageUrl = await this.s3Service.retrieveImage(
+        user.avatarImageKey,
+      );
+      user.avatarImageUrl = avatarImageUrl;
+    }
+
+    return user;
+  }
+
+  async findOneByIdRaw(id: number): Promise<User> {
+    const user = await this.usersRepository
+      .createQueryBuilder('user')
+      .where('user.id = :id', { id })
+      .getOne();
+
     return user;
   }
 
@@ -65,5 +85,29 @@ export class UsersService {
     user.password = await hash(user.password, salt);
     user.heartedMems = [];
     await this.usersRepository.insert(user);
+  }
+
+  async updateAvatar(userId: number, image: Express.Multer.File) {
+    const user = await this.findOneByIdRaw(userId);
+    if (!user)
+      throw new NotFoundException(
+        'The user who made the request was not found',
+      );
+    if (!image) {
+      if (user.avatarImageKey) {
+        await this.s3Service.deleteImage(user.avatarImageKey);
+        user.avatarImageKey = '';
+        await this.updateUser(user);
+        return;
+      }
+    } else {
+      const newKey = nanoid(40);
+      if (user.avatarImageKey) {
+        await this.s3Service.deleteImage(user.avatarImageKey);
+      }
+      await this.s3Service.storeImage(image, newKey);
+      user.avatarImageKey = newKey;
+      await this.updateUser(user);
+    }
   }
 }

@@ -9,6 +9,7 @@ import { Mem } from './mem.entity';
 import { UsersService } from 'src/user/users.service';
 import { S3Service } from 'src/s3/s3.service';
 import { nanoid } from 'nanoid';
+import { User } from 'src/user/user.entity';
 
 export interface MemFE extends Mem {
   imageUrl?: string;
@@ -38,7 +39,7 @@ export class MemsService {
 
     const id = nanoid(40);
 
-    await this.s3Service.storeMemImage(image, id);
+    await this.s3Service.storeImage(image, id);
 
     // const sharp = await import('sharp');
 
@@ -55,7 +56,7 @@ export class MemsService {
   }
 
   async getRelevantMems(userId: number) {
-    const user = await this.usersService.findOneById(userId);
+    const user = await this.usersService.findOneByIdWithMems(userId);
     if (!user) throw new NotFoundException('User was not found');
 
     const mems = await this.memRepository
@@ -71,8 +72,15 @@ export class MemsService {
 
     for (let i = 0; i < mems.length; i++) {
       const mem: MemFE = mems[i];
-      const imageUrl = await this.s3Service.retrieveMemImage(mem);
+      const imageUrl = await this.s3Service.retrieveImage(mem.imageKey);
       mem.imageUrl = imageUrl;
+
+      const userAvatarKey = mem.owner.avatarImageKey;
+      if (userAvatarKey) {
+        mem.owner.avatarImageUrl = await this.s3Service.retrieveImage(
+          userAvatarKey,
+        );
+      }
 
       if (!user.heartedMems) {
         mem.heartedByCurrentUser = false;
@@ -87,6 +95,8 @@ export class MemsService {
       memsFe.push(mem);
     }
 
+    console.log(memsFe);
+
     return memsFe;
   }
 
@@ -94,10 +104,13 @@ export class MemsService {
     const id = parseInt(userId);
     const idOfRequestingUser = parseInt(requestingUserId);
 
-    const requestingUser = await this.usersService.findOneById(
-      idOfRequestingUser,
-    );
-    if (!requestingUser) throw new NotFoundException('User was not found');
+    let requestingUser: null | User = null;
+    if (requestingUserId) {
+      requestingUser = await this.usersService.findOneByIdWithMems(
+        idOfRequestingUser,
+      );
+      if (!requestingUser) throw new NotFoundException('User was not found');
+    }
 
     const mems = await this.memRepository
       .createQueryBuilder('mem')
@@ -112,10 +125,17 @@ export class MemsService {
 
     for (let i = 0; i < mems.length; i++) {
       const mem: MemFE = mems[i];
-      const imageUrl = await this.s3Service.retrieveMemImage(mem);
+      const imageUrl = await this.s3Service.retrieveImage(mem.imageKey);
       mem.imageUrl = imageUrl;
 
-      if (!requestingUser.heartedMems) {
+      const userAvatarKey = mem.owner.avatarImageKey;
+      if (userAvatarKey) {
+        mem.owner.avatarImageUrl = await this.s3Service.retrieveImage(
+          userAvatarKey,
+        );
+      }
+
+      if (!requestingUser || !requestingUser.heartedMems) {
         mem.heartedByCurrentUser = false;
       } else {
         if (
@@ -135,7 +155,7 @@ export class MemsService {
 
   async deleteMem(userId: number, id: string) {
     const idNumber = parseInt(id);
-    const memOwner = await this.usersService.findOneById(userId);
+    const memOwner = await this.usersService.findOneByIdWithMems(userId);
     if (!memOwner) throw new BadRequestException('The user was not found');
 
     if (!memOwner.mems.some((mem) => mem.id === idNumber)) {
@@ -148,13 +168,13 @@ export class MemsService {
       throw new BadRequestException(
         'The mem which should be deleted does not exist',
       );
-    await this.s3Service.deleteMemImage(memToDelete);
+    await this.s3Service.deleteImage(memToDelete.imageKey);
     await this.memRepository.remove(memToDelete);
   }
 
   async heartMem(userId: number, id: string) {
     const idNumber = parseInt(id);
-    const likedByUser = await this.usersService.findOneById(userId);
+    const likedByUser = await this.usersService.findOneByIdWithMems(userId);
     if (!likedByUser) throw new BadRequestException('The user was not found');
 
     const memToLike = await this.findOneById(idNumber);

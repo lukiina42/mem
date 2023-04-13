@@ -31,8 +31,6 @@ export const AuthOptions = {
           token: userData.token,
         };
 
-        console.log(user);
-
         return user;
       },
     }),
@@ -47,6 +45,7 @@ export const AuthOptions = {
     session({ session, token }: any) {
       if (token && session.user) {
         session.user.token = token.token;
+        session.user.id = token.sub;
       }
       return session;
     },

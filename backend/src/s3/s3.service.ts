@@ -7,8 +7,6 @@ import {
 } from '@aws-sdk/client-s3';
 
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { Mem } from 'src/mem/mem.entity';
-import { MemFE } from 'src/mem/mem.service';
 
 @Injectable()
 export class S3Service {
@@ -26,7 +24,7 @@ export class S3Service {
     });
   }
 
-  async storeMemImage(image: Express.Multer.File, key: string) {
+  async storeImage(image: Express.Multer.File, key: string) {
     const bucketName = process.env.AWS_BUCKET_NAME;
 
     const params = {
@@ -41,11 +39,11 @@ export class S3Service {
     await this.s3.send(command);
   }
 
-  async retrieveMemImage(mem: MemFE) {
+  async retrieveImage(imageKey: string) {
     const bucketName = process.env.AWS_BUCKET_NAME;
     const getObjectParams = {
       Bucket: bucketName,
-      Key: mem.imageKey,
+      Key: imageKey,
     };
 
     const getObjectCommand = new GetObjectCommand(getObjectParams);
@@ -57,11 +55,11 @@ export class S3Service {
     return url;
   }
 
-  async deleteMemImage(mem: Mem) {
+  async deleteImage(imageKey: string) {
     const bucketName = process.env.AWS_BUCKET_NAME;
     const deleteObjectParams = {
       Bucket: bucketName,
-      Key: mem.imageKey,
+      Key: imageKey,
     };
 
     const deleteObjectCommand = new DeleteObjectCommand(deleteObjectParams);

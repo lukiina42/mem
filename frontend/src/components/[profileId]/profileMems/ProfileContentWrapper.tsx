@@ -7,13 +7,22 @@ import { ToastContainer } from "react-toastify";
 import { Mem } from "@/types";
 import MemsContainer from "@/components/home/memsContainer/MemsContainer";
 
-export default function ProfileContentWrapper({ mems }: { mems: Mem[] }) {
+export default function ProfileMemsWrapper({
+  mems,
+  isLoggedInUser,
+}: {
+  mems: Mem[];
+  isLoggedInUser: boolean;
+}) {
   return (
     <SessionProvider>
       <QueryClientProvider client={queryClient}>
-        {/* <div className="w-full flex flex-col sticky bg-white top-0 border-b">
-          Wasap
-        </div> */}
+        {isLoggedInUser && (
+          <div className="font-bold flex flex-col bg-white ml-4 mt-4">
+            Your mem's:
+          </div>
+        )}
+
         <div className="w-full flex flex-col justify-center items-center pb-b">
           <MemsContainer mems={mems} />
         </div>

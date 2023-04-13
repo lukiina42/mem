@@ -9,9 +9,16 @@ import {
   NotFoundException,
   ClassSerializerInterceptor,
   UseInterceptors,
+  Put,
+  UseGuards,
+  Request,
+  UploadedFile,
 } from '@nestjs/common';
 import { User } from './user.entity';
 import { UsersService } from './users.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JWTReqUser } from 'src/types';
 
 @Controller('/users')
 export class UsersController {
@@ -20,7 +27,7 @@ export class UsersController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
   async getUser(@Param('id') id: number) {
-    const user = await this.userService.getProfileInfoWithoutMems(id);
+    const user = await this.userService.findOneByIdWithAvatar(id);
 
     if (!user) throw new NotFoundException(`User with id ${id} was not found`);
     return user;
@@ -59,5 +66,16 @@ export class UsersController {
     if (userByEmail) {
       throw new BadRequestException('EmailExists');
     }
+  }
+
+  @Put('/avatar')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(204)
+  @UseInterceptors(FileInterceptor('image'))
+  async updateAvatar(
+    @Request() req: JWTReqUser,
+    @UploadedFile() image: Express.Multer.File,
+  ) {
+    await this.userService.updateAvatar(req.user.userId, image);
   }
 }

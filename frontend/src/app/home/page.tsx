@@ -4,14 +4,16 @@ import { decode } from "next-auth/jwt";
 import { Mem, MemBE } from "@/types";
 
 const getMems = async (): Promise<Mem[]> => {
-  const jwtObject = await decode({
+  //getServerSession from next auth returns only name and email, even though in callbacks I have specified it should return the token and id as well
+  const sessionData = await decode({
     token: cookies().get("next-auth.session-token")?.value,
     secret: process.env.NEXTAUTH_SECRET!,
   });
+
   const response = await fetch("http://localhost:8080/mems", {
     method: "GET",
     headers: {
-      Authorization: `Bearer ${jwtObject?.token}`,
+      Authorization: `Bearer ${sessionData?.token}`,
     },
     next: { revalidate: 0 },
   });

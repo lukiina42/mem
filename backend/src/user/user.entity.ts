@@ -28,6 +28,11 @@ export class User {
   @Column()
   password: string;
 
+  @Column({ default: '' })
+  avatarImageKey: string;
+
+  avatarImageUrl?: string;
+
   @OneToMany(() => Mem, (mem) => mem.owner)
   mems: Mem[];
 
