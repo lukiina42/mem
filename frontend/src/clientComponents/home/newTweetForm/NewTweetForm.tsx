@@ -8,8 +8,8 @@ import { useMutation } from "react-query";
 import { createMem } from "@/clientApi/memApi";
 import { useSession } from "next-auth/react";
 import { User } from "next-auth";
-import LoadingSpinner from "../../util/Loading";
-import { displayToast } from "@/components/util/toast";
+import LoadingSpinner from "@/utilComponents/Loading";
+import { displayToast } from "@/utilComponents/toast";
 
 //lazy solution
 const getAmountOfRows = (input: string) => {

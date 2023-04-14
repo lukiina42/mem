@@ -4,7 +4,7 @@ import { useSelectedLayoutSegment } from "next/navigation";
 import CustomLink from "../helper/CustomLink";
 import { BsBookmarksFill, BsBookmarks } from "react-icons/bs";
 import { HiBellAlert, HiOutlineBellAlert } from "react-icons/hi2";
-import ProfileWrapper from "@/components/profileSettings/ProfileWrapper";
+import ProfileWrapper from "../profileSettings/ProfileWrapper";
 
 export default function SidebarLinks() {
   const segment = useSelectedLayoutSegment();

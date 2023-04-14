@@ -95,8 +95,6 @@ export class MemsService {
       memsFe.push(mem);
     }
 
-    console.log(memsFe);
-
     return memsFe;
   }
 

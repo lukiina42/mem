@@ -1,4 +1,4 @@
-import HomeContentWrapper from "@/components/home/HomeContentWrapper";
+import HomeContentWrapper from "@/clientComponents/home/HomeContentWrapper";
 import { cookies } from "next/headers";
 import { decode } from "next-auth/jwt";
 import { Mem, MemBE } from "@/types";

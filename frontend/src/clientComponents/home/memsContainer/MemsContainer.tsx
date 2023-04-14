@@ -5,10 +5,10 @@ import { useSession } from "next-auth/react";
 import { useMutation } from "react-query";
 import { deleteMem, heartMem } from "@/clientApi/memApi";
 import { useRouter } from "next/navigation";
-import ConfirmationModal from "../../util/ConfirmationModal";
+import ConfirmationModal from "@/utilComponents/ConfirmationModal";
 import React from "react";
 import MemItem from "./memItem/MemItem";
-import { displayToast } from "@/components/util/toast";
+import { displayToast } from "@/utilComponents/toast";
 
 export default function MemsContainer({ mems }: { mems: Mem[] }) {
   const user = useSession().data?.user;

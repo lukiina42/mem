@@ -1,8 +1,8 @@
 "use client";
 
 import { updateAvatar } from "@/clientApi/userApi";
-import ModalWrapper from "@/components/util/ModalWrapper";
-import { displayToast } from "@/components/util/toast";
+import ModalWrapper from "@/utilComponents/ModalWrapper";
+import { displayToast } from "@/utilComponents/toast";
 import { User } from "@/types";
 import { useSession } from "next-auth/react";
 import React from "react";

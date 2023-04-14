@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import SidebarLinksWrapper from "./sidebarLinks/SidebarLinksWrapper";
+import SidebarLinksWrapper from "@/clientComponents/header/sidebarLinks/SidebarLinksWrapper";
 
 export default function Header() {
   return (
