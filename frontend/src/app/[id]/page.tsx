@@ -1,5 +1,5 @@
-import ProfileMemsWrapper from "@/components/[profileId]/profileMems/ProfileContentWrapper";
-import UserInfoWrapper from "@/components/[profileId]/userInfoWrapper/UserInfoWrapper";
+import ProfileMemsWrapper from "@/clientComponents/[id]/profileMems/ProfileContentWrapper";
+import UserInfoWrapper from "@/clientComponents/[id]/userInfoWrapper/UserInfoWrapper";
 import { User } from "@/types";
 import { decode } from "next-auth/jwt";
 import { cookies } from "next/headers";

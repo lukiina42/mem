@@ -8,7 +8,7 @@ import { createUser } from "@/clientApi/userApi";
 import InputError from "../helper/InputError";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { displayToast } from "@/components/util/toast";
+import { displayToast } from "@/utilComponents/toast";
 
 interface FormData {
   email: string;

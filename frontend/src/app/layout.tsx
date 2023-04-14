@@ -1,6 +1,5 @@
+import Header from "./Header";
 import "./globals.css";
-
-import Header from "@/components/header/Header";
 
 export const metadata = {
   title: "Twitter FE clone",

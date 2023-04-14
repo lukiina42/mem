@@ -5,7 +5,7 @@ import { QueryClientProvider } from "react-query";
 import { queryClient } from "@/lib/queryClient";
 import { ToastContainer } from "react-toastify";
 import { Mem } from "@/types";
-import MemsContainer from "@/components/home/memsContainer/MemsContainer";
+import MemsContainer from "@/clientComponents/home/memsContainer/MemsContainer";
 
 export default function ProfileMemsWrapper({
   mems,
@@ -19,7 +19,7 @@ export default function ProfileMemsWrapper({
       <QueryClientProvider client={queryClient}>
         {isLoggedInUser && (
           <div className="font-bold flex flex-col bg-white ml-4 mt-4">
-            Your mem's:
+            Your mem&apos;s:
           </div>
         )}
 

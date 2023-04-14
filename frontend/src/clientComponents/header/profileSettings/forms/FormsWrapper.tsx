@@ -3,7 +3,7 @@
 import { queryClient } from "@/lib/queryClient";
 import LoginForm from "./login/LoginForm";
 import SignupForm from "./signup/SignupForm";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClientProvider } from "react-query";
 
 interface FormsWrapperProps {
   resetMenu: () => void;
