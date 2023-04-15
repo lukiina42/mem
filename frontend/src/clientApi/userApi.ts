@@ -1,4 +1,4 @@
-import { User } from "@/types";
+import { User } from "@/types/user";
 import {
   handleError,
   handleResponseWithoutJson,
@@ -66,6 +66,20 @@ export const updateAvatar = (variables: {
       Authorization: `Bearer ${variables.token}`,
     },
     body: formData,
+  })
+    .then((response) => handleResponseWithoutJson(response, 204))
+    .catch(handleError);
+};
+
+export const followUser = (variables: {
+  followedId: number;
+  token: string;
+}): Promise<string | void> => {
+  return fetch(`http://localhost:8080/users/follow/${variables.followedId}`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${variables.token}`,
+    },
   })
     .then((response) => handleResponseWithoutJson(response, 204))
     .catch(handleError);

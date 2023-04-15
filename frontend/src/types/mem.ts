@@ -1,13 +1,6 @@
-export interface User {
-  username: string;
-  email: string;
-  id: string;
-  mems: Mem[];
-  heartedMems?: Mem[];
-  avatarImageUrl?: string;
-}
+import { User } from "./user";
 
-export interface MemBE {
+export interface MemDto {
   content: string;
   id: number;
   createdDate: string;

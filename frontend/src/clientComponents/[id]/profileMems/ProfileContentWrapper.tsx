@@ -4,7 +4,7 @@ import { SessionProvider } from "next-auth/react";
 import { QueryClientProvider } from "react-query";
 import { queryClient } from "@/lib/queryClient";
 import { ToastContainer } from "react-toastify";
-import { Mem } from "@/types";
+import { Mem } from "@/types/mem";
 import MemsContainer from "@/clientComponents/home/memsContainer/MemsContainer";
 
 export default function ProfileMemsWrapper({

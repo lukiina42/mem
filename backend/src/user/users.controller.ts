@@ -26,8 +26,14 @@ export class UsersController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
-  async getUser(@Param('id') id: number) {
-    const user = await this.userService.findOneByIdWithAvatar(id);
+  async getUser(@Param('id') id: string) {
+    let parsedId;
+    try {
+      parsedId = parseInt(id);
+    } catch (error) {
+      return;
+    }
+    const user = await this.userService.findOneByIdWithAvatar(parsedId);
 
     if (!user) throw new NotFoundException(`User with id ${id} was not found`);
     return user;
@@ -77,5 +83,12 @@ export class UsersController {
     @UploadedFile() image: Express.Multer.File,
   ) {
     await this.userService.updateAvatar(req.user.userId, image);
+  }
+
+  @Put('/follow/:id')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(204)
+  async followUser(@Param('id') id: string, @Request() req: JWTReqUser) {
+    await this.userService.followUser(req.user.userId, parseInt(id));
   }
 }

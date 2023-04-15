@@ -41,4 +41,11 @@ export class User {
   })
   @JoinTable()
   heartedMems: Mem[];
+
+  @ManyToMany(() => User, (user) => user.followedBy, { cascade: false })
+  @JoinTable()
+  following: User[];
+
+  @ManyToMany(() => User, (user) => user.following)
+  followedBy: User[];
 }

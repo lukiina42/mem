@@ -1,6 +1,6 @@
 "use client";
 
-import { User } from "@/types";
+import { User } from "@/types/user";
 import { CgProfile } from "react-icons/cg";
 import UserInfo from "./userInfo/UserInfo";
 import { QueryClientProvider } from "react-query";
