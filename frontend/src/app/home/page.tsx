@@ -1,7 +1,7 @@
 import HomeContentWrapper from "@/clientComponents/home/HomeContentWrapper";
 import { cookies } from "next/headers";
 import { decode } from "next-auth/jwt";
-import { Mem, MemBE } from "@/types";
+import { Mem, MemDto } from "@/types/mem";
 
 const getMems = async (): Promise<Mem[]> => {
   //getServerSession from next auth returns only name and email, even though in callbacks I have specified it should return the token and id as well
@@ -21,7 +21,7 @@ const getMems = async (): Promise<Mem[]> => {
     console.log(response);
     throw new Error(`The fetch wasn't successful ${response.status}`);
   }
-  let memsBE: MemBE[] = await response.json();
+  let memsBE: MemDto[] = await response.json();
   let mems: Mem[] = memsBE.map((mem) => {
     const createdTime = new Date(mem.createdDate);
     const updatedTime = new Date(mem.updatedDate);

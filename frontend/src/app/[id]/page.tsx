@@ -1,8 +1,9 @@
 import ProfileMemsWrapper from "@/clientComponents/[id]/profileMems/ProfileContentWrapper";
-import UserInfoWrapper from "@/clientComponents/[id]/userInfoWrapper/UserInfoWrapper";
-import { User } from "@/types";
+import UserInfoWrapper from "@/clientComponents/[id]/currentUser/userInfoWrapper/UserInfoWrapper";
+import { User } from "@/types/user";
 import { decode } from "next-auth/jwt";
 import { cookies } from "next/headers";
+import ProfileHeaderWrapper from "@/clientComponents/[id]/otherUsers/ProfileHeaderWrapper";
 
 interface GetProfileCallResponse {
   user: User;
@@ -27,8 +28,6 @@ async function getProfile(userId: number): Promise<GetProfileCallResponse> {
   if (userResponse.status !== 200)
     throw new Error("The profile fetch wasn't successful");
   const userData = await userResponse.json();
-
-  console.log(userData);
 
   let memsFetchUrl = `http://localhost:8080/mems/user/${userId}`;
   memsFetchUrl += id ? `?requestingUser=${id}` : "";
@@ -60,11 +59,7 @@ export default async function profile({ params }: { params: { id: number } }) {
       {isLoggedInUser ? (
         <UserInfoWrapper user={user} />
       ) : (
-        <div className="h-16 w-full flex items-center border-b-2">
-          <div className="font-bold text-xl ml-4">
-            {user.username}&apos;s mems
-          </div>
-        </div>
+        <ProfileHeaderWrapper username={user.username} id={user.id} />
       )}
 
       <div className="grow">

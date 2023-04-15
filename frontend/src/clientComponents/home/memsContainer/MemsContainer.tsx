@@ -1,6 +1,6 @@
 "use client";
 
-import { Mem } from "@/types";
+import { Mem } from "@/types/mem";
 import { useSession } from "next-auth/react";
 import { useMutation } from "react-query";
 import { deleteMem, heartMem } from "@/clientApi/memApi";

@@ -3,7 +3,7 @@
 import { updateAvatar } from "@/clientApi/userApi";
 import ModalWrapper from "@/utilComponents/ModalWrapper";
 import { displayToast } from "@/utilComponents/toast";
-import { User } from "@/types";
+import { User } from "@/types/user";
 import { useSession } from "next-auth/react";
 import React from "react";
 import { CgProfile } from "react-icons/cg";

@@ -1,6 +1,6 @@
 "use client";
 
-import { Mem } from "@/types";
+import { Mem } from "@/types/mem";
 import { CgProfile } from "react-icons/cg";
 import { BsFillTrashFill } from "react-icons/bs";
 import { User } from "next-auth";

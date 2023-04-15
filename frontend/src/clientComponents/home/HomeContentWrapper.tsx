@@ -5,7 +5,7 @@ import NewTweetForm from "./newTweetForm/NewTweetForm";
 import { QueryClientProvider } from "react-query";
 import { queryClient } from "@/lib/queryClient";
 import { ToastContainer } from "react-toastify";
-import { Mem } from "@/types";
+import { Mem } from "@/types/mem";
 import MemsContainer from "./memsContainer/MemsContainer";
 
 export default function HomeContentWrapper({ mems }: { mems: Mem[] }) {

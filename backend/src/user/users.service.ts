@@ -110,4 +110,24 @@ export class UsersService {
       await this.updateUser(user);
     }
   }
+
+  async followUser(followingId: number, followedId: number) {
+    const followedUser = await this.findOneByIdRaw(followedId);
+    if (!followedUser)
+      throw new NotFoundException('The followed user was not found');
+
+    const followingUser = await this.findOneByIdRaw(followingId);
+    if (!followingUser)
+      throw new NotFoundException(
+        'The user who made the request was not found',
+      );
+
+    if (!followingUser.following) {
+      followingUser.following = [];
+    }
+
+    followingUser.following.push(followedUser);
+
+    await this.updateUser(followingUser);
+  }
 }
