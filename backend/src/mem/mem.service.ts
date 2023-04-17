@@ -56,17 +56,35 @@ export class MemsService {
   }
 
   async getRelevantMems(userId: number) {
-    const user = await this.usersService.findOneByIdWithMems(userId);
+    const user =
+      await this.usersService.findOneByIdWithHeartedMemsAndWithFollowingUsers(
+        userId,
+      );
     if (!user) throw new NotFoundException('User was not found');
 
-    const mems = await this.memRepository
-      .createQueryBuilder('mem')
-      .leftJoinAndSelect('mem.owner', 'owner')
-      .where('mem.owner.id = :id', { id: userId })
-      .orderBy('mem.createdDate', 'DESC')
-      .leftJoinAndSelect('mem.heartedBy', 'heartedBy')
-      .limit(10)
-      .getMany();
+    let mems;
+
+    //if user  is not following anyone, return only the newest mems
+    if (user.following.length == 0) {
+      mems = await this.memRepository
+        .createQueryBuilder('mem')
+        .orderBy('mem.createdDate', 'DESC')
+        .leftJoinAndSelect('mem.owner', 'owner')
+        .leftJoinAndSelect('mem.heartedBy', 'heartedBy')
+        .limit(10)
+        .getMany();
+    } else {
+      mems = await this.memRepository
+        .createQueryBuilder('mem')
+        .leftJoinAndSelect('mem.owner', 'owner')
+        .where('mem.owner.id IN(:...ids)', {
+          ids: user.following.map((user) => user.id),
+        })
+        .orderBy('mem.createdDate', 'DESC')
+        .leftJoinAndSelect('mem.heartedBy', 'heartedBy')
+        .limit(10)
+        .getMany();
+    }
 
     const memsFe = [];
 

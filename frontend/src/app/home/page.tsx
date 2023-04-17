@@ -15,7 +15,7 @@ const getMems = async (): Promise<Mem[]> => {
     headers: {
       Authorization: `Bearer ${sessionData?.token}`,
     },
-    next: { revalidate: 0 },
+    next: { revalidate: 120 },
   });
   if (response.status !== 200) {
     console.log(response);

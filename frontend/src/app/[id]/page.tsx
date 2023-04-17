@@ -6,8 +6,16 @@ import { cookies } from "next/headers";
 import ProfileHeaderWrapper from "@/clientComponents/[id]/otherUsers/ProfileHeaderWrapper";
 
 interface GetProfileCallResponse {
-  user: User;
+  user: UserDataDto;
   isLoggedInUser: boolean;
+}
+
+export interface UserDataResponse extends User {
+  followedBy?: User[];
+}
+
+export interface UserDataDto extends User {
+  followedByCurrentUser: boolean;
 }
 
 async function getProfile(userId: number): Promise<GetProfileCallResponse> {
@@ -19,7 +27,7 @@ async function getProfile(userId: number): Promise<GetProfileCallResponse> {
   const id = jwtObject?.sub;
 
   const userResponse = await fetch(`http://localhost:8080/users/${userId}`, {
-    next: { revalidate: 0 },
+    next: { revalidate: 120 },
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -27,13 +35,26 @@ async function getProfile(userId: number): Promise<GetProfileCallResponse> {
   });
   if (userResponse.status !== 200)
     throw new Error("The profile fetch wasn't successful");
-  const userData = await userResponse.json();
+  const userData: UserDataResponse = await userResponse.json();
+
+  const isFollowedByCurrentUser =
+    id && userData.followedBy
+      ? userData.followedBy.find((user) => user.id === parseInt(id)) !==
+        undefined
+      : false;
+
+  delete userData.followedBy;
+
+  const userDataDto: UserDataDto = {
+    ...userData,
+    followedByCurrentUser: isFollowedByCurrentUser,
+  };
 
   let memsFetchUrl = `http://localhost:8080/mems/user/${userId}`;
   memsFetchUrl += id ? `?requestingUser=${id}` : "";
 
   const memsResponse = await fetch(memsFetchUrl, {
-    next: { revalidate: 0 },
+    next: { revalidate: 120 },
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -42,10 +63,10 @@ async function getProfile(userId: number): Promise<GetProfileCallResponse> {
   if (memsResponse.status !== 200)
     throw new Error("The user mems fetch wasn't successful");
 
-  userData.mems = await memsResponse.json();
+  userDataDto.mems = await memsResponse.json();
 
   return {
-    user: userData,
+    user: userDataDto,
     isLoggedInUser: id ? parseInt(id) == userId : false,
   };
 }
@@ -59,7 +80,11 @@ export default async function profile({ params }: { params: { id: number } }) {
       {isLoggedInUser ? (
         <UserInfoWrapper user={user} />
       ) : (
-        <ProfileHeaderWrapper username={user.username} id={user.id} />
+        <ProfileHeaderWrapper
+          username={user.username}
+          id={user.id}
+          isFollowedByCurrentUser={user.followedByCurrentUser}
+        />
       )}
 
       <div className="grow">

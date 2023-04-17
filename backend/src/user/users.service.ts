@@ -33,11 +33,27 @@ export class UsersService {
     return user;
   }
 
+  async findOneByIdWithHeartedMemsAndWithFollowingUsers(
+    id: number,
+  ): Promise<User> {
+    const user = await this.usersRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.heartedMems', 'heartedMems')
+      .leftJoinAndSelect('user.following', 'following')
+      .where('user.id = :id', { id })
+      .getOne();
+
+    return user;
+  }
+
   async findOneByIdWithAvatar(id: number): Promise<User> {
     const user = await this.usersRepository
       .createQueryBuilder('user')
       .where('user.id = :id', { id })
+      .leftJoinAndSelect('user.followedBy', 'followedBy')
       .getOne();
+
+    if (!user) throw new NotFoundException(`User with id ${id} was not found`);
 
     if (user.avatarImageKey) {
       const avatarImageUrl = await this.s3Service.retrieveImage(
@@ -53,6 +69,16 @@ export class UsersService {
     const user = await this.usersRepository
       .createQueryBuilder('user')
       .where('user.id = :id', { id })
+      .getOne();
+
+    return user;
+  }
+
+  async findOneByIdWithFollowingUsers(id: number): Promise<User> {
+    const user = await this.usersRepository
+      .createQueryBuilder('user')
+      .where('user.id = :id', { id })
+      .leftJoinAndSelect('user.following', 'following')
       .getOne();
 
     return user;
@@ -116,7 +142,7 @@ export class UsersService {
     if (!followedUser)
       throw new NotFoundException('The followed user was not found');
 
-    const followingUser = await this.findOneByIdRaw(followingId);
+    const followingUser = await this.findOneByIdWithFollowingUsers(followingId);
     if (!followingUser)
       throw new NotFoundException(
         'The user who made the request was not found',
@@ -126,7 +152,15 @@ export class UsersService {
       followingUser.following = [];
     }
 
-    followingUser.following.push(followedUser);
+    const filteredFollowingList = followingUser.following.filter(
+      (user) => user.id !== followedId,
+    );
+
+    if (filteredFollowingList.length == followingUser.following.length) {
+      followingUser.following.push(followedUser);
+    } else {
+      followingUser.following = filteredFollowingList;
+    }
 
     await this.updateUser(followingUser);
   }

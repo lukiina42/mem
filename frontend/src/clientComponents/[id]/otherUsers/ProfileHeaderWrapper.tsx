@@ -9,14 +9,20 @@ import { SessionProvider } from "next-auth/react";
 export default function ProfileHeaderWrapper({
   username,
   id,
+  isFollowedByCurrentUser,
 }: {
   username: string;
   id: number;
+  isFollowedByCurrentUser: boolean;
 }) {
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider>
-        <ProfileHeader username={username} id={id} />
+        <ProfileHeader
+          username={username}
+          id={id}
+          isFollowedByCurrentUser={isFollowedByCurrentUser}
+        />
       </SessionProvider>
     </QueryClientProvider>
   );
