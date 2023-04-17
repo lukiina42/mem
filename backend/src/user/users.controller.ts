@@ -6,7 +6,6 @@ import {
   Body,
   HttpCode,
   BadRequestException,
-  NotFoundException,
   ClassSerializerInterceptor,
   UseInterceptors,
   Put,
@@ -34,8 +33,6 @@ export class UsersController {
       return;
     }
     const user = await this.userService.findOneByIdWithAvatar(parsedId);
-
-    if (!user) throw new NotFoundException(`User with id ${id} was not found`);
     return user;
   }
 

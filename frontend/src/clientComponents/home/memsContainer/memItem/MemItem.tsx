@@ -6,6 +6,7 @@ import { BsFillTrashFill } from "react-icons/bs";
 import { User } from "next-auth";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import React from "react";
+import Link from "next/link";
 
 interface MemItemInterface {
   mem: Mem;
@@ -59,7 +60,11 @@ export default function MemItem({
       </div>
       <div className="flex flex-col gap-1 grow">
         <div className="flex justify-between">
-          <div className="font-bold text-lg">{mem.owner.username}</div>
+          <Link href={`/${mem.owner.id}`}>
+            <div className="font-bold text-lg hover:underline">
+              {mem.owner.username}
+            </div>
+          </Link>
           <div className="flex gap-2 items-center">
             <div className="text-sm">{mem.lastUpdated}</div>
             {user?.name === mem.owner.username && (
