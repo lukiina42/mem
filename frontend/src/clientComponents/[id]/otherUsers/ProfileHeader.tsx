@@ -1,5 +1,5 @@
 "use client";
-import { followUser } from "@/clientApi/userApi";
+import { followUser } from "@/clientApiCalls/userApi";
 import { displayToast } from "@/utilComponents/toast";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";

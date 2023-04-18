@@ -1,6 +1,6 @@
 "use client";
 
-import { updateAvatar } from "@/clientApi/userApi";
+import { updateAvatar } from "@/clientApiCalls/userApi";
 import ModalWrapper from "@/utilComponents/ModalWrapper";
 import { displayToast } from "@/utilComponents/toast";
 import { useSession } from "next-auth/react";
@@ -9,9 +9,9 @@ import { CgProfile } from "react-icons/cg";
 import { useMutation } from "react-query";
 import { useRouter } from "next/navigation";
 import ChangeAvatarForm from "./changeAvatarForm/ChangeAvatarForm";
-import { UserDataDto } from "@/app/[id]/page";
+import { UserData } from "@/app/[id]/page";
 
-export default function UserInfo({ user }: { user: UserDataDto }) {
+export default function UserInfo({ user }: { user: UserData }) {
   const [showProfileModal, setShowProfileModal] = React.useState(false);
   const [file, setFile] = React.useState<File | null>(null);
   const [imageDeleted, setImageDeleted] = React.useState(false);

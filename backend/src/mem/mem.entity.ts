@@ -1,3 +1,4 @@
+import { Comment } from 'src/comment/comment.entity';
 import { User } from 'src/user/user.entity';
 import {
   Entity,
@@ -7,6 +8,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToMany,
+  OneToMany,
 } from 'typeorm';
 
 @Entity()
@@ -36,4 +38,7 @@ export class Mem {
 
   @ManyToOne(() => User, (user) => user.mems)
   owner: User;
+
+  @OneToMany(() => Comment, (comment) => comment.mem)
+  comments: Comment[];
 }

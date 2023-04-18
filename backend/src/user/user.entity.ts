@@ -1,3 +1,4 @@
+import { Comment } from 'src/comment/comment.entity';
 import { Mem } from 'src/mem/mem.entity';
 import {
   Entity,
@@ -48,4 +49,7 @@ export class User {
 
   @ManyToMany(() => User, (user) => user.following)
   followedBy: User[];
+
+  @OneToMany(() => Comment, (comment) => comment.owner)
+  comments: Comment[];
 }

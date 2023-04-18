@@ -12,6 +12,8 @@ import { JwtService } from '@nestjs/jwt';
 import { Mem } from './mem/mem.entity';
 import { MemsModule } from './mem/mem.module';
 import { S3Service } from './s3/s3.service';
+import { CommentsModule } from './comment/comment.module';
+import { Comment } from './comment/comment.entity';
 
 @Module({
   imports: [
@@ -25,7 +27,7 @@ import { S3Service } from './s3/s3.service';
         username: configService.get<string>('DB_USER'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        entities: [User, Mem],
+        entities: [User, Mem, Comment],
         synchronize: true,
       }),
       inject: [ConfigService],
@@ -33,6 +35,7 @@ import { S3Service } from './s3/s3.service';
     UsersModule,
     MemsModule,
     AuthModule,
+    CommentsModule,
   ],
   controllers: [AppController],
   providers: [AppService, AuthService, UsersService, JwtService, S3Service],
