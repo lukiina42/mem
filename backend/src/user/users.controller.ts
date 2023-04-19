@@ -30,7 +30,7 @@ export class UsersController {
     try {
       parsedId = parseInt(id);
     } catch (error) {
-      return;
+      throw error;
     }
     const user = await this.userService.findOneByIdWithAvatar(parsedId);
     return user;

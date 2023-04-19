@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
+  Param,
   Post,
   Request,
   UseGuards,
@@ -29,5 +31,11 @@ export class CommentsController {
       memId,
       parentCommentId,
     );
+  }
+
+  @Get('/mem/:id')
+  @HttpCode(200)
+  async getMemComments(@Param('id') memId: string) {
+    return await this.commentsService.getMemComments(memId);
   }
 }

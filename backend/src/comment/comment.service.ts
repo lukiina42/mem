@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Comment } from './comment.entity';
-import { Repository } from 'typeorm';
+import { Repository, TreeRepository } from 'typeorm';
 import { UsersService } from 'src/user/users.service';
 import { MemsService } from 'src/mem/mem.service';
 
@@ -15,8 +15,9 @@ export class CommentsService {
     @InjectRepository(Comment)
     private readonly commentsRepository: Repository<Comment>,
     private readonly usersService: UsersService,
-    private readonly memsService: MemsService,
-  ) {}
+    private readonly memsService: MemsService, // @InjectRepository(Comment)
+  ) // private readonly commentTreeRepository: TreeRepository<Comment>
+  {}
 
   async findOneById(id: number): Promise<Comment> {
     return this.commentsRepository.findOneBy({ id });
@@ -65,5 +66,24 @@ export class CommentsService {
     }
     this.commentsRepository.save(comment);
     return;
+  }
+
+  async getMemComments(memId: string) {
+    let parsedMemId;
+    try {
+      parsedMemId = parseInt(memId);
+    } catch (exception) {
+      throw new BadRequestException(exception.message);
+    }
+    const mems = await this.commentsRepository
+      .createQueryBuilder('comment')
+      .where('comment.mem.id = :parsedMemId', { parsedMemId })
+      .orderBy('comment.createdDate', 'DESC')
+      .leftJoinAndSelect('comment.answers', 'answers')
+      .getMany();
+
+    console.log(mems);
+
+    return mems;
   }
 }

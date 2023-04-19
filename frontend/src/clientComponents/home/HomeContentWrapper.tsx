@@ -1,7 +1,7 @@
 "use client";
 
 import { SessionProvider } from "next-auth/react";
-import NewTweetForm from "./newTweetForm/NewTweetForm";
+import NewMemForm from "./newMemForm/NewMemForm";
 import { QueryClientProvider } from "react-query";
 import { queryClient } from "@/lib/queryClient";
 import { ToastContainer } from "react-toastify";
@@ -13,7 +13,7 @@ export default function HomeContentWrapper({ mems }: { mems: Mem[] }) {
     <SessionProvider>
       <QueryClientProvider client={queryClient}>
         <div className="w-full flex flex-col sticky bg-white top-0 border-b">
-          <NewTweetForm />
+          <NewMemForm />
         </div>
         <div className="w-full flex flex-col justify-center items-center pb-b">
           <MemsContainer mems={mems} />

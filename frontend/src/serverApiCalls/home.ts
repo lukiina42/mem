@@ -11,7 +11,7 @@ export const retrieveHomeMems = async () => {
     headers: {
       Authorization: `Bearer ${sessionData?.token}`,
     },
-    next: { revalidate: 120 },
+    next: { revalidate: 0 },
   });
   if (response.status !== 200) {
     throw new Error(`The fetch wasn't successful ${response.status}`);

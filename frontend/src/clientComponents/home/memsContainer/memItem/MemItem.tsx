@@ -5,8 +5,12 @@ import { CgProfile } from "react-icons/cg";
 import { BsFillTrashFill } from "react-icons/bs";
 import { User } from "next-auth";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
-import React from "react";
+import { FaRegComment } from "react-icons/fa";
+import { useState } from "react";
 import Link from "next/link";
+import MemComments from "./commentsModal/MemComments";
+import { QueryClientProvider } from "react-query";
+import { queryClient } from "@/lib/queryClient";
 
 interface MemItemInterface {
   mem: Mem;
@@ -23,7 +27,7 @@ export default function MemItem({
   displayBorder,
   handleHeartMem,
 }: MemItemInterface) {
-  const [heartChanged, setHeartChanged] = React.useState(false);
+  const [heartChanged, setHeartChanged] = useState(false);
 
   const isHearted = !heartChanged
     ? mem.heartedByCurrentUser
@@ -39,6 +43,8 @@ export default function MemItem({
     setHeartChanged(!heartChanged);
     handleHeartMem(id);
   };
+
+  const [commentsModalOpen, setCommentsModalOpen] = useState(false);
 
   return (
     <div
@@ -99,9 +105,20 @@ export default function MemItem({
               />
             )}
             <div className="font-bold text-xl">{amountOfHearts}</div>
+            <FaRegComment
+              onClick={() => setCommentsModalOpen(true)}
+              className="ml-4 hover:cursor-pointer"
+              size={25}
+            />
           </div>
         </div>
       </div>
+      {commentsModalOpen && (
+        <MemComments
+          memId={mem.id}
+          closeModal={() => setCommentsModalOpen(false)}
+        />
+      )}
     </div>
   );
 }

@@ -6,7 +6,7 @@ export const retrieveProfileInfo = async (userId: number) => {
   const loggedInUserId = sessionData?.sub;
 
   const userResponse = await fetch(`http://localhost:8080/users/${userId}`, {
-    next: { revalidate: 120 },
+    next: { revalidate: 0 },
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -30,11 +30,13 @@ export const retrieveProfileInfo = async (userId: number) => {
     followedByCurrentUser: isFollowedByCurrentUser,
   };
 
+  console.log(userDataDto);
+
   let memsFetchUrl = `http://localhost:8080/mems/user/${userId}`;
   memsFetchUrl += loggedInUserId ? `?requestingUser=${loggedInUserId}` : "";
 
   const memsResponse = await fetch(memsFetchUrl, {
-    next: { revalidate: 120 },
+    next: { revalidate: 0 },
     method: "GET",
     headers: {
       "Content-Type": "application/json",

@@ -7,6 +7,8 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
@@ -33,4 +35,10 @@ export class Comment {
 
   @ManyToOne(() => Comment, (comment) => comment.answers)
   parent: Comment;
+
+  @CreateDateColumn()
+  createdDate: Date;
+
+  @UpdateDateColumn()
+  updatedDate: Date;
 }

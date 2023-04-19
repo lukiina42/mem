@@ -13,6 +13,7 @@ interface ChangeAvatarFormProps {
   fileSelected: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleSaveAvatar: () => void;
   avatarImageUrl: string | undefined;
+  isLoading: boolean;
 }
 
 export default function ChangeAvatarForm(props: ChangeAvatarFormProps) {
@@ -24,6 +25,7 @@ export default function ChangeAvatarForm(props: ChangeAvatarFormProps) {
     fileSelected,
     handleSaveAvatar,
     avatarImageUrl,
+    isLoading,
   } = props;
   return (
     <div className="relative w-[350px] h-[350px] bg-white rounded-lg">
@@ -85,7 +87,11 @@ export default function ChangeAvatarForm(props: ChangeAvatarFormProps) {
           accept="image/*"
           className="hidden"
         ></input>
-        <button onClick={handleSaveAvatar} className="basic-button w-[4rem]">
+        <button
+          disabled={isLoading}
+          onClick={handleSaveAvatar}
+          className="basic-button w-[4rem]"
+        >
           Save
         </button>
       </div>

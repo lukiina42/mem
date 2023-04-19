@@ -38,7 +38,10 @@ export default function UserInfo({ user }: { user: UserData }) {
       );
       setFile(null);
       setShowProfileModal(false);
-      router.refresh();
+      //revalidate the route to trigger refresh
+      fetch(
+        `/api/revalidate?secret=${process.env.REVALIDATION_TOKEN}&id=${user.id}`
+      );
     },
     onError: () => {
       displayToast(
@@ -102,6 +105,7 @@ export default function UserInfo({ user }: { user: UserData }) {
             fileSelected={fileSelected}
             handleSaveAvatar={handleSaveAvatar}
             avatarImageUrl={user.avatarImageUrl}
+            isLoading={updateAvatarMutation.isLoading}
           />
         </ModalWrapper>
       )}
