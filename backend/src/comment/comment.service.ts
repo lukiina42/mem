@@ -5,9 +5,17 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Comment } from './comment.entity';
-import { Repository, TreeRepository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { UsersService } from 'src/user/users.service';
 import { MemsService } from 'src/mem/mem.service';
+
+export interface CommentsDto {
+  id: number;
+  content: string;
+  parent_id: null | number;
+  created_date: Date;
+  answers?: CommentsDto[];
+}
 
 @Injectable()
 export class CommentsService {
@@ -15,9 +23,8 @@ export class CommentsService {
     @InjectRepository(Comment)
     private readonly commentsRepository: Repository<Comment>,
     private readonly usersService: UsersService,
-    private readonly memsService: MemsService, // @InjectRepository(Comment)
-  ) // private readonly commentTreeRepository: TreeRepository<Comment>
-  {}
+    private readonly memsService: MemsService,
+  ) {}
 
   async findOneById(id: number): Promise<Comment> {
     return this.commentsRepository.findOneBy({ id });
@@ -75,15 +82,43 @@ export class CommentsService {
     } catch (exception) {
       throw new BadRequestException(exception.message);
     }
-    const mems = await this.commentsRepository
-      .createQueryBuilder('comment')
-      .where('comment.mem.id = :parsedMemId', { parsedMemId })
-      .orderBy('comment.createdDate', 'DESC')
-      .leftJoinAndSelect('comment.answers', 'answers')
-      .getMany();
 
-    console.log(mems);
+    const comments: CommentsDto[] = await this.commentsRepository.query(
+      `WITH RECURSIVE comments_tree AS (
+      -- Base case: select top-level comments for the post
+      SELECT id, content, parent_id, created_date, owner_id FROM comment
+      WHERE mem_id = $1
+        AND parent_id IS NULL
+      UNION ALL
+      -- Recursive case: select answers for each comment in the previous level
+      SELECT c.id, c.content, c.parent_id, c.created_date, c.owner_id
+      FROM comment c
+      JOIN comments_tree ct ON ct.id = c.parent_id
+    )
+    SELECT * FROM comments_tree ORDER BY parent_id DESC;`,
+      [parsedMemId],
+    );
 
-    return mems;
+    //n^2 complexity, should limit the amount of comments to fetch. If this total ripoff of an app would have more users that is :)))))))))))))))))))))))))
+    const commentsArrayDto: CommentsDto[] = [];
+    for (let i = 0; i < comments.length; i++) {
+      const comment = comments[i];
+      if (!comment.parent_id) {
+        commentsArrayDto.push(comment);
+      } else {
+        const parentComment = this.findCommentWithId(
+          comments,
+          comment.parent_id,
+        );
+        if (!parentComment.answers) parentComment.answers = [];
+        parentComment.answers.push(comment);
+      }
+    }
+
+    return commentsArrayDto;
+  }
+
+  findCommentWithId(comments: CommentsDto[], id) {
+    return comments.find((comment) => comment.id === id);
   }
 }
