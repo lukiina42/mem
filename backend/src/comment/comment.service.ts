@@ -8,13 +8,26 @@ import { Comment } from './comment.entity';
 import { Repository } from 'typeorm';
 import { UsersService } from 'src/user/users.service';
 import { MemsService } from 'src/mem/mem.service';
+import { mapCommentDbToCommentDto } from 'src/mapper/commentMapper';
 
-export interface CommentsDto {
+export interface CommentDb {
   id: number;
   content: string;
   parent_id: null | number;
+  owner_id: number;
   created_date: Date;
-  answers?: CommentsDto[];
+  username: string;
+  answers?: CommentDb[];
+}
+
+export interface CommentDto {
+  id: number;
+  parentId: number;
+  content: string;
+  createdDate: Date;
+  ownerUsername: string;
+  ownerId: number;
+  answers?: CommentDto[];
 }
 
 @Injectable()
@@ -36,6 +49,7 @@ export class CommentsService {
     memId: string,
     parentCommentId: string,
   ) {
+    console.log(memId);
     if (!content) throw new BadRequestException('Comment must contain text');
     const user = await this.usersService.findOneByIdRaw(ownerId);
     if (!user)
@@ -83,32 +97,37 @@ export class CommentsService {
       throw new BadRequestException(exception.message);
     }
 
-    const comments: CommentsDto[] = await this.commentsRepository.query(
+    const comments: CommentDb[] = await this.commentsRepository.query(
       `WITH RECURSIVE comments_tree AS (
       -- Base case: select top-level comments for the post
-      SELECT id, content, parent_id, created_date, owner_id FROM comment
-      WHERE mem_id = $1
-        AND parent_id IS NULL
+      SELECT c.id, c.content, c.parent_id, c.created_date, u.username, c.owner_id FROM comment c INNER JOIN "user" u ON c.owner_id = u.id
+      WHERE c.mem_id = $1
+        AND c.parent_id IS NULL
       UNION ALL
       -- Recursive case: select answers for each comment in the previous level
-      SELECT c.id, c.content, c.parent_id, c.created_date, c.owner_id
+      SELECT c.id, c.content, c.parent_id, c.created_date, u.username, c.owner_id
       FROM comment c
+      INNER JOIN "user" u ON c.owner_id = u.id
       JOIN comments_tree ct ON ct.id = c.parent_id
     )
     SELECT * FROM comments_tree ORDER BY parent_id DESC;`,
       [parsedMemId],
     );
 
+    const commentsDto = comments.map((comment) =>
+      mapCommentDbToCommentDto(comment),
+    );
+
     //n^2 complexity, should limit the amount of comments to fetch. If this total ripoff of an app would have more users that is :)))))))))))))))))))))))))
-    const commentsArrayDto: CommentsDto[] = [];
-    for (let i = 0; i < comments.length; i++) {
-      const comment = comments[i];
-      if (!comment.parent_id) {
+    const commentsArrayDto: CommentDto[] = [];
+    for (let i = 0; i < commentsDto.length; i++) {
+      const comment = commentsDto[i];
+      if (!comment.parentId) {
         commentsArrayDto.push(comment);
       } else {
         const parentComment = this.findCommentWithId(
-          comments,
-          comment.parent_id,
+          commentsDto,
+          comment.parentId,
         );
         if (!parentComment.answers) parentComment.answers = [];
         parentComment.answers.push(comment);
@@ -118,7 +137,7 @@ export class CommentsService {
     return commentsArrayDto;
   }
 
-  findCommentWithId(comments: CommentsDto[], id) {
+  findCommentWithId(comments: CommentDto[], id: number) {
     return comments.find((comment) => comment.id === id);
   }
 }

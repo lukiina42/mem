@@ -6,50 +6,30 @@ import { BsFillTrashFill } from "react-icons/bs";
 import { User } from "next-auth";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { FaRegComment } from "react-icons/fa";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import Link from "next/link";
-import MemComments from "./commentsModal/MemComments";
-import { QueryClientProvider } from "react-query";
-import { queryClient } from "@/lib/queryClient";
 
 interface MemItemInterface {
   mem: Mem;
-  user: User | undefined;
+  isOwnedByCurrentUser: boolean;
   handleDeleteMemClick: (id: number) => void;
-  displayBorder: boolean;
-  handleHeartMem: (memId: number) => void;
+  handleHeartClick: (memId: number) => void;
+  setCommentsModal?: Dispatch<SetStateAction<boolean>>;
+  isHearted: boolean;
+  amountOfHearts: number;
 }
 
 export default function MemItem({
   mem,
-  user,
+  isOwnedByCurrentUser,
   handleDeleteMemClick,
-  displayBorder,
-  handleHeartMem,
+  handleHeartClick,
+  setCommentsModal,
+  isHearted,
+  amountOfHearts,
 }: MemItemInterface) {
-  const [heartChanged, setHeartChanged] = useState(false);
-
-  const isHearted = !heartChanged
-    ? mem.heartedByCurrentUser
-    : !mem.heartedByCurrentUser;
-
-  const amountOfHearts = !heartChanged
-    ? mem.heartedBy.length
-    : mem.heartedByCurrentUser
-    ? mem.heartedBy.length - 1
-    : mem.heartedBy.length + 1;
-
-  const handleHeartClick = (id: number) => {
-    setHeartChanged(!heartChanged);
-    handleHeartMem(id);
-  };
-
-  const [commentsModalOpen, setCommentsModalOpen] = useState(false);
-
   return (
-    <div
-      className={`w-full flex mt-3 pb-3 pr-2 ${displayBorder && "border-b"}`}
-    >
+    <>
       <div className="min-w-[4rem] flex justify-center mt-2">
         {mem.owner.avatarImageUrl ? (
           <img // eslint-disable-line @next/next/no-img-element
@@ -73,7 +53,7 @@ export default function MemItem({
           </Link>
           <div className="flex gap-2 items-center">
             <div className="text-sm">{mem.lastUpdated}</div>
-            {user?.name === mem.owner.username && (
+            {isOwnedByCurrentUser && (
               <BsFillTrashFill
                 size={30}
                 className="text-red-500 p-1 rounded-full hover:bg-gray-200 duration-150 transition-all hover:cursor-pointer"
@@ -105,20 +85,16 @@ export default function MemItem({
               />
             )}
             <div className="font-bold text-xl">{amountOfHearts}</div>
-            <FaRegComment
-              onClick={() => setCommentsModalOpen(true)}
-              className="ml-4 hover:cursor-pointer"
-              size={25}
-            />
+            {setCommentsModal && (
+              <FaRegComment
+                onClick={() => setCommentsModal(true)}
+                className="ml-4 hover:cursor-pointer"
+                size={25}
+              />
+            )}
           </div>
         </div>
       </div>
-      {commentsModalOpen && (
-        <MemComments
-          memId={mem.id}
-          closeModal={() => setCommentsModalOpen(false)}
-        />
-      )}
-    </div>
+    </>
   );
 }

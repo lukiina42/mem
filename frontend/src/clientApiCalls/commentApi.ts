@@ -1,0 +1,50 @@
+import { Comment } from "@/types/comment";
+import {
+  handleError,
+  handleResponseWithJson,
+  handleResponseWithoutJson,
+} from "./apiUtils";
+
+export const getComments = (variables: {
+  memId: number;
+}): Promise<Comment[]> => {
+  return fetch(`http://localhost:8080/comments/mem/${variables.memId}`, {
+    method: "GET",
+    headers: {
+      "Content-type": "application/json",
+    },
+  })
+    .then((response) => handleResponseWithJson(response, 200))
+    .catch(handleError);
+};
+
+export const createComment = (variables: {
+  content: string;
+  memParentId?: number;
+  commentParentId?: number;
+  token: string;
+}): Promise<string | void> => {
+  const isRoot = variables.memParentId ? true : false;
+
+  const body = isRoot
+    ? {
+        content: variables.content,
+        parentMemId: variables.memParentId,
+      }
+    : {
+        content: variables.content,
+        commentParentId: variables.commentParentId,
+      };
+
+  return fetch(`http://localhost:8080/comments/create`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${variables.token}`,
+      "Content-type": "application/json",
+    },
+
+    body: JSON.stringify(body),
+  })
+    .then((response) => handleResponseWithoutJson(response, 204))
+    .catch(handleError);
+};

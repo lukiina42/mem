@@ -9,6 +9,7 @@ import ConfirmationModal from "@/utilComponents/ConfirmationModal";
 import React from "react";
 import MemItem from "./memItem/MemItem";
 import { displayToast } from "@/utilComponents/toast";
+import MemItemWrapper from "./memItem/MemItemWrapper";
 
 export default function MemsContainer({ mems }: { mems: Mem[] }) {
   const user = useSession().data?.user;
@@ -59,8 +60,9 @@ export default function MemsContainer({ mems }: { mems: Mem[] }) {
     },
   });
 
-  const handleHeartMem = (memId: number) => {
+  const handleHeartMemRequest = (memId: number) => {
     //optimistic update here
+    console.log(memId);
     heartMemMutation.mutate({ memId, token: user!.token });
   };
 
@@ -78,13 +80,13 @@ export default function MemsContainer({ mems }: { mems: Mem[] }) {
       )}
       {mems.map((mem, i) => {
         return (
-          <MemItem
+          <MemItemWrapper
             key={mem.id}
             mem={mem}
             user={user}
             handleDeleteMemClick={handleDeleteMemClick}
             displayBorder={i !== mems.length - 1}
-            handleHeartMem={handleHeartMem}
+            handleHeartMemRequest={handleHeartMemRequest}
           />
         );
       })}

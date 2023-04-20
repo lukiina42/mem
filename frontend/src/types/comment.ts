@@ -1,7 +1,9 @@
 export interface Comment {
   id: number;
-  parent_id: number;
+  parentId: number;
   content: string;
-  created_date: Date;
+  createdDate: Date;
+  ownerUsername: string;
+  ownerId: number;
   answers: Comment[];
 }
