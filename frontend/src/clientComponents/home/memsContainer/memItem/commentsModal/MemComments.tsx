@@ -67,7 +67,7 @@ export default function MemComments({
                     user={user}
                   />
                 )}
-                <div className="mt-2 flex flex-col gap-1 ml-16">
+                <div className="mt-2 flex flex-col ml-16">
                   {data?.map((comment) => {
                     return (
                       <RecursiveComment
