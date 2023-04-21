@@ -33,7 +33,7 @@ export const createComment = (variables: {
       }
     : {
         content: variables.content,
-        commentParentId: variables.commentParentId,
+        parentCommentId: variables.commentParentId,
       };
 
   return fetch(`http://localhost:8080/comments/create`, {

@@ -3,7 +3,6 @@
 import { Mem } from "@/types/mem";
 import { CgProfile } from "react-icons/cg";
 import { BsFillTrashFill } from "react-icons/bs";
-import { User } from "next-auth";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { FaRegComment } from "react-icons/fa";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -17,6 +16,7 @@ interface MemItemInterface {
   setCommentsModal?: Dispatch<SetStateAction<boolean>>;
   isHearted: boolean;
   amountOfHearts: number;
+  imgMaxH?: number;
 }
 
 export default function MemItem({
@@ -27,6 +27,7 @@ export default function MemItem({
   setCommentsModal,
   isHearted,
   amountOfHearts,
+  imgMaxH,
 }: MemItemInterface) {
   return (
     <>
@@ -68,6 +69,7 @@ export default function MemItem({
           src={mem.imageUrl}
           alt="Some mem idk"
           className="w-fit max-w-[100%]"
+          style={{ maxHeight: imgMaxH ? `${imgMaxH}px` : "auto" }}
         />
         <div className="w-full h-8 flex mt-1">
           <div className="flex gap-1 items-center">

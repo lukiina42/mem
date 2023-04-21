@@ -4,12 +4,13 @@ import { getComments } from "@/clientApiCalls/commentApi";
 import { Mem } from "@/types/mem";
 import LoadingSpinner from "@/utilComponents/Loading";
 import ModalWrapper from "@/utilComponents/ModalWrapper";
-import Link from "next/link";
+import { useState } from "react";
 import { useQuery } from "react-query";
 import MemItem from "../MemItem";
 import RecursiveComment from "./recursiveComment/RecursiveComment";
 import NewCommentForm from "./newCommentForm/NewCommentForm";
 import { User } from "next-auth";
+import { Comment } from "@/types/comment";
 
 interface MemCommentsProps {
   mem: Mem;
@@ -36,53 +37,62 @@ export default function MemComments({
     getComments({ memId: mem.id })
   );
 
+  const [replyComment, setReplyComment] = useState<null | Comment>(null);
+
   return (
     <ModalWrapper closeModal={closeModal}>
       <div className="h-[90vh] w-[80vw] min-w-[260px] min-h-[260px] max-w-[800px] bg-white flex">
-        {isLoading ? (
-          <div className="h-full w-full flex justify justify-center items-center">
-            <LoadingSpinner />
+        <div className="w-full flex flex-col gap-2">
+          <div className={`w-full flex mt-3 pb-3 pr-2 border-b`}>
+            <MemItem
+              key={mem.id}
+              mem={mem}
+              handleDeleteMemClick={handleDeleteMemClick}
+              handleHeartClick={handleHeartClick}
+              isHearted={isHearted}
+              amountOfHearts={amountOfHearts}
+              isOwnedByCurrentUser={isOwnedByCurrentUser}
+              imgMaxH={240}
+            />
           </div>
-        ) : (
-          <div className="w-full flex flex-col gap-1">
-            <div className={`w-full flex mt-3 pb-3 pr-2 border-b`}>
-              <MemItem
-                key={mem.id}
-                mem={mem}
-                handleDeleteMemClick={handleDeleteMemClick}
-                handleHeartClick={handleHeartClick}
-                isHearted={isHearted}
-                amountOfHearts={amountOfHearts}
-                isOwnedByCurrentUser={isOwnedByCurrentUser}
-              />
+          {isLoading ? (
+            <div className="h-full w-full flex justify justify-center items-center">
+              <LoadingSpinner />
             </div>
-            {data?.length == 0 ? (
-              <div>Nothing in here lulw</div>
-            ) : (
-              <>
-                {user && (
-                  <NewCommentForm
-                    memId={mem.id}
-                    refetch={refetch}
-                    user={user}
-                  />
-                )}
-                <div className="mt-2 flex flex-col ml-16">
-                  {data?.map((comment) => {
+          ) : (
+            <>
+              {user && (
+                <NewCommentForm
+                  replyComment={replyComment}
+                  memId={mem.id}
+                  refetch={refetch}
+                  user={user}
+                  setReplyComment={setReplyComment}
+                />
+              )}
+
+              <div className="flex flex-col mb-4 ml-16 overflow-y-auto">
+                {data?.length == 0 ? (
+                  <div>No comments yet!</div>
+                ) : (
+                  data?.map((comment, i) => {
                     return (
                       <RecursiveComment
                         key={comment.id}
                         isRoot={true}
                         comment={comment}
                         marginLeft={0}
+                        isFirst={i == 0}
+                        setReplyComment={setReplyComment}
+                        replyComment={replyComment}
                       />
                     );
-                  })}
-                </div>
-              </>
-            )}
-          </div>
-        )}
+                  })
+                )}
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </ModalWrapper>
   );
