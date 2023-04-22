@@ -110,7 +110,7 @@ export class CommentsService {
       INNER JOIN "user" u ON c.owner_id = u.id
       JOIN comments_tree ct ON ct.id = c.parent_id
     )
-    SELECT * FROM comments_tree ORDER BY parent_id DESC;`,
+    SELECT * FROM comments_tree ORDER BY created_date DESC;`,
       [parsedMemId],
     );
 

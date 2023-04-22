@@ -41,7 +41,7 @@ export class MemsController {
     @Request() req: JWTReqUser,
     @UploadedFile() image: Express.Multer.File,
   ) {
-    return await this.memService.createMem(image, content, req.user.email);
+    return await this.memService.createMem(req.user.email, image, content);
   }
 
   @Get('/user/:id')

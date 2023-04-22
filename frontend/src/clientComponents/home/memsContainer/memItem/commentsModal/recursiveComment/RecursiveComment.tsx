@@ -61,10 +61,13 @@ export default function RecursiveComment(props: RecursiveCommentProps) {
             </div>
             <BsReply
               size={20}
-              className="mt-2 hover:cursor-pointer"
+              className={`${isRoot && !isFirst && "mt-2"} hover:cursor-pointer`}
               onClick={() => setReplyComment(comment)}
             />
-            <AiOutlineHeart size={20} className="mt-2" />
+            <AiOutlineHeart
+              size={20}
+              className={`${isRoot && !isFirst && "mt-2"} hover:cursor-pointer`}
+            />
           </div>
         </div>
       </div>

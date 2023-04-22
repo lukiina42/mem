@@ -12,7 +12,7 @@ export default function HomeContentWrapper({ mems }: { mems: Mem[] }) {
   return (
     <SessionProvider>
       <QueryClientProvider client={queryClient}>
-        <div className="w-full flex flex-col sticky bg-white top-0 border-b">
+        <div className="w-full flex flex-col bg-white top-0 border-b">
           <NewMemForm />
         </div>
         <div className="w-full flex flex-col justify-center items-center pb-b">

@@ -7,7 +7,6 @@ import { deleteMem, heartMem } from "@/clientApiCalls/memApi";
 import { useRouter } from "next/navigation";
 import ConfirmationModal from "@/utilComponents/ConfirmationModal";
 import React from "react";
-import MemItem from "./memItem/MemItem";
 import { displayToast } from "@/utilComponents/toast";
 import MemItemWrapper from "./memItem/MemItemWrapper";
 
@@ -62,7 +61,6 @@ export default function MemsContainer({ mems }: { mems: Mem[] }) {
 
   const handleHeartMemRequest = (memId: number) => {
     //optimistic update here
-    console.log(memId);
     heartMemMutation.mutate({ memId, token: user!.token });
   };
 

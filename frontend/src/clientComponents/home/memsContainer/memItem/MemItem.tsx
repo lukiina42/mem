@@ -65,12 +65,14 @@ export default function MemItem({
         </div>
         <div>{mem.content}</div>
         {/* dunno if I should have some min w here, small pictures are kinda small ngl xd */}
-        <img // eslint-disable-line @next/next/no-img-element
-          src={mem.imageUrl}
-          alt="Some mem idk"
-          className="w-fit max-w-[100%]"
-          style={{ maxHeight: imgMaxH ? `${imgMaxH}px` : "auto" }}
-        />
+        {mem.imageUrl && (
+          <img // eslint-disable-line @next/next/no-img-element
+            src={mem.imageUrl}
+            alt="Some mem idk"
+            className="w-fit max-w-[100%]"
+            style={{ maxHeight: imgMaxH ? `${imgMaxH}px` : "auto" }}
+          />
+        )}
         <div className="w-full h-8 flex mt-1">
           <div className="flex gap-1 items-center">
             {isHearted ? (

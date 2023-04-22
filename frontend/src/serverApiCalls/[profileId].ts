@@ -12,6 +12,7 @@ export const retrieveProfileInfo = async (userId: number) => {
       "Content-Type": "application/json",
     },
   });
+
   if (userResponse.status !== 200)
     throw new Error("The profile fetch wasn't successful");
   const userData: UserDataDto = await userResponse.json();
@@ -29,8 +30,6 @@ export const retrieveProfileInfo = async (userId: number) => {
     ...userData,
     followedByCurrentUser: isFollowedByCurrentUser,
   };
-
-  console.log(userDataDto);
 
   let memsFetchUrl = `http://localhost:8080/mems/user/${userId}`;
   memsFetchUrl += loggedInUserId ? `?requestingUser=${loggedInUserId}` : "";

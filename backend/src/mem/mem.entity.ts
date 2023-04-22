@@ -13,9 +13,11 @@ import {
 
 @Entity()
 export class Mem {
-  constructor(content: string, imageKey: string) {
+  constructor(content: string, imageKey?: string) {
     this.content = content;
-    this.imageKey = imageKey;
+    if (imageKey) {
+      this.imageKey = imageKey;
+    }
   }
 
   @PrimaryGeneratedColumn()
@@ -24,7 +26,7 @@ export class Mem {
   @Column()
   content: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: true })
   imageKey: string;
 
   @CreateDateColumn()
@@ -39,6 +41,8 @@ export class Mem {
   @ManyToOne(() => User, (user) => user.mems)
   owner: User;
 
-  @OneToMany(() => Comment, (comment) => comment.mem)
+  @OneToMany(() => Comment, (comment) => comment.mem, {
+    cascade: ['remove'],
+  })
   comments: Comment[];
 }
