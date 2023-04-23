@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { CgClose } from "react-icons/cg";
 import { useMutation } from "react-query";
 
-import { createUser } from "@/clientApi/userApi";
+import { createUser } from "@/clientApiCalls/userApi";
 import InputError from "../helper/InputError";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

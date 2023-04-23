@@ -22,6 +22,16 @@ export class UsersService {
     await this.usersRepository.save(user);
   }
 
+  async findOneByIdWithHeartedMems(id: number): Promise<User> {
+    const user = await this.usersRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.heartedMems', 'heartedMems')
+      .where('user.id = :id', { id })
+      .getOne();
+
+    return user;
+  }
+
   async findOneByIdWithMems(id: number): Promise<User> {
     const user = await this.usersRepository
       .createQueryBuilder('user')

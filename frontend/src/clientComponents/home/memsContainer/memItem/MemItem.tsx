@@ -3,47 +3,34 @@
 import { Mem } from "@/types/mem";
 import { CgProfile } from "react-icons/cg";
 import { BsFillTrashFill } from "react-icons/bs";
-import { User } from "next-auth";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
-import React from "react";
+import { FaRegComment } from "react-icons/fa";
+import { Dispatch, SetStateAction, useState } from "react";
 import Link from "next/link";
 
 interface MemItemInterface {
   mem: Mem;
-  user: User | undefined;
+  isOwnedByCurrentUser: boolean;
   handleDeleteMemClick: (id: number) => void;
-  displayBorder: boolean;
-  handleHeartMem: (memId: number) => void;
+  handleHeartClick: (memId: number) => void;
+  setCommentsModal?: Dispatch<SetStateAction<boolean>>;
+  isHearted: boolean;
+  amountOfHearts: number;
+  imgMaxH?: number;
 }
 
 export default function MemItem({
   mem,
-  user,
+  isOwnedByCurrentUser,
   handleDeleteMemClick,
-  displayBorder,
-  handleHeartMem,
+  handleHeartClick,
+  setCommentsModal,
+  isHearted,
+  amountOfHearts,
+  imgMaxH,
 }: MemItemInterface) {
-  const [heartChanged, setHeartChanged] = React.useState(false);
-
-  const isHearted = !heartChanged
-    ? mem.heartedByCurrentUser
-    : !mem.heartedByCurrentUser;
-
-  const amountOfHearts = !heartChanged
-    ? mem.heartedBy.length
-    : mem.heartedByCurrentUser
-    ? mem.heartedBy.length - 1
-    : mem.heartedBy.length + 1;
-
-  const handleHeartClick = (id: number) => {
-    setHeartChanged(!heartChanged);
-    handleHeartMem(id);
-  };
-
   return (
-    <div
-      className={`w-full flex mt-3 pb-3 pr-2 ${displayBorder && "border-b"}`}
-    >
+    <>
       <div className="min-w-[4rem] flex justify-center mt-2">
         {mem.owner.avatarImageUrl ? (
           <img // eslint-disable-line @next/next/no-img-element
@@ -67,7 +54,7 @@ export default function MemItem({
           </Link>
           <div className="flex gap-2 items-center">
             <div className="text-sm">{mem.lastUpdated}</div>
-            {user?.name === mem.owner.username && (
+            {isOwnedByCurrentUser && (
               <BsFillTrashFill
                 size={30}
                 className="text-red-500 p-1 rounded-full hover:bg-gray-200 duration-150 transition-all hover:cursor-pointer"
@@ -78,11 +65,14 @@ export default function MemItem({
         </div>
         <div>{mem.content}</div>
         {/* dunno if I should have some min w here, small pictures are kinda small ngl xd */}
-        <img // eslint-disable-line @next/next/no-img-element
-          src={mem.imageUrl}
-          alt="Some mem idk"
-          className="w-fit max-w-[100%]"
-        />
+        {mem.imageUrl && (
+          <img // eslint-disable-line @next/next/no-img-element
+            src={mem.imageUrl}
+            alt="Some mem idk"
+            className="w-fit max-w-[100%]"
+            style={{ maxHeight: imgMaxH ? `${imgMaxH}px` : "auto" }}
+          />
+        )}
         <div className="w-full h-8 flex mt-1">
           <div className="flex gap-1 items-center">
             {isHearted ? (
@@ -99,9 +89,16 @@ export default function MemItem({
               />
             )}
             <div className="font-bold text-xl">{amountOfHearts}</div>
+            {setCommentsModal && (
+              <FaRegComment
+                onClick={() => setCommentsModal(true)}
+                className="ml-4 hover:cursor-pointer"
+                size={25}
+              />
+            )}
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

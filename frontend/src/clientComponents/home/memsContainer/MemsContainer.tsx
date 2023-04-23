@@ -3,12 +3,12 @@
 import { Mem } from "@/types/mem";
 import { useSession } from "next-auth/react";
 import { useMutation } from "react-query";
-import { deleteMem, heartMem } from "@/clientApi/memApi";
+import { deleteMem, heartMem } from "@/clientApiCalls/memApi";
 import { useRouter } from "next/navigation";
 import ConfirmationModal from "@/utilComponents/ConfirmationModal";
 import React from "react";
-import MemItem from "./memItem/MemItem";
 import { displayToast } from "@/utilComponents/toast";
+import MemItemWrapper from "./memItem/MemItemWrapper";
 
 export default function MemsContainer({ mems }: { mems: Mem[] }) {
   const user = useSession().data?.user;
@@ -59,7 +59,7 @@ export default function MemsContainer({ mems }: { mems: Mem[] }) {
     },
   });
 
-  const handleHeartMem = (memId: number) => {
+  const handleHeartMemRequest = (memId: number) => {
     //optimistic update here
     heartMemMutation.mutate({ memId, token: user!.token });
   };
@@ -78,13 +78,13 @@ export default function MemsContainer({ mems }: { mems: Mem[] }) {
       )}
       {mems.map((mem, i) => {
         return (
-          <MemItem
+          <MemItemWrapper
             key={mem.id}
             mem={mem}
             user={user}
             handleDeleteMemClick={handleDeleteMemClick}
             displayBorder={i !== mems.length - 1}
-            handleHeartMem={handleHeartMem}
+            handleHeartMemRequest={handleHeartMemRequest}
           />
         );
       })}

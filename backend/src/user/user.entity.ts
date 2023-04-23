@@ -1,3 +1,4 @@
+import { Comment } from 'src/comment/comment.entity';
 import { Mem } from 'src/mem/mem.entity';
 import {
   Entity,
@@ -28,7 +29,7 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ default: '' })
+  @Column({ default: '', name: 'avatar_image_key' })
   avatarImageKey: string;
 
   avatarImageUrl?: string;
@@ -48,4 +49,7 @@ export class User {
 
   @ManyToMany(() => User, (user) => user.following)
   followedBy: User[];
+
+  @OneToMany(() => Comment, (comment) => comment.owner)
+  comments: Comment[];
 }

@@ -10,8 +10,9 @@ import { UsersService } from 'src/user/users.service';
 import { S3Service } from 'src/s3/s3.service';
 import { nanoid } from 'nanoid';
 import { User } from 'src/user/user.entity';
+import { mapMemsDbToDto } from 'src/mapper/memMapper';
 
-export interface MemFE extends Mem {
+export interface MemDto extends Mem {
   imageUrl?: string;
   heartedByCurrentUser?: boolean;
   hearts?: number;
@@ -31,23 +32,33 @@ export class MemsService {
   }
 
   async createMem(
-    image: Express.Multer.File,
-    content: string,
     userEmail: string,
+    image?: Express.Multer.File,
+    content?: string,
   ) {
+    if (!image && !content)
+      throw new BadRequestException(
+        'Either text content or image must be present!',
+      );
+
     const user = await this.usersService.findOneByEmail(userEmail);
 
-    const id = nanoid(40);
+    let newMem;
 
-    await this.s3Service.storeImage(image, id);
+    if (image) {
+      const id = nanoid(40);
 
-    // const sharp = await import('sharp');
+      await this.s3Service.storeImage(image, id);
 
-    // const buffer = await sharp(image.buffer)
-    //   .resize({ height: 1920, width: 1080, fit: 'contain' })
-    //   .toBuffer();
+      if (content) {
+        newMem = new Mem(content, id);
+      } else {
+        newMem = new Mem('', id);
+      }
+    } else {
+      newMem = new Mem(content);
+    }
 
-    const newMem = new Mem(content, id);
     newMem.owner = user;
 
     const mem = await this.memRepository.save(newMem);
@@ -71,7 +82,7 @@ export class MemsService {
         .orderBy('mem.createdDate', 'DESC')
         .leftJoinAndSelect('mem.owner', 'owner')
         .leftJoinAndSelect('mem.heartedBy', 'heartedBy')
-        .limit(10)
+        .take(10)
         .getMany();
     } else {
       mems = await this.memRepository
@@ -82,38 +93,11 @@ export class MemsService {
         })
         .orderBy('mem.createdDate', 'DESC')
         .leftJoinAndSelect('mem.heartedBy', 'heartedBy')
-        .limit(10)
+        .take(10)
         .getMany();
     }
 
-    const memsFe = [];
-
-    for (let i = 0; i < mems.length; i++) {
-      const mem: MemFE = mems[i];
-      const imageUrl = await this.s3Service.retrieveImage(mem.imageKey);
-      mem.imageUrl = imageUrl;
-
-      const userAvatarKey = mem.owner.avatarImageKey;
-      if (userAvatarKey) {
-        mem.owner.avatarImageUrl = await this.s3Service.retrieveImage(
-          userAvatarKey,
-        );
-      }
-
-      if (!user.heartedMems) {
-        mem.heartedByCurrentUser = false;
-      } else {
-        if (user.heartedMems.find((userMem) => mem.id === userMem.id)) {
-          mem.heartedByCurrentUser = true;
-        } else {
-          mem.heartedByCurrentUser = false;
-        }
-      }
-
-      memsFe.push(mem);
-    }
-
-    return memsFe;
+    return mapMemsDbToDto(mems, user, this.s3Service);
   }
 
   async getMemsOfUser(userId: string, requestingUserId: string) {
@@ -122,7 +106,7 @@ export class MemsService {
 
     let requestingUser: null | User = null;
     if (requestingUserId) {
-      requestingUser = await this.usersService.findOneByIdWithMems(
+      requestingUser = await this.usersService.findOneByIdWithHeartedMems(
         idOfRequestingUser,
       );
       if (!requestingUser) throw new NotFoundException('User was not found');
@@ -134,39 +118,10 @@ export class MemsService {
       .where('mem.owner.id = :id', { id })
       .orderBy('mem.createdDate', 'DESC')
       .leftJoinAndSelect('mem.heartedBy', 'heartedBy')
-      .limit(10)
+      .take(10)
       .getMany();
 
-    const memsFe = [];
-
-    for (let i = 0; i < mems.length; i++) {
-      const mem: MemFE = mems[i];
-      const imageUrl = await this.s3Service.retrieveImage(mem.imageKey);
-      mem.imageUrl = imageUrl;
-
-      const userAvatarKey = mem.owner.avatarImageKey;
-      if (userAvatarKey) {
-        mem.owner.avatarImageUrl = await this.s3Service.retrieveImage(
-          userAvatarKey,
-        );
-      }
-
-      if (!requestingUser || !requestingUser.heartedMems) {
-        mem.heartedByCurrentUser = false;
-      } else {
-        if (
-          requestingUser.heartedMems.find((userMem) => mem.id === userMem.id)
-        ) {
-          mem.heartedByCurrentUser = true;
-        } else {
-          mem.heartedByCurrentUser = false;
-        }
-      }
-
-      memsFe.push(mem);
-    }
-
-    return memsFe;
+    return mapMemsDbToDto(mems, requestingUser, this.s3Service);
   }
 
   async deleteMem(userId: number, id: string) {

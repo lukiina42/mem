@@ -5,7 +5,7 @@ import { useState } from "react";
 import { ImFilePicture } from "react-icons/im";
 import { GrClose } from "react-icons/gr";
 import { useMutation } from "react-query";
-import { createMem } from "@/clientApi/memApi";
+import { createMem } from "@/clientApiCalls/memApi";
 import { useSession } from "next-auth/react";
 import { User } from "next-auth";
 import LoadingSpinner from "@/utilComponents/Loading";
