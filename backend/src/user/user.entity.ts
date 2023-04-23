@@ -29,7 +29,7 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ default: '' })
+  @Column({ default: '', name: 'avatar_image_key' })
   avatarImageKey: string;
 
   avatarImageUrl?: string;

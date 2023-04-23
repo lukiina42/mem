@@ -6,4 +6,5 @@ export interface Comment {
   ownerUsername: string;
   ownerId: number;
   answers: Comment[];
+  ownerAvatarUrl: string;
 }

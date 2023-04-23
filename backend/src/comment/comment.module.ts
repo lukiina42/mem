@@ -5,11 +5,12 @@ import { Comment } from './comment.entity';
 import { CommentsController } from './comment.controller';
 import { UsersModule } from 'src/user/users.module';
 import { MemsModule } from 'src/mem/mem.module';
+import { S3Service } from 'src/s3/s3.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Comment]), UsersModule, MemsModule],
   exports: [TypeOrmModule, CommentsService],
-  providers: [CommentsService],
+  providers: [CommentsService, S3Service],
   controllers: [CommentsController],
 })
 export class CommentsModule {}

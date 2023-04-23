@@ -9,6 +9,7 @@ import { Repository } from 'typeorm';
 import { UsersService } from 'src/user/users.service';
 import { MemsService } from 'src/mem/mem.service';
 import { mapCommentDbToCommentDto } from 'src/mapper/commentMapper';
+import { S3Service } from 'src/s3/s3.service';
 
 export interface CommentDb {
   id: number;
@@ -18,6 +19,7 @@ export interface CommentDb {
   created_date: Date;
   username: string;
   answers?: CommentDb[];
+  avatar_image_key?: string;
 }
 
 export interface CommentDto {
@@ -28,6 +30,7 @@ export interface CommentDto {
   ownerUsername: string;
   ownerId: number;
   answers?: CommentDto[];
+  ownerAvatarUrl?: string;
 }
 
 @Injectable()
@@ -37,6 +40,7 @@ export class CommentsService {
     private readonly commentsRepository: Repository<Comment>,
     private readonly usersService: UsersService,
     private readonly memsService: MemsService,
+    private readonly s3Service: S3Service,
   ) {}
 
   async findOneById(id: number): Promise<Comment> {
@@ -100,12 +104,12 @@ export class CommentsService {
     const comments: CommentDb[] = await this.commentsRepository.query(
       `WITH RECURSIVE comments_tree AS (
       -- Base case: select top-level comments for the post
-      SELECT c.id, c.content, c.parent_id, c.created_date, u.username, c.owner_id FROM comment c INNER JOIN "user" u ON c.owner_id = u.id
+      SELECT c.id, c.content, c.parent_id, c.created_date, u.username, u.avatar_image_key, c.owner_id FROM comment c INNER JOIN "user" u ON c.owner_id = u.id
       WHERE c.mem_id = $1
         AND c.parent_id IS NULL
       UNION ALL
       -- Recursive case: select answers for each comment in the previous level
-      SELECT c.id, c.content, c.parent_id, c.created_date, u.username, c.owner_id
+      SELECT c.id, c.content, c.parent_id, c.created_date, u.username, u.avatar_image_key, c.owner_id
       FROM comment c
       INNER JOIN "user" u ON c.owner_id = u.id
       JOIN comments_tree ct ON ct.id = c.parent_id
@@ -114,8 +118,10 @@ export class CommentsService {
       [parsedMemId],
     );
 
-    const commentsDto = comments.map((comment) =>
-      mapCommentDbToCommentDto(comment),
+    const commentsDto = await Promise.all(
+      comments.map((comment) =>
+        mapCommentDbToCommentDto(comment, this.s3Service),
+      ),
     );
 
     //n^2 complexity, should limit the amount of comments to fetch. If this total ripoff of an app would have more users that is :)))))))))))))))))))))))))

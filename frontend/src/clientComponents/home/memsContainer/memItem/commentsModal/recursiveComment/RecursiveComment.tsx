@@ -4,6 +4,7 @@ import { Comment } from "@/types/comment";
 import { BsReply } from "react-icons/bs";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { SetStateAction, Dispatch } from "react";
+import { CgProfile } from "react-icons/cg";
 
 interface RecursiveCommentProps {
   comment: Comment;
@@ -32,11 +33,10 @@ export default function RecursiveComment(props: RecursiveCommentProps) {
   return (
     <>
       <div className="flex flex-col">
-        {!isRoot && <div className="h-1 border-l-[1px] w-full" />}
         <div className={`flex`}>
-          {leftDivsArray.map((item) => {
+          {leftDivsArray.map((item, index) => {
             return (
-              <div key={item} className="flex flex-col items-center w-4">
+              <div key={item} className={`flex flex-col items-center ml-5 w-4`}>
                 <>
                   <div
                     className={`h-1/2 w-full ${
@@ -49,25 +49,41 @@ export default function RecursiveComment(props: RecursiveCommentProps) {
             );
           })}
           <div className="flex gap-1 items-center">
-            <div
-              className={`w-fit flex items-start px-3 py-2 gap-2 ${
-                replyComment?.id === comment.id ? "bg-blue-100" : "bg-slate-100"
-              }  rounded-3xl ${isRoot && !isFirst && "mt-2"}`}
-            >
-              <div className="font-bold hover:cursor-pointer hover:underline">
-                {comment.ownerUsername}
+            {comment.ownerAvatarUrl ? (
+              <img // eslint-disable-line @next/next/no-img-element
+                className="w-[2.5rem] h-[2.5rem] rounded-full object-cover"
+                alt="submitted picture"
+                src={comment.ownerAvatarUrl}
+              />
+            ) : (
+              <CgProfile
+                size={40}
+                className="rounded-full bg-gray-400 p-1 text-gray-300"
+              />
+            )}
+            <div className="flex flex-col">
+              <div
+                className={`w-fit flex items-start px-3 py-2 gap-2 ${
+                  replyComment?.id === comment.id
+                    ? "bg-blue-100"
+                    : "bg-slate-100"
+                }  rounded-3xl ${isRoot && !isFirst && "mt-2"}`}
+              >
+                <div className="font-bold hover:cursor-pointer hover:underline">
+                  {comment.ownerUsername}
+                </div>
+                <div>{comment.content}</div>
               </div>
-              <div>{comment.content}</div>
+              <div className="flex gap-2 pb-1">
+                <div
+                  className="text-xs ml-4 hover:cursor-pointer hover:underline"
+                  onClick={() => setReplyComment(comment)}
+                >
+                  answer
+                </div>
+                <div className="text-xs">like</div>
+              </div>
             </div>
-            <BsReply
-              size={20}
-              className={`${isRoot && !isFirst && "mt-2"} hover:cursor-pointer`}
-              onClick={() => setReplyComment(comment)}
-            />
-            <AiOutlineHeart
-              size={20}
-              className={`${isRoot && !isFirst && "mt-2"} hover:cursor-pointer`}
-            />
           </div>
         </div>
       </div>
