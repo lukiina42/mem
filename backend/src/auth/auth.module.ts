@@ -8,6 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './jwt.strategy';
 import { S3Service } from 'src/s3/s3.service';
+import { AuthController } from './auth.controller';
 
 @Module({
   imports: [
@@ -28,5 +29,6 @@ import { S3Service } from 'src/s3/s3.service';
     S3Service,
   ],
   exports: [AuthService],
+  controllers: [AuthController],
 })
 export class AuthModule {}
