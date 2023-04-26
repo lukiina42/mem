@@ -9,12 +9,13 @@ export interface MemDto {
   imageUrl: string;
   heartedByCurrentUser: boolean;
   heartedBy: User[];
+  lastUpdateDate: string;
 }
 
 export interface Mem {
   content: string;
   id: number;
-  lastUpdated: string;
+  lastUpdateDate: string;
   owner: User;
   imageUrl: string;
   heartedByCurrentUser: boolean;

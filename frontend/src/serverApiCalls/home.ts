@@ -1,4 +1,4 @@
-import { Mem, MemDto } from "@/types/mem";
+import { Mem } from "@/types/mem";
 import { retrieveCookiesSession } from "./retrieveCookiesSession";
 
 export const retrieveHomeMems = async () => {
@@ -14,29 +14,15 @@ export const retrieveHomeMems = async () => {
   if (response.status !== 200) {
     throw new Error(`The fetch wasn't successful ${response.status}`);
   }
-  let memsBE: MemDto[] = await response.json();
-  let mems: Mem[] = memsBE.map((mem) => {
-    const createdTime = new Date(mem.createdDate);
-    const updatedTime = new Date(mem.updatedDate);
 
-    const time =
-      createdTime.getTime() == updatedTime.getTime()
-        ? createdTime
-        : updatedTime;
+  const {
+    mems,
+    isUserFollowingAnyone,
+  }: { mems: Mem[]; isUserFollowingAnyone: boolean } = await response.json();
 
-    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-    //todo use timeZone as a locale somehow
-    const formatedTime = new Intl.DateTimeFormat("cs-CZ", {
-      day: "numeric",
-      month: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-    }).format(time);
-    return {
-      ...mem,
-      lastUpdated: formatedTime,
-    };
-  });
-  return mems;
+  return {
+    mems,
+    isUserFollowingAnyone,
+    sessionToken: sessionData!.token,
+  };
 };

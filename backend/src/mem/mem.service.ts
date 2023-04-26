@@ -16,6 +16,7 @@ export interface MemDto extends Mem {
   imageUrl?: string;
   heartedByCurrentUser?: boolean;
   hearts?: number;
+  lastUpdateDate?: string;
 }
 
 @Injectable()
@@ -96,6 +97,27 @@ export class MemsService {
         .take(10)
         .getMany();
     }
+
+    return {
+      mems: await mapMemsDbToDto(mems, user, this.s3Service),
+      isUserFollowingAnyone: user.following.length > 0,
+    };
+  }
+
+  async getNewestMems(userId: number) {
+    const user =
+      await this.usersService.findOneByIdWithHeartedMemsAndWithFollowingUsers(
+        userId,
+      );
+    if (!user) throw new NotFoundException('User was not found');
+
+    const mems = await this.memRepository
+      .createQueryBuilder('mem')
+      .orderBy('mem.createdDate', 'DESC')
+      .leftJoinAndSelect('mem.owner', 'owner')
+      .leftJoinAndSelect('mem.heartedBy', 'heartedBy')
+      .take(10)
+      .getMany();
 
     return mapMemsDbToDto(mems, user, this.s3Service);
   }

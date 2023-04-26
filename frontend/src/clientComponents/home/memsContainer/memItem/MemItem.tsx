@@ -53,7 +53,7 @@ export default function MemItem({
             </div>
           </Link>
           <div className="flex gap-2 items-center">
-            <div className="text-sm">{mem.lastUpdated}</div>
+            <div className="text-sm">{mem.lastUpdateDate}</div>
             {isOwnedByCurrentUser && (
               <BsFillTrashFill
                 size={30}

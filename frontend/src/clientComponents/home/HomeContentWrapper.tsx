@@ -1,23 +1,27 @@
 "use client";
 
 import { SessionProvider } from "next-auth/react";
-import NewMemForm from "./newMemForm/NewMemForm";
 import { QueryClientProvider } from "react-query";
 import { queryClient } from "@/lib/queryClient";
 import { ToastContainer } from "react-toastify";
 import { Mem } from "@/types/mem";
-import MemsContainer from "./memsContainer/MemsContainer";
 
-export default function HomeContentWrapper({ mems }: { mems: Mem[] }) {
+import HomeContent from "./HomeContent";
+import { DefaultHomeProps } from "@/app/home/page";
+
+export default function HomeContentWrapper({
+  mems,
+  sessionToken,
+  isUserFollowingAnyone,
+}: DefaultHomeProps) {
   return (
     <SessionProvider>
       <QueryClientProvider client={queryClient}>
-        <div className="w-full flex flex-col bg-white top-0 border-b">
-          <NewMemForm />
-        </div>
-        <div className="w-full flex flex-col justify-center items-center pb-b">
-          <MemsContainer mems={mems} />
-        </div>
+        <HomeContent
+          mems={mems}
+          sessionToken={sessionToken}
+          isUserFollowingAnyone={isUserFollowingAnyone}
+        />
       </QueryClientProvider>
       <ToastContainer
         position="top-center"

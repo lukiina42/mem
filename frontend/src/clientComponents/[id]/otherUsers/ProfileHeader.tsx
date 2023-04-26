@@ -1,5 +1,6 @@
 "use client";
 import { followUser } from "@/clientApiCalls/userApi";
+import LoadingSpinner from "@/utilComponents/Loading";
 import { displayToast } from "@/utilComponents/toast";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -56,13 +57,15 @@ export default function ProfileHeader({
           className="relative mr-4 hover:cursor-pointer group"
           onClick={handleFollowClick}
         >
-          {isFollowedByCurrentUser ? (
+          {followUserMutation.isLoading ? (
+            <LoadingSpinner />
+          ) : isFollowedByCurrentUser ? (
             <SlUserUnfollow size={25} />
           ) : (
             <SlUserFollow size={25} />
           )}
 
-          <span className="sidebar-tooltip group-hover:scale-100 -left-[210%]">
+          <span className="tooltip group-hover:scale-100 right-full top-1/4">
             {isFollowedByCurrentUser ? "Unfollow" : "Follow"}
           </span>
         </div>

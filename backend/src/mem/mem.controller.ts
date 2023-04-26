@@ -59,6 +59,12 @@ export class MemsController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('/home/newest')
+  async getNewestMems(@Request() req: JWTReqUser) {
+    return await this.memService.getNewestMems(req.user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Delete('/delete/:id')
   @HttpCode(204)
   async deleteMem(@Request() req: JWTReqUser, @Param('id') id: string) {

@@ -27,7 +27,7 @@ export default function CustomLink({
         {name}
       </div>
       {children}
-      <span className="sidebar-tooltip group-hover:scale-100 @[200px]:hidden block">
+      <span className="tooltip group-hover:scale-100 left-[100%] @[200px]:hidden block">
         {name}
       </span>
     </Link>
