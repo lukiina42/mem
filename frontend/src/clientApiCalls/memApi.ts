@@ -1,3 +1,4 @@
+import { Mem } from "@/types/mem";
 import {
   handleError,
   handleResponseWithoutJson,
@@ -57,5 +58,17 @@ export const heartMem = (variables: {
     },
   })
     .then((response) => handleResponseWithoutJson(response, 204))
+    .catch(handleError);
+};
+
+export const getNewMems = (variables: { token: string }): Promise<Mem[]> => {
+  return fetch(`http://localhost:8080/mems/home/newest`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${variables.token}`,
+      "Content-type": "application/json",
+    },
+  })
+    .then((response) => handleResponseWithJson(response, 200))
     .catch(handleError);
 };

@@ -32,6 +32,26 @@ export const mapMemsDbToDto = async (
       }
     }
 
+    const createdTime = new Date(mem.createdDate);
+    const updatedTime = new Date(mem.updatedDate);
+
+    const time =
+      createdTime.getTime() == updatedTime.getTime()
+        ? createdTime
+        : updatedTime;
+
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    //todo use timeZone as a locale somehow
+    const formatedTime = new Intl.DateTimeFormat('cs-CZ', {
+      day: 'numeric',
+      month: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+    }).format(time);
+
+    mem.lastUpdateDate = formatedTime;
+
     memsFe.push(mem);
   }
 
