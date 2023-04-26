@@ -7,7 +7,7 @@
     @apply absolute w-auto p-2 m-2 min-w-max left-[100%] rounded-md shadow-md
     text-white bg-gray-900
     font-bold 
-    transition-all duration-150 scale-0 origin-left;
+    transition-all duration-150 scale-0 origin-left z-50;
   }
 
   .basic-button {

@@ -18,7 +18,6 @@ export default function ProfileOptionsMenu({
 }) {
   const signedIn = user !== null;
 
-  console.log(user);
   return (
     <div
       className={`absolute -top-[80%] left-[105%] bg-base-100 w-56 border-[2px] bg-white border-slate-200 shadow-lg rounded-lg flex flex-col justify-evenly`}
@@ -46,12 +45,21 @@ export default function ProfileOptionsMenu({
         </>
       ) : (
         <>
+          {user?.name?.length && user.name.length > 14 && (
+            <div className="font-bold rounded-t-lg border-blue-500 w-full text-center py-2">
+              {user?.name}
+            </div>
+          )}
           <div
             onClick={() => {
               redirect!(`/${user.id}`);
               setShowMenu!(false);
             }}
-            className="font-bold rounded-t-lg w-full text-center hover:cursor-pointer hover:bg-blue-300 py-2 transition-all duration-200"
+            className={`font-bold w-full text-center border-t ${
+              user?.name?.length && user.name.length > 14
+                ? "border-t rounded-t-none"
+                : "rounded-t-lg"
+            } border-b hover:cursor-pointer hover:bg-blue-300 py-2 transition-all duration-200`}
           >
             Profile
           </div>

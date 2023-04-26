@@ -5,6 +5,7 @@ import { BsReply } from "react-icons/bs";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { SetStateAction, Dispatch } from "react";
 import { CgProfile } from "react-icons/cg";
+import Link from "next/link";
 
 interface RecursiveCommentProps {
   comment: Comment;
@@ -36,7 +37,10 @@ export default function RecursiveComment(props: RecursiveCommentProps) {
         <div className={`flex`}>
           {leftDivsArray.map((item, index) => {
             return (
-              <div key={item} className={`flex flex-col items-center ml-5 w-4`}>
+              <div
+                key={item}
+                className={`flex flex-col items-center ml-5 min-w-4 w-4`}
+              >
                 <>
                   <div
                     className={`h-1/2 w-full ${
@@ -51,15 +55,12 @@ export default function RecursiveComment(props: RecursiveCommentProps) {
           <div className="flex gap-1 items-center">
             {comment.ownerAvatarUrl ? (
               <img // eslint-disable-line @next/next/no-img-element
-                className="w-[2.5rem] h-[2.5rem] rounded-full object-cover"
+                className="w-[2.5rem] h-[2.5rem] min-w-[2.5rem] min-h-[2.5rem] rounded-full object-cover"
                 alt="submitted picture"
                 src={comment.ownerAvatarUrl}
               />
             ) : (
-              <CgProfile
-                size={40}
-                className="rounded-full bg-gray-400 p-1 text-gray-300"
-              />
+              <CgProfile className="w-[2.5rem] h-[2.5rem] min-w-[2.5rem] min-h-[2.5rem] rounded-full bg-gray-400 p-1 text-gray-300" />
             )}
             <div className="flex flex-col">
               <div
@@ -69,10 +70,12 @@ export default function RecursiveComment(props: RecursiveCommentProps) {
                     : "bg-slate-100"
                 }  rounded-3xl ${isRoot && !isFirst && "mt-2"}`}
               >
-                <div className="font-bold hover:cursor-pointer hover:underline">
-                  {comment.ownerUsername}
-                </div>
-                <div>{comment.content}</div>
+                <Link href={`/${comment.ownerId}`}>
+                  <div className="font-bold hover:cursor-pointer hover:underline">
+                    {comment.ownerUsername}
+                  </div>
+                </Link>
+                <div className="flex flex-nowrap">{comment.content}</div>
               </div>
               <div className="flex gap-2 pb-1">
                 <div

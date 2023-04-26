@@ -1,13 +1,13 @@
-export default function page() {
+export default function ImageLoading() {
   return (
     <div className="h-full w-full flex flex-col overflow-y-auto">
-      <div className="grow flex flex-col gap-2 justify-center items-center">
+      <div className="grow flex flex-col justify-center items-center">
         {[1, 2, 3].map((item) => {
           return (
             <div
               key={item}
               role="status"
-              className="w-full p-4  border-t-gray-200 rounded shadow animate-pulse md:p-6 dark:border-t-gray-700"
+              className="w-full p-4 border-t-gray-200 rounded shadow animate-pulse md:p-6 dark:border-t-gray-700"
             >
               <div className="flex w-full items-center">
                 <svg

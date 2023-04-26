@@ -31,13 +31,15 @@ export default function Profile() {
     <>
       <div className="relative mt-4">
         <div
-          className="relative ml-4 flex @[180px]:justify-between justify-end gap-2 hover:text-blue-500 hover:cursor-pointer transition-all duration-200 group"
+          className="relative ml-4 flex @[200px]:justify-between justify-end gap-2 hover:text-blue-500 hover:cursor-pointer transition-all duration-200 group"
           onClick={() => setShowMenu((currMenu) => !currMenu)}
         >
-          <div className="text-xl @[180px]:block hidden">{username}</div>
+          <div className="text-xl @[200px]:block hidden max-w-[140px] overflow-hidden whitespace-nowrap text-ellipsis">
+            {username}
+          </div>
           <MdOutlinePersonOutline size={30} />
           <span
-            className={`sidebar-tooltip left-[4.5rem] -bottom-2 group-hover:scale-100 @[180px]:hidden block ${
+            className={`sidebar-tooltip left-[4.5rem] -bottom-2 group-hover:scale-100 @[200px]:hidden block ${
               !username && "hidden"
             }`}
           >

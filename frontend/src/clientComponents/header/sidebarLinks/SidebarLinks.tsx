@@ -14,7 +14,7 @@ export default function SidebarLinks() {
     <div className="flex flex-col gap-5 mt-4">
       {segment && (
         <>
-          <div className="w-8 @[180px]:w-[95%] block mb-4 border self-end"></div>
+          <div className="w-8 @[200px]:w-[95%] block mb-4 border self-end"></div>
           <CustomLink href={"/bookmarks"} name="Bookmarks" segment={segment}>
             {segment === "bookmarks" ? (
               <BsBookmarksFill size={30} />
@@ -35,7 +35,7 @@ export default function SidebarLinks() {
           </CustomLink>
         </>
       )}
-      <div className="w-8 @[180px]:w-[95%] block mt-4 border self-end"></div>
+      <div className="w-8 @[200px]:w-[95%] block mt-4 border self-end"></div>
       <ProfileWrapper />
     </div>
   );

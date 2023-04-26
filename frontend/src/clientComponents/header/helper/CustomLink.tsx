@@ -19,15 +19,15 @@ export default function CustomLink({
   return (
     <Link
       href={href}
-      className={`flex items-center @[180px]:justify-between justify-end gap-2 ml-4 ${
+      className={`flex items-center @[200px]:justify-between justify-end gap-2 ml-4 ${
         !active && "hover:text-blue-500"
       } transition-all duration-150 group`}
     >
-      <div className={`${active && "underline"} text-xl @[180px]:block hidden`}>
+      <div className={`${active && "underline"} text-xl @[200px]:block hidden`}>
         {name}
       </div>
       {children}
-      <span className="sidebar-tooltip group-hover:scale-100 @[180px]:hidden block">
+      <span className="sidebar-tooltip group-hover:scale-100 @[200px]:hidden block">
         {name}
       </span>
     </Link>

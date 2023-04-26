@@ -12,6 +12,7 @@ import { createComment } from "@/clientApiCalls/commentApi";
 import { User } from "next-auth";
 import { AiOutlineSend } from "react-icons/ai";
 import { Comment } from "@/types/comment";
+import { ChangeHandler } from "react-hook-form";
 
 interface NewCommentFormProps {
   user: User;
@@ -27,7 +28,6 @@ export default function NewCommentForm(props: NewCommentFormProps) {
 
   const createCommentMutation = useMutation(createComment, {
     onSuccess: () => {
-      displayToast("You successfully commented", "bottom-center", "success");
       setInputContent("");
       refetch();
       setReplyComment(null);
@@ -41,8 +41,13 @@ export default function NewCommentForm(props: NewCommentFormProps) {
     },
   });
 
-  const handleContentInputChange = (text: string) => {
-    setInputContent(text);
+  const handleContentInputChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    if (event.target.value.endsWith("\n")) {
+      return;
+    }
+    setInputContent(event.target.value);
   };
 
   const loading = createCommentMutation.status === "loading";
@@ -68,7 +73,7 @@ export default function NewCommentForm(props: NewCommentFormProps) {
     <div className="flex flex-col gap-1">
       {replyComment && (
         <div className="flex gap-4 items-center">
-          <div className="ml-16 text-sm text-gray-500">
+          <div className="text-sm text-gray-500">
             Answering to {replyComment.ownerUsername}
           </div>
           <div
@@ -80,20 +85,23 @@ export default function NewCommentForm(props: NewCommentFormProps) {
         </div>
       )}
       <div className="h-fit w-full flex justify-center items-center">
-        <div className="relative flex h-full flex-grow pb-1 items-center ml-16 mr-4">
+        <div className="relative flex h-full flex-grow pb-1 items-center mr-4">
           <textarea
             className={`text-xl rounded-xl py-2 resize-none border w-full px-2`}
             rows={1}
             placeholder="Write your comment here"
             value={inputContent}
-            onChange={(e) => handleContentInputChange(e.target.value)}
+            onChange={handleContentInputChange}
+            onKeyDown={(e) => {
+              if (e.key == "Enter") onSubmit();
+            }}
           />
           <div className="absolute right-1">
             {loading ? (
               <LoadingSpinner />
             ) : (
               <AiOutlineSend
-                className="hover:cursor-pointer"
+                className="hover:cursor-pointer mr-2"
                 onClick={onSubmit}
                 size={20}
               />

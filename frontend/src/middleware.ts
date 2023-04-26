@@ -2,20 +2,19 @@ import { getToken } from "next-auth/jwt";
 import { NextRequestWithAuth, withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 
-//this is not needed because middleware is not called on each page request as I thought
-//but still would be interesting to try and find out how to do this
-// let lastSuccessfulCheck = new Date("1970");
+//this is not working because each time the middleware is called this is reset, I dunno how else to do it xd
+let lastSuccessfulCheck = new Date("1970");
 
-// //check jwt token every day
-// const ONE_DAY = 1440 * 60 * 1000;
+//check jwt token every day
+const ONE_DAY = 1440 * 60 * 1000;
 
 const checkProfileJwt = async (req: NextRequestWithAuth) => {
-  // const newDate = new Date();
-  // //@ts-ignore
-  // if (newDate - lastSuccessfulCheck < ONE_DAY) {
-  //   console.log(true);
-  //   return true;
-  // }
+  const newDate = new Date();
+  //@ts-ignore
+  if (newDate - lastSuccessfulCheck < ONE_DAY) {
+    console.log(true);
+    return true;
+  }
 
   const token = await getToken({ req });
   if (!token) return false;
@@ -24,10 +23,10 @@ const checkProfileJwt = async (req: NextRequestWithAuth) => {
     headers: {
       Authorization: `Bearer ${token?.token}`,
     },
+    next: { revalidate: 84000 },
   });
   switch (jwtResponse.status) {
     case 200:
-      //lastSuccessfulCheck = newDate;
       return true;
     case 401:
       return false;
