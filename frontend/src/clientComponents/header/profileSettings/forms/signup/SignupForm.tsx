@@ -50,7 +50,6 @@ export default function SignupForm(props: SignupFormProps) {
       const error = JSON.parse(e.message);
       switch (error.message) {
         case responseErrorMessage.EMAIL:
-          console.log("email exists");
           setError("email", {
             type: "exists",
             message: "This email already exists",

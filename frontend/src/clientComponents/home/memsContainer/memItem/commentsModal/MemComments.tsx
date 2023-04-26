@@ -33,7 +33,7 @@ export default function MemComments({
   isOwnedByCurrentUser,
   user,
 }: MemCommentsProps) {
-  const { data, isLoading, refetch } = useQuery("memComments", () =>
+  const { data, refetch, isLoading } = useQuery(`memComment${mem.id}`, () =>
     getComments({ memId: mem.id })
   );
 
@@ -41,7 +41,7 @@ export default function MemComments({
 
   return (
     <ModalWrapper closeModal={closeModal}>
-      <div className="h-[90vh] w-[80vw] min-w-[260px] min-h-[260px] max-w-[800px] bg-white flex">
+      <div className="h-[90vh] w-[80vw] min-w-[260px] min-h-[260px] max-w-[800px] bg-white flex rounded-lg">
         <div className="w-full flex flex-col gap-2">
           <div className={`w-full flex mt-3 pb-3 pr-2 border-b`}>
             <MemItem
@@ -60,37 +60,40 @@ export default function MemComments({
               <LoadingSpinner />
             </div>
           ) : (
-            <>
-              {user && (
-                <NewCommentForm
-                  replyComment={replyComment}
-                  memId={mem.id}
-                  refetch={refetch}
-                  user={user}
-                  setReplyComment={setReplyComment}
-                />
-              )}
-
-              <div className="flex flex-col mb-4 ml-16 overflow-y-auto">
-                {data?.length == 0 ? (
-                  <div>No comments yet!</div>
-                ) : (
-                  data?.map((comment, i) => {
-                    return (
-                      <RecursiveComment
-                        key={comment.id}
-                        isRoot={true}
-                        comment={comment}
-                        marginLeft={0}
-                        isFirst={i == 0}
-                        setReplyComment={setReplyComment}
-                        replyComment={replyComment}
-                      />
-                    );
-                  })
+            <div className="flex w-full">
+              <div className="md:w-16 w-4"></div>
+              <div className="grow">
+                {user && (
+                  <NewCommentForm
+                    replyComment={replyComment}
+                    memId={mem.id}
+                    refetch={refetch}
+                    user={user}
+                    setReplyComment={setReplyComment}
+                  />
                 )}
+
+                <div className={`flex flex-col mb-4 mt-4 overflow-y-auto`}>
+                  {data?.length == 0 ? (
+                    <div>No comments yet!</div>
+                  ) : (
+                    data?.map((comment, i) => {
+                      return (
+                        <RecursiveComment
+                          key={comment.id}
+                          isRoot={true}
+                          comment={comment}
+                          marginLeft={0}
+                          isFirst={i == 0}
+                          setReplyComment={setReplyComment}
+                          replyComment={replyComment}
+                        />
+                      );
+                    })
+                  )}
+                </div>
               </div>
-            </>
+            </div>
           )}
         </div>
       </div>

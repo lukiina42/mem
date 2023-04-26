@@ -1,16 +1,9 @@
 "use client";
 
 import { Mem } from "@/types/mem";
-import { CgProfile } from "react-icons/cg";
-import { BsFillTrashFill } from "react-icons/bs";
 import { User } from "next-auth";
-import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
-import { FaRegComment } from "react-icons/fa";
 import { useState } from "react";
-import Link from "next/link";
 import MemComments from "./commentsModal/MemComments";
-import { QueryClientProvider } from "react-query";
-import { queryClient } from "@/lib/queryClient";
 import MemItem from "./MemItem";
 
 interface MemItemInterface {
@@ -51,7 +44,9 @@ export default function MemItemWrapper({
 
   return (
     <div
-      className={`w-full flex mt-3 pb-3 pr-2 ${displayBorder && "border-b"}`}
+      className={`w-full flex mt-3 mr-1 pb-3 pr-2 ${
+        displayBorder && "border-b"
+      }`}
     >
       <MemItem
         key={mem.id}

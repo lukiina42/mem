@@ -10,7 +10,7 @@ export default function Header() {
         <div className="flex flex-col gap-5 mt-5">
           <Link href="/">
             <div className="ml-4 w-full flex justify-center">
-              <div className="relative @[180px]:h-[64px] @[180px]:w-[64px] w-[50px] h-[50px] mr-4">
+              <div className="relative @[200px]:h-[64px] @[200px]:w-[64px] w-[50px] h-[50px] mr-4">
                 <img // eslint-disable-line @next/next/no-img-element
                   src="/logo.png"
                   className="w-full"

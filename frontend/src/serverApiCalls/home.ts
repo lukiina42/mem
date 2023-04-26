@@ -4,8 +4,6 @@ import { retrieveCookiesSession } from "./retrieveCookiesSession";
 export const retrieveHomeMems = async () => {
   const sessionData = await retrieveCookiesSession();
 
-  console.log(sessionData?.token);
-
   const response = await fetch("http://localhost:8080/mems", {
     method: "GET",
     headers: {
