@@ -49,7 +49,7 @@ export default function ChangeAvatarForm(props: ChangeAvatarFormProps) {
             className="text-black hover:bg-blue-50 rounded-sm hover:cursor-pointer"
             size={25}
           />
-          <span className="tooltip group-hover:scale-100 @[200px]:hidden block">
+          <span className="tooltip origin-top-left group-hover:scale-100 @[200px]:hidden block">
             Delete the image
           </span>
         </div>

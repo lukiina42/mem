@@ -39,7 +39,7 @@ export default function Profile() {
           </div>
           <MdOutlinePersonOutline size={30} />
           <span
-            className={`tooltip left-[4.5rem] -bottom-2 group-hover:scale-100 @[200px]:hidden block ${
+            className={`tooltip origin-left left-[4.5rem] -bottom-2 group-hover:scale-100 @[200px]:hidden block ${
               !username && "hidden"
             }`}
           >

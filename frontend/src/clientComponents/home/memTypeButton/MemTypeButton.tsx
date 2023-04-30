@@ -20,7 +20,7 @@ export default function MemType(props: MemTypeSwitchProps) {
     >
       {memsType}
       {disabled && (
-        <span className="tooltip group-hover:scale-100 ml-auto mr-auto top-full left-0 right-0 text-center">
+        <span className="tooltip group-hover:scale-100 ml-auto mr-auto top-full left-0 right-0 text-center origin-top">
           You are not following anyone!
         </span>
       )}

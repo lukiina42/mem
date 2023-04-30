@@ -48,7 +48,13 @@ export default function HomeContent({
         />
       </div>
       <div className="w-full flex flex-col justify-center items-center pb-b">
-        <MemsContainer mems={memsType == "Following" ? mems : newestMems!} />
+        <MemsContainer
+          mems={
+            memsType == "Following" || !isUserFollowingAnyone
+              ? mems
+              : newestMems!
+          }
+        />
       </div>
     </>
   );
