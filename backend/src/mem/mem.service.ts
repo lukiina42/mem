@@ -11,6 +11,8 @@ import { S3Service } from 'src/s3/s3.service';
 import { nanoid } from 'nanoid';
 import { User } from 'src/user/user.entity';
 import { mapMemsDbToDto } from 'src/mapper/memMapper';
+import { Notification } from 'src/notifications/notification.entity';
+import { NotificationsService } from 'src/notifications/notifications.service';
 
 export interface MemDto extends Mem {
   imageUrl?: string;
@@ -26,10 +28,19 @@ export class MemsService {
     private memRepository: Repository<Mem>,
     private usersService: UsersService,
     private s3Service: S3Service,
+    private notificationsService: NotificationsService,
   ) {}
 
   async findOneById(id: number): Promise<Mem> {
-    return this.memRepository.findOneBy({ id });
+    return await this.memRepository.findOneBy({ id });
+  }
+
+  async findOneByIdWithOwnerId(id: number): Promise<Mem> {
+    return await this.memRepository
+      .createQueryBuilder('mem')
+      .where('mem.id = :id', { id })
+      .leftJoinAndSelect('mem.owner', 'owner')
+      .getOne();
   }
 
   async createMem(
@@ -170,7 +181,8 @@ export class MemsService {
     const likedByUser = await this.usersService.findOneByIdWithMems(userId);
     if (!likedByUser) throw new BadRequestException('The user was not found');
 
-    const memToLike = await this.findOneById(idNumber);
+    const memToLike = await this.findOneByIdWithOwnerId(idNumber);
+
     if (!memToLike)
       throw new NotFoundException('The mem to like was not found');
 
@@ -186,6 +198,12 @@ export class MemsService {
       likedByUser.heartedMems = likedByUser.heartedMems.filter(
         (mem) => mem.id !== memToLike.id,
       );
+
+    await this.notificationsService.createNotification(
+      memToLike.owner,
+      likedByUser,
+      'heartedMem',
+    );
 
     await this.usersService.updateUser(likedByUser);
   }

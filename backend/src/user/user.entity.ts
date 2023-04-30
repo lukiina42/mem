@@ -1,5 +1,6 @@
 import { Comment } from 'src/comment/comment.entity';
 import { Mem } from 'src/mem/mem.entity';
+import { Notification } from 'src/notifications/notification.entity';
 import {
   Entity,
   Column,
@@ -52,4 +53,7 @@ export class User {
 
   @OneToMany(() => Comment, (comment) => comment.owner)
   comments: Comment[];
+
+  @OneToMany(() => Notification, (notification) => notification.notifiedUser)
+  notifications: Notification[];
 }

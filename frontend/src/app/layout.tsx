@@ -2,9 +2,8 @@ import Header from "./Header";
 import "./globals.css";
 
 export const metadata = {
-  title: "Twitter FE clone",
-  description:
-    "An app imitating twitter, new technologies are used to practice them",
+  title: "Mem!",
+  description: "Very mem yes, very mem",
 };
 
 export default function RootLayout({

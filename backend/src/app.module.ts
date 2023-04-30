@@ -14,6 +14,9 @@ import { MemsModule } from './mem/mem.module';
 import { S3Service } from './s3/s3.service';
 import { CommentsModule } from './comment/comment.module';
 import { Comment } from './comment/comment.entity';
+import { NotificationsModule } from './notifications/notifications.module';
+import { NotificationsGateway } from './notifications/notification.gateway';
+import { Notification } from './notifications/notification.entity';
 
 @Module({
   imports: [
@@ -27,7 +30,7 @@ import { Comment } from './comment/comment.entity';
         username: configService.get<string>('DB_USER'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        entities: [User, Mem, Comment],
+        entities: [User, Mem, Comment, Notification],
         synchronize: true,
       }),
       inject: [ConfigService],
@@ -36,8 +39,16 @@ import { Comment } from './comment/comment.entity';
     MemsModule,
     AuthModule,
     CommentsModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, AuthService, UsersService, JwtService, S3Service],
+  providers: [
+    AppService,
+    AuthService,
+    UsersService,
+    JwtService,
+    S3Service,
+    NotificationsGateway,
+  ],
 })
 export class AppModule {}

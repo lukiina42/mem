@@ -31,20 +31,20 @@ export default function MemItem({
 }: MemItemInterface) {
   return (
     <>
-      <div className="min-w-[4rem] flex justify-center mt-2">
+      <Link
+        href={`/${mem.owner.id}`}
+        className="min-w-[4rem] flex justify-center mt-2"
+      >
         {mem.owner.avatarImageUrl ? (
           <img // eslint-disable-line @next/next/no-img-element
-            className="w-[3.5rem] h-[3.5rem] rounded-full object-cover"
+            className="w-[3rem] h-[3rem] rounded-full object-cover"
             alt="submitted picture"
             src={mem.owner.avatarImageUrl}
           />
         ) : (
-          <CgProfile
-            size={40}
-            className="rounded-full bg-gray-400 p-1 text-gray-300"
-          />
+          <CgProfile className="rounded-full w-[3rem] h-[3rem] bg-gray-400 p-1 text-gray-300" />
         )}
-      </div>
+      </Link>
       <div className="flex flex-col gap-1 grow">
         <div className="flex justify-between">
           <Link href={`/${mem.owner.id}`}>

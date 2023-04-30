@@ -1,7 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import SidebarLinksWrapper from "@/clientComponents/header/sidebarLinks/SidebarLinksWrapper";
+import HeaderWrapper from "@/clientComponents/header/sidebarLinks/HeaderWrapper";
+import { io } from "socket.io-client";
+import { retrieveCookiesSession } from "@/serverApiCalls/retrieveCookiesSession";
 
 export default function Header() {
   return (
@@ -20,7 +21,7 @@ export default function Header() {
             </div>
           </Link>
           <div className="mr-5">
-            <SidebarLinksWrapper />
+            <HeaderWrapper />
           </div>
         </div>
       </nav>

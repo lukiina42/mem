@@ -65,7 +65,7 @@ export default function ProfileHeader({
             <SlUserFollow size={25} />
           )}
 
-          <span className="tooltip group-hover:scale-100 right-full top-1/4">
+          <span className="tooltip origin-top group-hover:scale-100 right-full top-1/4">
             {isFollowedByCurrentUser ? "Unfollow" : "Follow"}
           </span>
         </div>
