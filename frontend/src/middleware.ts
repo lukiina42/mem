@@ -2,22 +2,38 @@ import { getToken } from "next-auth/jwt";
 import { NextRequestWithAuth, withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 
-//this is not working because each time the middleware is called this is reset, I dunno how else to do it xd
-let lastSuccessfulCheck = new Date("1970");
-
 //check jwt token every day
 const ONE_DAY = 1440 * 60 * 1000;
 
-const checkProfileJwt = async (req: NextRequestWithAuth) => {
-  const newDate = new Date();
+type checkProfileResponseType =
+  | {
+      isAuthenticated: false;
+    }
+  | {
+      isAuthenticated: true;
+      jwtLastCheck: string;
+    };
+
+const checkProfileJwt = async (
+  req: NextRequestWithAuth
+): Promise<checkProfileResponseType> => {
+  const lastCheck: string | undefined = req.cookies.get("jwtLastCheck")?.value;
+
+  //on localhost this saves around 20ms :)
   //@ts-ignore
-  if (newDate - lastSuccessfulCheck < ONE_DAY) {
-    console.log(true);
-    return true;
+  if (lastCheck && new Date() - new Date(lastCheck) < ONE_DAY) {
+    console.log("skipping jwt check to BE!");
+    return {
+      isAuthenticated: true,
+      jwtLastCheck: lastCheck,
+    };
   }
 
   const token = await getToken({ req });
-  if (!token) return false;
+  if (!token)
+    return {
+      isAuthenticated: false,
+    };
   const jwtResponse = await fetch("http://localhost:8080/auth/profile", {
     method: "GET",
     headers: {
@@ -27,9 +43,14 @@ const checkProfileJwt = async (req: NextRequestWithAuth) => {
   });
   switch (jwtResponse.status) {
     case 200:
-      return true;
+      return {
+        isAuthenticated: true,
+        jwtLastCheck: new Date().toString(),
+      };
     case 401:
-      return false;
+      return {
+        isAuthenticated: false,
+      };
     default:
       throw new Error(
         `Something went wrong while checking user JWT, ${jwtResponse.status}`
@@ -44,14 +65,16 @@ export default withAuth(
     const isAuthPage = req.nextUrl.pathname === "/";
 
     if (isAuthPage) {
-      if (userJwtValid) {
-        return NextResponse.redirect(new URL("/home", req.url));
+      if (userJwtValid.isAuthenticated) {
+        const res = NextResponse.redirect(new URL("/home", req.url));
+        res.cookies.set("jwtLastCheck", userJwtValid.jwtLastCheck);
+        return res;
       }
 
       return null;
     }
 
-    if (!userJwtValid) {
+    if (!userJwtValid.isAuthenticated) {
       for (let i = 0; i < protectedRoutes.length; i++) {
         const route = protectedRoutes[i];
         if (req.nextUrl.pathname.startsWith(route)) {
