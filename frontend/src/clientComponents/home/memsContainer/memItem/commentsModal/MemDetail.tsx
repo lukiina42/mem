@@ -20,10 +20,10 @@ interface MemCommentsProps {
   handleHeartClick: (memId: number) => void;
   isOwnedByCurrentUser: boolean;
   handleDeleteMemClick: (id: number) => void;
-  user: User | undefined;
+  token: string;
 }
 
-export default function MemComments({
+export default function MemDetail({
   mem,
   closeModal,
   isHearted,
@@ -31,7 +31,7 @@ export default function MemComments({
   handleHeartClick,
   handleDeleteMemClick,
   isOwnedByCurrentUser,
-  user,
+  token,
 }: MemCommentsProps) {
   const { data, refetch, isLoading } = useQuery(`memComment${mem.id}`, () =>
     getComments({ memId: mem.id })
@@ -60,20 +60,20 @@ export default function MemComments({
               <LoadingSpinner />
             </div>
           ) : (
-            <div className="flex w-full">
+            <div className="flex w-full overflow-y-auto">
               <div className="md:w-16 w-4"></div>
               <div className="grow">
-                {user && (
+                {token && (
                   <NewCommentForm
                     replyComment={replyComment}
                     memId={mem.id}
                     refetch={refetch}
-                    user={user}
+                    token={token}
                     setReplyComment={setReplyComment}
                   />
                 )}
 
-                <div className={`flex flex-col mb-4 mt-4 overflow-y-auto`}>
+                <div className={`flex flex-col mt-4`}>
                   {data?.length == 0 ? (
                     <div>No comments yet!</div>
                   ) : (

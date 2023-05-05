@@ -9,6 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './jwt.strategy';
 import { S3Service } from 'src/s3/s3.service';
 import { AuthController } from './auth.controller';
+import { NotificationsModule } from 'src/notifications/notifications.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { AuthController } from './auth.controller';
       secret: 'secretKey',
       signOptions: { expiresIn: '7d' },
     }),
+    NotificationsModule,
   ],
   providers: [
     AuthService,

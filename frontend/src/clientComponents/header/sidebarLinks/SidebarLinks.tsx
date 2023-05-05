@@ -8,6 +8,7 @@ import ProfileWrapper from "../profileSettings/ProfileWrapper";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Socket, io } from "socket.io-client";
+import { Notification } from "@/types/notification";
 
 let socket: Socket | undefined = undefined;
 
@@ -17,7 +18,9 @@ export default function SidebarLinks() {
   const userData = useSession();
 
   const [isConnected, setIsConnected] = useState(false);
-  const [notificationEvents, setNotificationEvents] = useState<string[]>([]);
+  const [notificationTrigger, setNotificationTrigger] = useState(false);
+  const [notification, setNotification] = useState("");
+
   useEffect(() => {
     function onConnect() {
       setIsConnected(true);
@@ -27,8 +30,10 @@ export default function SidebarLinks() {
       setIsConnected(false);
     }
 
-    function handleHeartMemNotification(notification: any) {
-      console.log(notification);
+    function handleNotification(notification: Notification) {
+      setNotificationTrigger(true);
+      setTimeout(() => setNotificationTrigger(false), 5000);
+      setNotification(notification.content);
     }
 
     if (userData.data?.user) {
@@ -39,7 +44,9 @@ export default function SidebarLinks() {
       }
       socket.on("connect", onConnect);
       socket.on("disconnect", onDisconnect);
-      socket.on("heartMem", handleHeartMemNotification);
+      socket.on("heartedMem", handleNotification);
+      socket.on("unheartedMem", handleNotification);
+      socket.on("newFollow", handleNotification);
     }
 
     return () => {
@@ -47,7 +54,9 @@ export default function SidebarLinks() {
         if (socket) {
           socket.off("connect", onConnect);
           socket.off("disconnect", onDisconnect);
-          socket.off("heatMem", handleHeartMemNotification);
+          socket.off("heartedMem", handleNotification);
+          socket.off("unheartedMem", handleNotification);
+          socket.off("newFollow", handleNotification);
         }
       }
     };
@@ -68,13 +77,29 @@ export default function SidebarLinks() {
           </CustomLink>
           <CustomLink
             href={"/notifications"}
-            name="Notifications"
+            name={notification ? notification : "Notifications"}
             segment={segment}
+            hideTooltip={notificationTrigger}
           >
+            <span
+              className={`notification-tooltip origin-left scale-100 left-[100%] ${
+                notificationTrigger ? "block" : "hidden"
+              }`}
+            >
+              {notification}
+            </span>
             {segment === "notifications" ? (
               <HiBellAlert size={30} />
             ) : (
-              <HiOutlineBellAlert size={30} />
+              <div className="relative" onClick={() => setNotification("")}>
+                <HiOutlineBellAlert
+                  size={30}
+                  className={`${notificationTrigger && "animate-wiggle"}`}
+                />
+                {notification && (
+                  <div className="absolute bottom-0 right-1 bg-red-500 rounded-full w-1 h-1"></div>
+                )}
+              </div>
             )}
           </CustomLink>
         </>

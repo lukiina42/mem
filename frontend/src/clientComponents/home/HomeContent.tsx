@@ -45,6 +45,7 @@ export default function HomeContent({
           memsType="Newest"
           handleMemsTypeChange={handleMemsTypeChange}
           isActive={memsType == "Newest"}
+          disabled={isLoading}
         />
       </div>
       <div className="w-full flex flex-col justify-center items-center pb-b">

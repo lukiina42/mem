@@ -9,6 +9,7 @@ import ConfirmationModal from "@/utilComponents/ConfirmationModal";
 import React from "react";
 import { displayToast } from "@/utilComponents/toast";
 import MemItemWrapper from "./memItem/MemItemWrapper";
+import { useHeartMutation } from "@/clientApiCalls/reactQuery/heartMutation";
 
 export default function MemsContainer({ mems }: { mems: Mem[] }) {
   const user = useSession().data?.user;
@@ -47,20 +48,9 @@ export default function MemsContainer({ mems }: { mems: Mem[] }) {
   };
   ////
 
-  ////heart mem
-  const heartMemMutation = useMutation(heartMem, {
-    onSuccess: () => {},
-    onError: () => {
-      displayToast(
-        "Something went wrong while hearting mem, please try again",
-        "bottom-center",
-        "error"
-      );
-    },
-  });
+  const heartMemMutation = useHeartMutation();
 
   const handleHeartMemRequest = (memId: number) => {
-    //optimistic update here
     heartMemMutation.mutate({ memId, token: user!.token });
   };
 

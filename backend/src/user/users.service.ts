@@ -5,6 +5,7 @@ import { User } from './user.entity';
 import { genSalt, hash, compare as comparePasswords } from 'bcrypt';
 import { S3Service } from 'src/s3/s3.service';
 import { nanoid } from 'nanoid';
+import { NotificationService } from 'src/notifications/notification.service';
 
 @Injectable()
 export class UsersService {
@@ -12,6 +13,7 @@ export class UsersService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
     private s3Service: S3Service,
+    private notificationsService: NotificationService,
   ) {}
 
   findAll(): Promise<User[]> {
@@ -20,6 +22,16 @@ export class UsersService {
 
   async updateUser(user: User) {
     await this.usersRepository.save(user);
+  }
+
+  async addImageUrlToUser(user: User) {
+    if (user.avatarImageKey) {
+      const avatarImageUrl = await this.s3Service.retrieveImage(
+        user.avatarImageKey,
+      );
+      user.avatarImageUrl = avatarImageUrl;
+      return user;
+    }
   }
 
   async findOneByIdWithHeartedMems(id: number): Promise<User> {
@@ -65,12 +77,7 @@ export class UsersService {
 
     if (!user) throw new NotFoundException(`User with id ${id} was not found`);
 
-    if (user.avatarImageKey) {
-      const avatarImageUrl = await this.s3Service.retrieveImage(
-        user.avatarImageKey,
-      );
-      user.avatarImageUrl = avatarImageUrl;
-    }
+    await this.addImageUrlToUser(user);
 
     return user;
   }
@@ -166,11 +173,22 @@ export class UsersService {
       (user) => user.id !== followedId,
     );
 
-    if (filteredFollowingList.length == followingUser.following.length) {
+    const newFollow =
+      filteredFollowingList.length == followingUser.following.length;
+
+    if (newFollow) {
       followingUser.following.push(followedUser);
     } else {
       followingUser.following = filteredFollowingList;
     }
+
+    if (newFollow)
+      await this.notificationsService.createNotification(
+        followedUser,
+        followingUser,
+        undefined,
+        'newFollow',
+      );
 
     await this.updateUser(followingUser);
   }

@@ -2,20 +2,15 @@
 
 import { Dispatch, SetStateAction, useState } from "react";
 
-import { ImFilePicture } from "react-icons/im";
-import { GrClose } from "react-icons/gr";
 import { useMutation } from "react-query";
-import { createMem } from "@/clientApiCalls/memApi";
 import LoadingSpinner from "@/utilComponents/Loading";
 import { displayToast } from "@/utilComponents/toast";
 import { createComment } from "@/clientApiCalls/commentApi";
-import { User } from "next-auth";
 import { AiOutlineSend } from "react-icons/ai";
 import { Comment } from "@/types/comment";
-import { ChangeHandler } from "react-hook-form";
 
 interface NewCommentFormProps {
-  user: User;
+  token: string;
   refetch: () => void;
   memId: number;
   replyComment: null | Comment;
@@ -23,7 +18,7 @@ interface NewCommentFormProps {
 }
 
 export default function NewCommentForm(props: NewCommentFormProps) {
-  const { refetch, user, memId, replyComment, setReplyComment } = props;
+  const { refetch, token, memId, replyComment, setReplyComment } = props;
   const [inputContent, setInputContent] = useState("");
 
   const createCommentMutation = useMutation(createComment, {
@@ -58,14 +53,14 @@ export default function NewCommentForm(props: NewCommentFormProps) {
       createCommentMutation.mutate({
         content: inputContent,
         commentParentId: replyComment.id,
-        token: user.token,
+        token,
       });
       return;
     }
     createCommentMutation.mutate({
       content: inputContent,
       memParentId: memId,
-      token: user.token,
+      token,
     });
   };
 
