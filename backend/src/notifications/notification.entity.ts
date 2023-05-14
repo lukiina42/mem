@@ -7,6 +7,7 @@ import {
   ManyToOne,
   CreateDateColumn,
   RelationId,
+  BeforeInsert,
 } from 'typeorm';
 
 @Entity()
@@ -25,6 +26,14 @@ export class Notification {
   createdDate: Date;
 
   formattedCreatedDate: string;
+
+  @Column({ default: false })
+  seen: boolean;
+
+  @BeforeInsert()
+  beforeInsertActions() {
+    this.seen = false;
+  }
 
   @ManyToOne(() => User, (user) => user.notifications)
   notifiedUser: User;

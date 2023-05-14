@@ -8,4 +8,5 @@ export interface Notification {
   trigerredByUserId: number;
   relatesToMemId: number | null;
   trigerredBy: User;
+  seen: boolean;
 }

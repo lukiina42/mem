@@ -1,12 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { MdOutlinePersonOutline } from "react-icons/md";
 import ProfileOptionsMenu from "./profileOptionsMenu/ProfileOptionsMenu";
 import FormsWrapper from "./forms/FormsWrapper";
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { ToastContainer } from "react-toastify";
+import { useSelectedLayoutSegment } from "next/navigation";
 
 export default function Profile() {
   const [showModal, setShowModal] = React.useState<"none" | "signup" | "login">(
@@ -14,7 +15,16 @@ export default function Profile() {
   );
   const [showMenu, setShowMenu] = React.useState(false);
 
+  const segment = useSelectedLayoutSegment();
+
   const { data: session, status } = useSession();
+
+  //jwt is invalid (unable to signOut in middleware)
+  useEffect(() => {
+    if (!segment && session?.user?.name) {
+      signOut();
+    }
+  }, [segment, session]);
 
   const resetMenu = () => {
     setShowModal("none");

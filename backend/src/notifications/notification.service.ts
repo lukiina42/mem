@@ -6,6 +6,7 @@ import { User } from 'src/user/user.entity';
 import { NotificationsGateway } from './notification.gateway';
 import { Mem } from 'src/mem/mem.entity';
 import { S3Service } from 'src/s3/s3.service';
+import { SchedulerRegistry } from '@nestjs/schedule';
 
 @Injectable()
 export class NotificationService {
@@ -14,6 +15,7 @@ export class NotificationService {
     private notificationRepository: Repository<Notification>,
     private readonly notificationsGateway: NotificationsGateway,
     private s3Service: S3Service,
+    private schedulerRegistry: SchedulerRegistry,
   ) {}
 
   async createNotification(
@@ -87,10 +89,27 @@ export class NotificationService {
           hour: 'numeric',
           minute: 'numeric',
         }).format(notification.createdDate);
-        return notification;
+        return { ...notification };
       }),
     );
 
+    notifs.forEach((notification) => {
+      if (!notification.seen) {
+        this.removeNotificationTimeout(notification);
+        notification.seen = true;
+        this.notificationRepository.save(notification);
+      }
+    });
+
     return notificationsDto;
+  }
+
+  //86 400 000
+  removeNotificationTimeout(notification: Notification) {
+    return setTimeout(() => this.removeNotification(notification), 1800000);
+  }
+
+  removeNotification(notification: Notification) {
+    this.notificationRepository.remove(notification);
   }
 }

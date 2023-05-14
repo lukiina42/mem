@@ -12,7 +12,6 @@ export default function NotificationCard({
   borderTop: boolean;
   token: string;
 }) {
-  console.log(notification);
   return (
     <div className={`flex w-full mt-2 ${borderTop && "border-t"}`}>
       <Link
@@ -36,15 +35,11 @@ export default function NotificationCard({
               {notification.trigerredBy.username}
             </div>
           </Link>
-          <div className="flex gap-2 items-center">
+          <div className="flex flex-col gap-2 items-end justify-between h-8">
             <div className="text-sm">{notification.formattedCreatedDate}</div>
-            {/* {isOwnedByCurrentUser && (
-              <BsFillTrashFill
-                size={30}
-                className="text-red-500 p-1 rounded-full hover:bg-gray-200 duration-150 transition-all hover:cursor-pointer"
-                onClick={() => handleDeleteMemClick(mem.id)}
-              />
-            )} */}
+            {!notification.seen && (
+              <div className="w-1 h-1 bg-red-500 rounded-full"></div>
+            )}
           </div>
         </div>
         <div className="mt-1">{notification.content}</div>

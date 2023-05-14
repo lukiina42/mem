@@ -6,61 +6,17 @@ import { BsBookmarksFill, BsBookmarks } from "react-icons/bs";
 import { HiBellAlert, HiOutlineBellAlert } from "react-icons/hi2";
 import ProfileWrapper from "../profileSettings/ProfileWrapper";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { Socket, io } from "socket.io-client";
-import { Notification } from "@/types/notification";
-
-let socket: Socket | undefined = undefined;
+import { useNotificationSocket } from "@/hooks/useNotificationSocket";
 
 export default function SidebarLinks() {
   const segment = useSelectedLayoutSegment();
 
   const userData = useSession();
 
-  const [isConnected, setIsConnected] = useState(false);
-  const [notificationTrigger, setNotificationTrigger] = useState(false);
-  const [notification, setNotification] = useState("");
+  const { notification, setNotification, notificationTrigger } =
+    useNotificationSocket(userData.data);
 
-  useEffect(() => {
-    function onConnect() {
-      setIsConnected(true);
-    }
-
-    function onDisconnect() {
-      setIsConnected(false);
-    }
-
-    function handleNotification(notification: Notification) {
-      setNotificationTrigger(true);
-      setTimeout(() => setNotificationTrigger(false), 5000);
-      setNotification(notification.content);
-    }
-
-    if (userData.data?.user) {
-      if (!socket) {
-        socket = io("http://localhost:8080", {
-          query: { userId: userData.data.user.id },
-        });
-      }
-      socket.on("connect", onConnect);
-      socket.on("disconnect", onDisconnect);
-      socket.on("heartedMem", handleNotification);
-      socket.on("unheartedMem", handleNotification);
-      socket.on("newFollow", handleNotification);
-    }
-
-    return () => {
-      if (userData.data?.user) {
-        if (socket) {
-          socket.off("connect", onConnect);
-          socket.off("disconnect", onDisconnect);
-          socket.off("heartedMem", handleNotification);
-          socket.off("unheartedMem", handleNotification);
-          socket.off("newFollow", handleNotification);
-        }
-      }
-    };
-  }, [userData]);
+  //TODO REVALIDATE NOTIFICATIONS PATH IF NEW NOTIFICATION APPEARS
 
   //the fact that user is logged in is secured in middleware
   return (
