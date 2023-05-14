@@ -3,8 +3,9 @@
 import { Mem } from "@/types/mem";
 import { User } from "next-auth";
 import { useState } from "react";
-import MemComments from "./commentsModal/MemComments";
+import MemDetail from "./commentsModal/MemDetail";
 import MemItem from "./MemItem";
+import { useHeart } from "@/hooks/useHeart";
 
 interface MemItemInterface {
   mem: Mem;
@@ -21,22 +22,11 @@ export default function MemItemWrapper({
   displayBorder,
   handleHeartMemRequest,
 }: MemItemInterface) {
-  const [heartChanged, setHeartChanged] = useState(false);
-
-  const isHearted = !heartChanged
-    ? mem.heartedByCurrentUser
-    : !mem.heartedByCurrentUser;
-
-  const amountOfHearts = !heartChanged
-    ? mem.heartedBy.length
-    : mem.heartedByCurrentUser
-    ? mem.heartedBy.length - 1
-    : mem.heartedBy.length + 1;
-
-  const handleHeartClick = (id: number) => {
-    setHeartChanged(!heartChanged);
-    handleHeartMemRequest(id);
-  };
+  const { handleHeartClick, isHearted, amountOfHearts } = useHeart(
+    mem.heartedByCurrentUser,
+    mem.heartedBy,
+    handleHeartMemRequest
+  );
 
   const isOwnedByCurrentUser = user?.name === mem.owner.username;
 
@@ -59,7 +49,7 @@ export default function MemItemWrapper({
         isOwnedByCurrentUser={isOwnedByCurrentUser}
       />
       {commentsModalOpen && (
-        <MemComments
+        <MemDetail
           isHearted={isHearted}
           amountOfHearts={amountOfHearts}
           mem={mem}
@@ -67,7 +57,7 @@ export default function MemItemWrapper({
           closeModal={() => setCommentsModalOpen(false)}
           isOwnedByCurrentUser={isOwnedByCurrentUser}
           handleDeleteMemClick={handleDeleteMemClick}
-          user={user}
+          token={user?.token ? user.token : ""}
         />
       )}
     </div>

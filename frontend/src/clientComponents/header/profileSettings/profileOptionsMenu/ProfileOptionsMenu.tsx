@@ -65,6 +65,7 @@ export default function ProfileOptionsMenu({
           </div>
           <div
             onClick={() => {
+              setShowMenu!(false);
               signOut!();
               redirect!("");
             }}

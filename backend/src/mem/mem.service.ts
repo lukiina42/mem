@@ -10,9 +10,8 @@ import { UsersService } from 'src/user/users.service';
 import { S3Service } from 'src/s3/s3.service';
 import { nanoid } from 'nanoid';
 import { User } from 'src/user/user.entity';
-import { mapMemsDbToDto } from 'src/mapper/memMapper';
-import { Notification } from 'src/notifications/notification.entity';
-import { NotificationsService } from 'src/notifications/notifications.service';
+import { mapMemsDbToDto, mapMemDbToDto } from 'src/mapper/memMapper';
+import { NotificationService } from 'src/notifications/notification.service';
 
 export interface MemDto extends Mem {
   imageUrl?: string;
@@ -28,7 +27,7 @@ export class MemsService {
     private memRepository: Repository<Mem>,
     private usersService: UsersService,
     private s3Service: S3Service,
-    private notificationsService: NotificationsService,
+    private notificationsService: NotificationService,
   ) {}
 
   async findOneById(id: number): Promise<Mem> {
@@ -41,6 +40,21 @@ export class MemsService {
       .where('mem.id = :id', { id })
       .leftJoinAndSelect('mem.owner', 'owner')
       .getOne();
+  }
+
+  async findOneByIdWithHeartedByAndOwner(id: number): Promise<Mem> {
+    return await this.memRepository
+      .createQueryBuilder('mem')
+      .where('mem.id = :id', { id })
+      .leftJoinAndSelect('mem.heartedBy', 'heartedBy')
+      .leftJoinAndSelect('mem.owner', 'owner')
+      .getOne();
+  }
+
+  async retrieveMemWithImageUrl(id: number, userId: number): Promise<Mem> {
+    const mem = await this.findOneByIdWithHeartedByAndOwner(id);
+    const user = await this.usersService.findOneByIdWithHeartedMems(userId);
+    return await mapMemDbToDto(mem, this.s3Service, user);
   }
 
   async createMem(
@@ -202,7 +216,8 @@ export class MemsService {
     await this.notificationsService.createNotification(
       memToLike.owner,
       likedByUser,
-      'heartedMem',
+      memToLike,
+      `${userMemeAlreadyLiked ? 'unheartedMem' : 'heartedMem'}`,
     );
 
     await this.usersService.updateUser(likedByUser);

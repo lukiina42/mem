@@ -1,16 +1,20 @@
+import { getSession } from "@/lib/session";
 import Header from "./Header";
 import "./globals.css";
+import { retrieveCookiesSession } from "@/serverApiCalls/retrieveCookiesSession";
 
 export const metadata = {
   title: "Mem!",
   description: "Very mem yes, very mem",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const data = await retrieveCookiesSession();
+  console.log("userSession data", data);
   return (
     <html lang="en">
       <body>

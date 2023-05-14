@@ -10,6 +10,25 @@
     transition-all duration-150 scale-0 z-50;
   }
 
+  .notification-tooltip {
+    @apply absolute w-auto p-2 m-2 min-w-max rounded-md shadow-md
+    text-white bg-gray-900
+    font-bold 
+    transition-all duration-150 scale-0 z-[99] max-w-sm opacity-100;
+  }
+
+  .notification-tooltip::after {
+    content: "";
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent black transparent transparent;
+  }
+
   .basic-button {
     @apply border bg-blue-500 hover:bg-blue-600 text-green-100 py-2 px-4 font-semibold rounded-lg transition-all duration-150;
   }

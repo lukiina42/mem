@@ -19,7 +19,7 @@ export default function MemType(props: MemTypeSwitchProps) {
       onClick={() => handleMemsTypeChange(memsType)}
     >
       {memsType}
-      {disabled && (
+      {disabled && memsType == "Following" && (
         <span className="tooltip group-hover:scale-100 ml-auto mr-auto top-full left-0 right-0 text-center origin-top">
           You are not following anyone!
         </span>

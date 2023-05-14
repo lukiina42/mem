@@ -17,12 +17,13 @@ import { Comment } from './comment/comment.entity';
 import { NotificationsModule } from './notifications/notifications.module';
 import { NotificationsGateway } from './notifications/notification.gateway';
 import { Notification } from './notifications/notification.entity';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [ConfigModule, ScheduleModule.forRoot()],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres' as const,
         host: configService.get<string>('DB_HOST'),

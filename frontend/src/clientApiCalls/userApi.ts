@@ -60,6 +60,8 @@ export const updateAvatar = (variables: {
     formData.append("image", variables.file as File);
   }
 
+  console.log(variables.token);
+
   return fetch(`http://localhost:8080/users/avatar`, {
     method: "PUT",
     headers: {

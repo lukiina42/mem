@@ -5,9 +5,18 @@ import CustomLink from "../helper/CustomLink";
 import { BsBookmarksFill, BsBookmarks } from "react-icons/bs";
 import { HiBellAlert, HiOutlineBellAlert } from "react-icons/hi2";
 import ProfileWrapper from "../profileSettings/ProfileWrapper";
+import { useSession } from "next-auth/react";
+import { useNotificationSocket } from "@/hooks/useNotificationSocket";
 
 export default function SidebarLinks() {
   const segment = useSelectedLayoutSegment();
+
+  const userData = useSession();
+
+  const { notification, setNotification, notificationTrigger } =
+    useNotificationSocket(userData.data);
+
+  //TODO REVALIDATE NOTIFICATIONS PATH IF NEW NOTIFICATION APPEARS
 
   //the fact that user is logged in is secured in middleware
   return (
@@ -24,13 +33,29 @@ export default function SidebarLinks() {
           </CustomLink>
           <CustomLink
             href={"/notifications"}
-            name="Notifications"
+            name={notification ? notification : "Notifications"}
             segment={segment}
+            hideTooltip={notificationTrigger}
           >
+            <span
+              className={`notification-tooltip origin-left scale-100 left-[100%] ${
+                notificationTrigger ? "block" : "hidden"
+              }`}
+            >
+              {notification}
+            </span>
             {segment === "notifications" ? (
               <HiBellAlert size={30} />
             ) : (
-              <HiOutlineBellAlert size={30} />
+              <div className="relative" onClick={() => setNotification("")}>
+                <HiOutlineBellAlert
+                  size={30}
+                  className={`${notificationTrigger && "animate-wiggle"}`}
+                />
+                {notification && (
+                  <div className="absolute bottom-0 right-1 bg-red-500 rounded-full w-1 h-1"></div>
+                )}
+              </div>
             )}
           </CustomLink>
         </>

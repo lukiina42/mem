@@ -8,14 +8,17 @@ export default function CustomLink({
   children,
   segment,
   name,
+  hideTooltip,
 }: {
   href: string;
   //TODO instead of children get one icon filled and one icon outlined
   children: React.ReactNode;
   name: string;
   segment: string | null;
+  hideTooltip?: boolean;
 }) {
   let active = href === `/${segment || ""}`;
+
   return (
     <Link
       href={href}
@@ -24,12 +27,16 @@ export default function CustomLink({
       } transition-all duration-150 group`}
     >
       <div className={`${active && "underline"} text-xl @[200px]:block hidden`}>
-        {name}
+        {href == "/notifications" ? "Notifications" : name}
       </div>
       {children}
-      <span className="tooltip origin-left group-hover:scale-100 left-[100%] @[200px]:hidden block">
-        {name}
-      </span>
+      {!hideTooltip && (
+        <span
+          className={`${"notification-tooltip"} origin-left group-hover:scale-100 left-[100%] @[200px]:hidden block`}
+        >
+          {name}
+        </span>
+      )}
     </Link>
   );
 }

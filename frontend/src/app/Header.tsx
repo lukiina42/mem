@@ -1,8 +1,6 @@
 import Link from "next/link";
 import React from "react";
 import HeaderWrapper from "@/clientComponents/header/sidebarLinks/HeaderWrapper";
-import { io } from "socket.io-client";
-import { retrieveCookiesSession } from "@/serverApiCalls/retrieveCookiesSession";
 
 export default function Header() {
   return (

@@ -72,3 +72,18 @@ export const getNewMems = (variables: { token: string }): Promise<Mem[]> => {
     .then((response) => handleResponseWithJson(response, 200))
     .catch(handleError);
 };
+
+export const getMem = (variables: {
+  id: number;
+  token: string;
+}): Promise<Mem> => {
+  return fetch(`http://localhost:8080/mems/${variables.id}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${variables.token}`,
+      "Content-type": "application/json",
+    },
+  })
+    .then((response) => handleResponseWithJson(response, 200))
+    .catch(handleError);
+};

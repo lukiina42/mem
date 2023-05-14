@@ -23,14 +23,12 @@ export class NotificationsGateway implements OnGatewayConnection {
   handleConnection(socket: Socket) {
     const userId = socket.handshake.query.userId;
     if (typeof userId == 'string') {
-      console.log(`New client connected with user ID ${userId}`);
       this.connections.set(userId, socket);
     }
   }
 
   handleDisconnect(socket: Socket) {
     const userId = socket.handshake.query.userId as string;
-    console.log(`Client disconnected with user ID ${userId}`);
     this.connections.delete(userId);
   }
 

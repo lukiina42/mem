@@ -10,6 +10,7 @@ import { UsersService } from 'src/user/users.service';
 import { MemsService } from 'src/mem/mem.service';
 import { mapCommentDbToCommentDto } from 'src/mapper/commentMapper';
 import { S3Service } from 'src/s3/s3.service';
+import { NotificationService } from 'src/notifications/notification.service';
 
 export interface CommentDb {
   id: number;
@@ -41,6 +42,7 @@ export class CommentsService {
     private readonly usersService: UsersService,
     private readonly memsService: MemsService,
     private readonly s3Service: S3Service,
+    private notificationsService: NotificationService,
   ) {}
 
   async findOneById(id: number): Promise<Comment> {
@@ -53,7 +55,6 @@ export class CommentsService {
     memId: string,
     parentCommentId: string,
   ) {
-    console.log(memId);
     if (!content) throw new BadRequestException('Comment must contain text');
     const user = await this.usersService.findOneByIdRaw(ownerId);
     if (!user)
@@ -70,10 +71,18 @@ export class CommentsService {
     if (memId) {
       try {
         const parsedMemId = parseInt(memId);
-        const memParent = await this.memsService.findOneById(parsedMemId);
+        const memParent = await this.memsService.findOneByIdWithOwnerId(
+          parsedMemId,
+        );
         if (!memParent)
           throw new BadRequestException('The parent mem was not found');
         comment.mem = memParent;
+        this.notificationsService.createNotification(
+          memParent.owner,
+          user,
+          memParent,
+          'newComment',
+        );
       } catch (error) {
         throw new BadRequestException(error.message);
       }
