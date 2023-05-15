@@ -5,16 +5,18 @@ import CustomLink from "../helper/CustomLink";
 import { BsBookmarksFill, BsBookmarks } from "react-icons/bs";
 import { HiBellAlert, HiOutlineBellAlert } from "react-icons/hi2";
 import ProfileWrapper from "../profileSettings/ProfileWrapper";
-import { useSession } from "next-auth/react";
 import { useNotificationSocket } from "@/hooks/useNotificationSocket";
+import { Session, User } from "next-auth";
 
-export default function SidebarLinks() {
+export default function SidebarLinks({
+  userData,
+}: {
+  userData: Session | null;
+}) {
   const segment = useSelectedLayoutSegment();
 
-  const userData = useSession();
-
   const { notification, setNotification, notificationTrigger } =
-    useNotificationSocket(userData.data);
+    useNotificationSocket(userData);
 
   //TODO REVALIDATE NOTIFICATIONS PATH IF NEW NOTIFICATION APPEARS
 

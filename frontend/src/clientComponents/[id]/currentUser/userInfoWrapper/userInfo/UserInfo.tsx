@@ -9,7 +9,7 @@ import { CgProfile } from "react-icons/cg";
 import { useMutation } from "react-query";
 import { useRouter } from "next/navigation";
 import ChangeAvatarForm from "./changeAvatarForm/ChangeAvatarForm";
-import { UserData } from "@/app/[id]/page";
+import { UserData } from "@/app/user/[id]/page";
 
 export default function UserInfo({ user }: { user: UserData }) {
   const [showProfileModal, setShowProfileModal] = React.useState(false);

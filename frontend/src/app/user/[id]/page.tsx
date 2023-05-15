@@ -3,6 +3,8 @@ import UserInfoWrapper from "@/clientComponents/[id]/currentUser/userInfoWrapper
 import { User } from "@/types/user";
 import ProfileHeaderWrapper from "@/clientComponents/[id]/otherUsers/ProfileHeaderWrapper";
 import { retrieveProfileInfo } from "@/serverApiCalls/[profileId]";
+import { retrieveCookiesSession } from "@/serverApiCalls/retrieveCookiesSession";
+import { getServerSession } from "next-auth";
 
 interface GetProfileCallResponse {
   user: UserData;

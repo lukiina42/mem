@@ -47,7 +47,7 @@ export default function MemItem({
       </Link>
       <div className="flex flex-col gap-1 grow">
         <div className="flex justify-between">
-          <Link href={`/${mem.owner.id}`}>
+          <Link href={`/user/${mem.owner.id}`}>
             <div className="font-bold text-lg hover:underline">
               {mem.owner.username}
             </div>

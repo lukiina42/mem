@@ -1,4 +1,4 @@
-import ImageLoading from "../ImageLoading";
+import ImageLoading from "../../ImageLoading";
 
 export default function Loading() {
   return <ImageLoading />;

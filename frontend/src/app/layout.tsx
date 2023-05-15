@@ -13,13 +13,12 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const data = await retrieveCookiesSession();
-  console.log("userSession data", data);
+  const data = await getSession();
   return (
     <html lang="en">
       <body>
-        <main className="h-screen w-screen flex flex-row overflow-hidden">
-          <Header />
+        <main className="h-screen w-screen flex flex-row">
+          <Header userData={data} />
           <div className="lg:max-w-[50rem] lg:min-w-[50rem] min-w-0 w-3/4">
             {children}
           </div>
