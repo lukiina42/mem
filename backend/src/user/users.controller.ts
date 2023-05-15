@@ -32,6 +32,7 @@ export class UsersController {
     } catch (error) {
       throw error;
     }
+    console.log(`Get user by id ${id} call`);
     const user = await this.userService.findOneByIdWithAvatar(parsedId);
     return user;
   }

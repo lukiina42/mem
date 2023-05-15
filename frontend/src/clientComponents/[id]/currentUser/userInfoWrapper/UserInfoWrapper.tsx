@@ -4,7 +4,7 @@ import UserInfo from "./userInfo/UserInfo";
 import { QueryClientProvider } from "react-query";
 import { queryClient } from "@/lib/queryClient";
 import { SessionProvider } from "next-auth/react";
-import { UserData } from "@/app/[id]/page";
+import { UserData } from "@/app/user/[id]/page";
 
 export default function UserInfoWrapper({ user }: { user: UserData }) {
   return (

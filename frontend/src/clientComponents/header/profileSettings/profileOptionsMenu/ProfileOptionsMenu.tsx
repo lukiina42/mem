@@ -52,7 +52,7 @@ export default function ProfileOptionsMenu({
           )}
           <div
             onClick={() => {
-              redirect!(`/${user.id}`);
+              redirect!(`/user/${user.id}`);
               setShowMenu!(false);
             }}
             className={`font-bold w-full text-center border-t ${

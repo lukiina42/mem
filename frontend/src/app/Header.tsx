@@ -1,8 +1,9 @@
 import Link from "next/link";
 import React from "react";
 import HeaderWrapper from "@/clientComponents/header/sidebarLinks/HeaderWrapper";
+import { Session, User } from "next-auth";
 
-export default function Header() {
+export default function Header({ userData }: { userData: Session | null }) {
   return (
     <>
       <nav className="grow shadow-xl max-h-full flex flex-col justify-start items-end @container min-w-[64px] gap-12">
@@ -19,7 +20,7 @@ export default function Header() {
             </div>
           </Link>
           <div className="mr-5">
-            <HeaderWrapper />
+            <HeaderWrapper userData={userData} />
           </div>
         </div>
       </nav>

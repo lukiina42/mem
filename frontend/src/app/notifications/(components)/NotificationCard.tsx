@@ -15,7 +15,7 @@ export default function NotificationCard({
   return (
     <div className={`flex w-full mt-2 ${borderTop && "border-t"}`}>
       <Link
-        href={`/${notification.trigerredBy.id}`}
+        href={`/user/${notification.trigerredBy.id}`}
         className="min-w-[4rem] flex justify-center mt-2"
       >
         {notification.trigerredBy.avatarImageUrl ? (
@@ -30,7 +30,7 @@ export default function NotificationCard({
       </Link>
       <div className="flex flex-col grow">
         <div className="flex justify-between mt-1">
-          <Link href={`/${notification.trigerredBy.id}`}>
+          <Link href={`/user/${notification.trigerredBy.id}`}>
             <div className="font-bold text-lg hover:underline">
               {notification.trigerredBy.username}
             </div>

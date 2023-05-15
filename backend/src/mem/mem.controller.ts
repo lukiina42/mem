@@ -53,6 +53,7 @@ export class MemsController {
     @Param('id') userId: string,
     @Query() query: { requestingUser: string },
   ) {
+    console.log(`Getting mems of user ${userId}`);
     return await this.memService.getMemsOfUser(userId, query.requestingUser);
   }
 

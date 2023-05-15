@@ -22,7 +22,6 @@ const checkProfileJwt = async (
   //on localhost this saves around 20ms :)
   //@ts-ignore
   if (lastCheck && new Date() - new Date(lastCheck) < ONE_DAY) {
-    console.log("skipping jwt check to BE!");
     return {
       isAuthenticated: true,
       jwtLastCheck: lastCheck,
@@ -39,7 +38,6 @@ const checkProfileJwt = async (
     headers: {
       Authorization: `Bearer ${token?.token}`,
     },
-    next: { revalidate: 84000 },
   });
   switch (jwtResponse.status) {
     case 200:

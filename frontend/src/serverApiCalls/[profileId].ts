@@ -1,4 +1,4 @@
-import { UserData, UserDataDto } from "@/app/[id]/page";
+import { UserData, UserDataDto } from "@/app/user/[id]/page";
 import { retrieveCookiesSession } from "./retrieveCookiesSession";
 
 export const retrieveProfileInfo = async (userId: number) => {

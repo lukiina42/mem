@@ -70,7 +70,7 @@ export default function RecursiveComment(props: RecursiveCommentProps) {
                     : "bg-slate-100"
                 }  rounded-3xl ${isRoot && !isFirst && "mt-2"}`}
               >
-                <Link href={`/${comment.ownerId}`}>
+                <Link href={`/user/${comment.ownerId}`}>
                   <div className="font-bold hover:cursor-pointer hover:underline">
                     {comment.ownerUsername}
                   </div>
