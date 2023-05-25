@@ -89,6 +89,10 @@ export default function MemItem({
               />
             )}
             <div className="font-bold text-xl">{amountOfHearts}</div>
+            {/* should open the modal but that doesn't work currently */}
+            {/* <Link href={`/mem/${mem.id}`}>
+              <FaRegComment className="ml-4 hover:cursor-pointer" size={25} />
+            </Link> */}
             {setCommentsModal && (
               <FaRegComment
                 onClick={() => setCommentsModal(true)}

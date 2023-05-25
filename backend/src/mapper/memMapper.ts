@@ -23,7 +23,7 @@ export const mapMemsDbToDto = async (
 export const mapMemDbToDto = async (
   mem: MemDto,
   s3Service: S3Service,
-  user: User,
+  user: User | null,
 ) => {
   if (mem.imageKey) {
     const imageUrl = await s3Service.retrieveImage(mem.imageKey);

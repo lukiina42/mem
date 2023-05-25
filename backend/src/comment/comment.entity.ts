@@ -27,14 +27,18 @@ export class Comment {
   @JoinColumn({ name: 'owner_id' })
   owner: User;
 
-  @ManyToOne(() => Mem, (mem) => mem.comments)
+  @ManyToOne(() => Mem, (mem) => mem.comments, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'mem_id' })
   mem: Mem;
 
   @OneToMany(() => Comment, (comment) => comment.parent)
   answers: Comment[];
 
-  @ManyToOne(() => Comment, (comment) => comment.answers)
+  @ManyToOne(() => Comment, (comment) => comment.answers, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'parent_id' })
   parent: Comment;
 
