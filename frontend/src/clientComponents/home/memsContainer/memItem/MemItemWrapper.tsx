@@ -6,6 +6,7 @@ import { useState } from "react";
 import MemDetail from "./commentsModal/MemDetail";
 import MemItem from "./MemItem";
 import { useHeart } from "@/hooks/useHeart";
+import ModalWrapper from "@/utilComponents/ModalWrapper";
 
 interface MemItemInterface {
   mem: Mem;
@@ -49,16 +50,17 @@ export default function MemItemWrapper({
         isOwnedByCurrentUser={isOwnedByCurrentUser}
       />
       {commentsModalOpen && (
-        <MemDetail
-          isHearted={isHearted}
-          amountOfHearts={amountOfHearts}
-          mem={mem}
-          handleHeartClick={handleHeartClick}
-          closeModal={() => setCommentsModalOpen(false)}
-          isOwnedByCurrentUser={isOwnedByCurrentUser}
-          handleDeleteMemClick={handleDeleteMemClick}
-          token={user?.token ? user.token : ""}
-        />
+        <ModalWrapper closeModal={() => setCommentsModalOpen(false)}>
+          <MemDetail
+            isHearted={isHearted}
+            amountOfHearts={amountOfHearts}
+            mem={mem}
+            handleHeartClick={handleHeartClick}
+            isOwnedByCurrentUser={isOwnedByCurrentUser}
+            handleDeleteMemClick={handleDeleteMemClick}
+            token={user?.token ? user.token : ""}
+          />
+        </ModalWrapper>
       )}
     </div>
   );

@@ -41,8 +41,6 @@ export class Mem {
   @ManyToOne(() => User, (user) => user.mems)
   owner: User;
 
-  @OneToMany(() => Comment, (comment) => comment.mem, {
-    cascade: ['remove'],
-  })
+  @OneToMany(() => Comment, (comment) => comment.mem)
   comments: Comment[];
 }

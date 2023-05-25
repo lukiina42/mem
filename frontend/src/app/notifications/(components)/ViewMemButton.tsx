@@ -7,6 +7,7 @@ import { useState } from "react";
 import MemDetail from "@/clientComponents/home/memsContainer/memItem/commentsModal/MemDetail";
 import { useHeartMutation } from "@/clientApiCalls/reactQuery/heartMutation";
 import { useHeart } from "@/hooks/useHeart";
+import ModalWrapper from "@/utilComponents/ModalWrapper";
 
 export default function ViewMemButton({
   notification,
@@ -46,16 +47,17 @@ export default function ViewMemButton({
         View mem
       </div>
       {displayMemDetail && mem && (
-        <MemDetail
-          isHearted={isHearted}
-          amountOfHearts={mem.heartedBy.length}
-          mem={mem}
-          closeModal={() => setDisplayMemDetail(false)}
-          handleHeartClick={handleHeartClick}
-          isOwnedByCurrentUser={false}
-          handleDeleteMemClick={() => {}}
-          token={token}
-        />
+        <ModalWrapper closeModal={() => setDisplayMemDetail(false)}>
+          <MemDetail
+            isHearted={isHearted}
+            amountOfHearts={mem.heartedBy.length}
+            mem={mem}
+            handleHeartClick={handleHeartClick}
+            isOwnedByCurrentUser={false}
+            handleDeleteMemClick={() => {}}
+            token={token}
+          />
+        </ModalWrapper>
       )}
     </div>
   );

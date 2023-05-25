@@ -25,13 +25,14 @@ export class MemsController {
   constructor(private readonly memService: MemsService) {}
 
   @UseInterceptors(ClassSerializerInterceptor)
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async getMem(@Param('id') id: number, @Request() req: JWTReqUser) {
-    const mem = await this.memService.retrieveMemWithImageUrl(
-      id,
-      req.user.userId,
-    );
+  async getMem(
+    @Param('id') id: number,
+    @Query() query: { requestingUserId: string },
+  ) {
+    //is 0 if no user is logged in
+    const userId = parseInt(query.requestingUserId);
+    const mem = await this.memService.retrieveMemWithImageUrl(id, userId);
     if (!mem) throw new NotFoundException(`User with id ${id} was not found`);
     return mem;
   }

@@ -53,7 +53,10 @@ export class MemsService {
 
   async retrieveMemWithImageUrl(id: number, userId: number): Promise<Mem> {
     const mem = await this.findOneByIdWithHeartedByAndOwner(id);
-    const user = await this.usersService.findOneByIdWithHeartedMems(userId);
+    let user = null;
+    if (userId) {
+      user = await this.usersService.findOneByIdWithHeartedMems(userId);
+    }
     return await mapMemDbToDto(mem, this.s3Service, user);
   }
 
