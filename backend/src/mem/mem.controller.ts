@@ -31,6 +31,7 @@ export class MemsController {
     @Query() query: { requestingUserId: string },
   ) {
     //is 0 if no user is logged in
+    console.log(query.requestingUserId);
     const userId = parseInt(query.requestingUserId);
     const mem = await this.memService.retrieveMemWithImageUrl(id, userId);
     if (!mem) throw new NotFoundException(`User with id ${id} was not found`);
@@ -52,22 +53,40 @@ export class MemsController {
   @Get('/user/:id')
   async getMemsOfUser(
     @Param('id') userId: string,
-    @Query() query: { requestingUser: string },
+    @Query() query: { requestingUser?: string; from: string; to: string },
   ) {
-    console.log(`Getting mems of user ${userId}`);
-    return await this.memService.getMemsOfUser(userId, query.requestingUser);
+    return await this.memService.getMemsOfUser(
+      userId,
+      query.requestingUser,
+      query.from,
+      query.to,
+    );
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('/')
-  async getRelevantMems(@Request() req: JWTReqUser) {
-    return await this.memService.getRelevantMems(req.user.userId);
+  async getRelevantMems(
+    @Request() req: JWTReqUser,
+    @Query() query: { from: string; to: string },
+  ) {
+    return await this.memService.getRelevantMems(
+      req.user.userId,
+      query.from,
+      query.to,
+    );
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('/home/newest')
-  async getNewestMems(@Request() req: JWTReqUser) {
-    return await this.memService.getNewestMems(req.user.userId);
+  async getNewestMems(
+    @Request() req: JWTReqUser,
+    @Query() query: { from: string; to: string },
+  ) {
+    return await this.memService.getNewestMems(
+      req.user.userId,
+      query.from,
+      query.to,
+    );
   }
 
   @UseGuards(JwtAuthGuard)

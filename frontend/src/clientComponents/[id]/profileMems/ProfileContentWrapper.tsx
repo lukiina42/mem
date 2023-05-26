@@ -6,25 +6,27 @@ import { queryClient } from "@/lib/queryClient";
 import { ToastContainer } from "react-toastify";
 import { Mem } from "@/types/mem";
 import MemsContainer from "@/clientComponents/home/memsContainer/MemsContainer";
+import { JWT } from "next-auth/jwt";
 
 export default function ProfileMemsWrapper({
   mems,
-  isLoggedInUser,
+  userId,
+  sessionData,
 }: {
   mems: Mem[];
   isLoggedInUser: boolean;
+  userId: number;
+  sessionData: JWT | null;
 }) {
   return (
     <SessionProvider>
       <QueryClientProvider client={queryClient}>
-        {isLoggedInUser && (
-          <div className="font-bold flex flex-col bg-white ml-4 mt-4">
-            Your mem&apos;s:
-          </div>
-        )}
-
         <div className="w-full flex flex-col justify-center items-center pb-b">
-          <MemsContainer mems={mems} />
+          <MemsContainer
+            mems={mems}
+            requestUrl={`/user/${userId}`}
+            sessionData={sessionData}
+          />
         </div>
       </QueryClientProvider>
       <ToastContainer

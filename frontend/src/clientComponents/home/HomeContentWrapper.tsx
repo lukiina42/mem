@@ -11,7 +11,7 @@ import { DefaultHomeProps } from "@/app/home/page";
 
 export default function HomeContentWrapper({
   mems,
-  sessionToken,
+  sessionData,
   isUserFollowingAnyone,
 }: DefaultHomeProps) {
   return (
@@ -19,7 +19,7 @@ export default function HomeContentWrapper({
       <QueryClientProvider client={queryClient}>
         <HomeContent
           mems={mems}
-          sessionToken={sessionToken}
+          sessionData={sessionData}
           isUserFollowingAnyone={isUserFollowingAnyone}
         />
       </QueryClientProvider>

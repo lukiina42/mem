@@ -1,6 +1,7 @@
 import HomeContentWrapper from "@/clientComponents/home/HomeContentWrapper";
 import { Mem } from "@/types/mem";
 import { retrieveHomeMems } from "@/serverApiCalls/home";
+import { JWT } from "next-auth/jwt";
 
 const getMems = async () => {
   return await retrieveHomeMems();
@@ -8,22 +9,24 @@ const getMems = async () => {
 
 export interface DefaultHomeProps {
   mems: Mem[];
-  sessionToken: string;
+  sessionData: JWT;
   isUserFollowingAnyone: boolean;
 }
 
 export default async function page() {
-  const { mems, sessionToken, isUserFollowingAnyone } = await getMems();
+  const { mems, sessionData, isUserFollowingAnyone } = await getMems();
 
   return (
     <div className="h-full w-full flex flex-col overflow-y-auto">
-      <div className="h-16 w-full flex items-center border-b-2">
-        <div className="font-bold text-xl ml-4">Home</div>
+      <div className="w-full border-b-2">
+        <div className="h-16 flex items-center font-bold text-xl ml-4">
+          Home
+        </div>
       </div>
       <div className="grow">
         <HomeContentWrapper
           mems={mems}
-          sessionToken={sessionToken}
+          sessionData={sessionData}
           isUserFollowingAnyone={isUserFollowingAnyone}
         />
       </div>

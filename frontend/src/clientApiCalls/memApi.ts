@@ -61,14 +61,28 @@ export const heartMem = (variables: {
     .catch(handleError);
 };
 
-export const getNewMems = (variables: { token: string }): Promise<Mem[]> => {
-  return fetch(`http://localhost:8080/mems/home/newest`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${variables.token}`,
-      "Content-type": "application/json",
-    },
-  })
+export const getMems = (variables: {
+  token: string;
+  from: number;
+  to: number;
+  requestUrl: string;
+  requestingUser?: string;
+}): Promise<Mem[]> => {
+  console.log(variables.token);
+  return fetch(
+    `http://localhost:8080/mems${variables.requestUrl}?from=${
+      variables.from
+    }&to=${variables.to}&requestingUser=${
+      variables.requestingUser && variables.requestingUser
+    }`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${variables.token}`,
+        "Content-type": "application/json",
+      },
+    }
+  )
     .then((response) => handleResponseWithJson(response, 200))
     .catch(handleError);
 };
@@ -76,14 +90,18 @@ export const getNewMems = (variables: { token: string }): Promise<Mem[]> => {
 export const getMem = (variables: {
   id: number;
   token: string;
+  requestUserId: string;
 }): Promise<Mem> => {
-  return fetch(`http://localhost:8080/mems/${variables.id}`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${variables.token}`,
-      "Content-type": "application/json",
-    },
-  })
+  return fetch(
+    `http://localhost:8080/mems/${variables.id}?requestingUserId=${variables.requestUserId}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${variables.token}`,
+        "Content-type": "application/json",
+      },
+    }
+  )
     .then((response) => handleResponseWithJson(response, 200))
     .catch(handleError);
 };

@@ -32,7 +32,7 @@ export default function MemItem({
   return (
     <>
       <Link
-        href={`/${mem.owner.id}`}
+        href={`user/${mem.owner.id}`}
         className="min-w-[4rem] flex justify-center mt-2"
       >
         {mem.owner.avatarImageUrl ? (

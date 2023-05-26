@@ -58,7 +58,7 @@ export default function ProfileOptionsMenu({
             className={`font-bold w-full text-center border-t ${
               user?.name?.length && user.name.length > 14
                 ? "border-t rounded-t-none"
-                : "rounded-t-lg"
+                : "rounded-t-lg border-none"
             } border-b hover:cursor-pointer hover:bg-blue-300 py-2 transition-all duration-200`}
           >
             Profile
