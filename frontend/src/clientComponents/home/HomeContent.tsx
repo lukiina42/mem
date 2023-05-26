@@ -4,20 +4,27 @@ import { useState } from "react";
 import MemsContainer from "./memsContainer/MemsContainer";
 import NewMemForm from "./newMemForm/NewMemForm";
 import { useQuery } from "react-query";
-import { getNewMems } from "@/clientApiCalls/memApi";
+import { getMems } from "@/clientApiCalls/memApi";
 import { DefaultHomeProps } from "@/app/home/page";
 import MemType from "./memTypeButton/MemTypeButton";
 
 export default function HomeContent({
   mems,
-  sessionToken,
+  sessionData,
   isUserFollowingAnyone,
 }: DefaultHomeProps) {
   const {
     data: newestMems,
     refetch,
     isLoading,
-  } = useQuery("newMems", () => getNewMems({ token: sessionToken }));
+  } = useQuery("newMems", () =>
+    getMems({
+      token: sessionData!.token,
+      requestUrl: "/home/newest",
+      from: 0,
+      to: 9,
+    })
+  );
 
   const [memsType, setMemsType] = useState<"Following" | "Newest">(
     isUserFollowingAnyone ? "Following" : "Newest"
@@ -50,6 +57,8 @@ export default function HomeContent({
       </div>
       <div className="w-full flex flex-col justify-center items-center pb-b">
         <MemsContainer
+          sessionData={sessionData}
+          requestUrl={memsType == "Following" ? "/" : "/home/newest"}
           mems={
             memsType == "Following" || !isUserFollowingAnyone
               ? mems

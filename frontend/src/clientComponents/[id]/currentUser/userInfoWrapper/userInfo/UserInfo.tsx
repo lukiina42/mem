@@ -7,18 +7,15 @@ import { useSession } from "next-auth/react";
 import React from "react";
 import { CgProfile } from "react-icons/cg";
 import { useMutation } from "react-query";
-import { useRouter } from "next/navigation";
 import ChangeAvatarForm from "./changeAvatarForm/ChangeAvatarForm";
 import { UserData } from "@/app/user/[id]/page";
 
-export default function UserInfo({ user }: { user: UserData }) {
+export default function LoggedUserInfo({ user }: { user: UserData }) {
   const [showProfileModal, setShowProfileModal] = React.useState(false);
   const [file, setFile] = React.useState<File | null>(null);
   const [imageDeleted, setImageDeleted] = React.useState(false);
 
   const sessionUser = useSession();
-
-  const router = useRouter();
 
   const fileSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {

@@ -5,7 +5,7 @@ import { User } from 'src/user/user.entity';
 
 export const mapMemsDbToDto = async (
   mems: Mem[],
-  user: User,
+  user: User | null,
   s3Service: S3Service,
 ): Promise<MemDto[]> => {
   const memsFe: MemDto[] = [];

@@ -18,10 +18,11 @@ const checkProfileJwt = async (
   req: NextRequestWithAuth
 ): Promise<checkProfileResponseType> => {
   const lastCheck: string | undefined = req.cookies.get("jwtLastCheck")?.value;
+  const sessionToken = req.cookies.get("next-auth.session-token");
 
   //on localhost this saves around 20ms :)
   //@ts-ignore
-  if (lastCheck && new Date() - new Date(lastCheck) < ONE_DAY) {
+  if (lastCheck && new Date() - new Date(lastCheck) < ONE_DAY && sessionToken) {
     return {
       isAuthenticated: true,
       jwtLastCheck: lastCheck,

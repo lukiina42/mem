@@ -7,10 +7,11 @@ import MemDetail from "./commentsModal/MemDetail";
 import MemItem from "./MemItem";
 import { useHeart } from "@/hooks/useHeart";
 import ModalWrapper from "@/utilComponents/ModalWrapper";
+import { JWT } from "next-auth/jwt";
 
 interface MemItemInterface {
   mem: Mem;
-  user: User | undefined;
+  user: JWT | null;
   handleDeleteMemClick: (id: number) => void;
   displayBorder: boolean;
   handleHeartMemRequest: (memId: number) => void;

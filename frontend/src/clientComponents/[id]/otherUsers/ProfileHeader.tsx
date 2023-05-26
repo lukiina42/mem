@@ -51,7 +51,9 @@ export default function ProfileHeader({
 
   return (
     <div className="h-16 w-full justify-between flex items-center border-b-2">
-      <div className="font-bold text-xl ml-4">{username}&apos;s mems</div>
+      <div className="font-bold text-xl ml-4 h-16 flex items-center">
+        {username}&apos;s mems
+      </div>
       {session.data?.user?.token && (
         <div
           className="relative mr-4 hover:cursor-pointer group"

@@ -95,7 +95,8 @@ export class MemsService {
     return mem.id;
   }
 
-  async getRelevantMems(userId: number) {
+  async getRelevantMems(userId: number, from: string, to: string) {
+    const { parsedFrom, parsedTo } = this.parseFromAndToToNumber(from, to);
     const user =
       await this.usersService.findOneByIdWithHeartedMemsAndWithFollowingUsers(
         userId,
@@ -111,7 +112,8 @@ export class MemsService {
         .orderBy('mem.createdDate', 'DESC')
         .leftJoinAndSelect('mem.owner', 'owner')
         .leftJoinAndSelect('mem.heartedBy', 'heartedBy')
-        .take(10)
+        .skip(parsedFrom)
+        .take(parsedTo - parsedFrom + 1)
         .getMany();
     } else {
       mems = await this.memRepository
@@ -122,7 +124,8 @@ export class MemsService {
         })
         .orderBy('mem.createdDate', 'DESC')
         .leftJoinAndSelect('mem.heartedBy', 'heartedBy')
-        .take(10)
+        .skip(parsedFrom)
+        .take(parsedTo - parsedFrom + 1)
         .getMany();
     }
 
@@ -132,7 +135,20 @@ export class MemsService {
     };
   }
 
-  async getNewestMems(userId: number) {
+  parseFromAndToToNumber = (from: string, to: string) => {
+    let parsedFrom, parsedTo;
+    try {
+      parsedFrom = parseInt(from);
+      parsedTo = parseInt(to);
+    } catch (e) {
+      throw new BadRequestException('Invalid from or to query params');
+    }
+    return { parsedFrom, parsedTo };
+  };
+
+  async getNewestMems(userId: number, from: string, to: string) {
+    const { parsedFrom, parsedTo } = this.parseFromAndToToNumber(from, to);
+
     const user =
       await this.usersService.findOneByIdWithHeartedMemsAndWithFollowingUsers(
         userId,
@@ -144,18 +160,27 @@ export class MemsService {
       .orderBy('mem.createdDate', 'DESC')
       .leftJoinAndSelect('mem.owner', 'owner')
       .leftJoinAndSelect('mem.heartedBy', 'heartedBy')
-      .take(10)
+      .skip(parsedFrom)
+      .take(parsedTo - parsedFrom + 1)
       .getMany();
 
     return mapMemsDbToDto(mems, user, this.s3Service);
   }
 
-  async getMemsOfUser(userId: string, requestingUserId: string) {
+  async getMemsOfUser(
+    userId: string,
+    requestingUserId: string,
+    from: string,
+    to: string,
+  ) {
+    const { parsedFrom, parsedTo } = this.parseFromAndToToNumber(from, to);
     const id = parseInt(userId);
-    const idOfRequestingUser = parseInt(requestingUserId);
+    const idOfRequestingUser = requestingUserId
+      ? parseInt(requestingUserId)
+      : 0;
 
     let requestingUser: null | User = null;
-    if (requestingUserId) {
+    if (idOfRequestingUser) {
       requestingUser = await this.usersService.findOneByIdWithHeartedMems(
         idOfRequestingUser,
       );
@@ -168,7 +193,8 @@ export class MemsService {
       .where('mem.owner.id = :id', { id })
       .orderBy('mem.createdDate', 'DESC')
       .leftJoinAndSelect('mem.heartedBy', 'heartedBy')
-      .take(10)
+      .skip(parsedFrom)
+      .take(parsedTo - parsedFrom + 1)
       .getMany();
 
     return mapMemsDbToDto(mems, requestingUser, this.s3Service);
@@ -189,7 +215,7 @@ export class MemsService {
       throw new BadRequestException(
         'The mem which should be deleted does not exist',
       );
-    await this.s3Service.deleteImage(memToDelete.imageKey);
+    if (memToDelete.imageKey) this.s3Service.deleteImage(memToDelete.imageKey);
     await this.memRepository.remove(memToDelete);
   }
 

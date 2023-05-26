@@ -8,26 +8,31 @@ import MemDetail from "@/clientComponents/home/memsContainer/memItem/commentsMod
 import { useHeartMutation } from "@/clientApiCalls/reactQuery/heartMutation";
 import { useHeart } from "@/hooks/useHeart";
 import ModalWrapper from "@/utilComponents/ModalWrapper";
+import { JWT } from "next-auth/jwt";
 
 export default function ViewMemButton({
   notification,
-  token,
+  sessionData,
 }: {
   notification: Notification;
-  token: string;
+  sessionData: JWT;
 }) {
   const {
     data: mem,
     refetch,
     isLoading,
   } = useQuery(`mem${notification.id}`, () =>
-    getMem({ id: notification.relatesToMemId!, token })
+    getMem({
+      id: notification.relatesToMemId!,
+      token: sessionData.token,
+      requestUserId: sessionData.sub!,
+    })
   );
 
   const heartMemMutation = useHeartMutation();
 
   const handleHeartMemRequest = (memId: number) => {
-    heartMemMutation.mutate({ memId, token: token });
+    heartMemMutation.mutate({ memId, token: sessionData.token });
   };
 
   const { handleHeartClick, isHearted, amountOfHearts } = useHeart(
@@ -50,12 +55,12 @@ export default function ViewMemButton({
         <ModalWrapper closeModal={() => setDisplayMemDetail(false)}>
           <MemDetail
             isHearted={isHearted}
-            amountOfHearts={mem.heartedBy.length}
+            amountOfHearts={amountOfHearts}
             mem={mem}
             handleHeartClick={handleHeartClick}
             isOwnedByCurrentUser={false}
             handleDeleteMemClick={() => {}}
-            token={token}
+            token={sessionData.token}
           />
         </ModalWrapper>
       )}

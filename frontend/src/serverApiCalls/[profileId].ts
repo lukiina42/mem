@@ -31,8 +31,8 @@ export const retrieveProfileInfo = async (userId: number) => {
     followedByCurrentUser: isFollowedByCurrentUser,
   };
 
-  let memsFetchUrl = `http://localhost:8080/mems/user/${userId}`;
-  memsFetchUrl += loggedInUserId ? `?requestingUser=${loggedInUserId}` : "";
+  let memsFetchUrl = `http://localhost:8080/mems/user/${userId}?from=0&to=9`;
+  memsFetchUrl += loggedInUserId ? `&requestingUser=${loggedInUserId}` : "";
 
   const memsResponse = await fetch(memsFetchUrl, {
     next: { revalidate: 0 },
@@ -49,5 +49,6 @@ export const retrieveProfileInfo = async (userId: number) => {
   return {
     user: userDataDto,
     isLoggedInUser: loggedInUserId ? parseInt(loggedInUserId) == userId : false,
+    sessionData: sessionData,
   };
 };

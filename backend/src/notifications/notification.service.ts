@@ -104,7 +104,8 @@ export class NotificationService {
     return notificationsDto;
   }
 
-  //86 400 000
+  //86 400 000 is a day xd
+  //currently set to 30 minutes
   removeNotificationTimeout(notification: Notification) {
     return setTimeout(() => this.removeNotification(notification), 1800000);
   }

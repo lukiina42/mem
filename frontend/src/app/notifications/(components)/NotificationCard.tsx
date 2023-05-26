@@ -2,15 +2,16 @@ import { Notification } from "@/types/notification";
 import Link from "next/link";
 import { CgProfile } from "react-icons/cg";
 import ViewMemButtonWrapper from "./ViewMemButtonWrapper";
+import { JWT } from "next-auth/jwt";
 
 export default function NotificationCard({
   notification,
   borderTop,
-  token,
+  sessionData,
 }: {
   notification: Notification;
   borderTop: boolean;
-  token: string;
+  sessionData: JWT;
 }) {
   return (
     <div className={`flex w-full mt-2 ${borderTop && "border-t"}`}>
@@ -44,7 +45,10 @@ export default function NotificationCard({
         </div>
         <div className="mt-1">{notification.content}</div>
         {notification.relatesToMemId && (
-          <ViewMemButtonWrapper notification={notification} token={token} />
+          <ViewMemButtonWrapper
+            notification={notification}
+            sessionData={sessionData}
+          />
         )}
       </div>
     </div>

@@ -35,7 +35,9 @@ export class Notification {
     this.seen = false;
   }
 
-  @ManyToOne(() => User, (user) => user.notifications)
+  @ManyToOne(() => User, (user) => user.notifications, {
+    onDelete: 'CASCADE',
+  })
   notifiedUser: User;
 
   @RelationId((notification: Notification) => notification.notifiedUser)
@@ -47,7 +49,9 @@ export class Notification {
   @RelationId((notification: Notification) => notification.trigerredBy)
   trigerredByUserId: number;
 
-  @ManyToOne(() => Mem)
+  @ManyToOne(() => Mem, {
+    onDelete: 'CASCADE',
+  })
   relatesTo: Mem;
 
   @RelationId((notification: Notification) => notification.relatesTo)

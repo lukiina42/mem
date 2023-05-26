@@ -1,10 +1,11 @@
 import { Mem } from "@/types/mem";
 import { retrieveCookiesSession } from "./retrieveCookiesSession";
+import { JWT } from "next-auth/jwt";
 
 export const retrieveHomeMems = async () => {
   const sessionData = await retrieveCookiesSession();
 
-  const response = await fetch("http://localhost:8080/mems", {
+  const response = await fetch("http://localhost:8080/mems?from=0&to=9", {
     method: "GET",
     headers: {
       Authorization: `Bearer ${sessionData?.token}`,
@@ -23,6 +24,6 @@ export const retrieveHomeMems = async () => {
   return {
     mems,
     isUserFollowingAnyone,
-    sessionToken: sessionData!.token,
+    sessionData: sessionData as JWT,
   };
 };
