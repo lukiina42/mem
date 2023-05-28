@@ -18,6 +18,9 @@ import { UsersService } from './users.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { JWTReqUser } from 'src/types';
+import { Roles } from './roles/role.decorator';
+import { Role } from './roles/role.enum';
+import { RolesGuard } from './roles/roles.guard';
 
 @Controller('/users')
 export class UsersController {
@@ -72,7 +75,8 @@ export class UsersController {
   }
 
   @Put('/avatar')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @HttpCode(204)
   @UseInterceptors(FileInterceptor('image'))
   async updateAvatar(

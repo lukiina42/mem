@@ -18,6 +18,8 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { NotificationsGateway } from './notifications/notification.gateway';
 import { Notification } from './notifications/notification.entity';
 import { ScheduleModule } from '@nestjs/schedule';
+import { RolesGuard } from './user/roles/roles.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -50,6 +52,10 @@ import { ScheduleModule } from '@nestjs/schedule';
     JwtService,
     S3Service,
     NotificationsGateway,
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
   ],
 })
 export class AppModule {}
