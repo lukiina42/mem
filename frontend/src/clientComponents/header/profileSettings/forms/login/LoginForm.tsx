@@ -27,9 +27,14 @@ export default function LoginForm(props: {
     try {
       const data = await signIn("credentials", {
         callbackUrl: "/home",
+        //redirect: false,
         email: formData.email,
         password: formData.password,
       });
+      // if (data?.ok) {
+      //   const data = await getSession();
+      //   redirect("/home");
+      // }
     } catch (error) {
       console.log(error);
     }

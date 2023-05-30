@@ -15,6 +15,7 @@ interface MemItemInterface {
   handleDeleteMemClick: (id: number) => void;
   displayBorder: boolean;
   handleHeartMemRequest: (memId: number) => void;
+  enableDelete?: boolean;
 }
 
 export default function MemItemWrapper({
@@ -23,6 +24,7 @@ export default function MemItemWrapper({
   handleDeleteMemClick,
   displayBorder,
   handleHeartMemRequest,
+  enableDelete,
 }: MemItemInterface) {
   const { handleHeartClick, isHearted, amountOfHearts } = useHeart(
     mem.heartedByCurrentUser,
@@ -49,6 +51,7 @@ export default function MemItemWrapper({
         isHearted={isHearted}
         amountOfHearts={amountOfHearts}
         isOwnedByCurrentUser={isOwnedByCurrentUser}
+        enableDelete={enableDelete}
       />
       {commentsModalOpen && (
         <ModalWrapper closeModal={() => setCommentsModalOpen(false)}>

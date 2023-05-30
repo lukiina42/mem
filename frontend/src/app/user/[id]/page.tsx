@@ -25,11 +25,7 @@ export default async function profile({ params }: { params: { id: number } }) {
       {isLoggedInUser ? (
         <LoggedUserInfoWrapper user={user} />
       ) : (
-        <ProfileHeaderWrapper
-          username={user.username}
-          id={user.id}
-          isFollowedByCurrentUser={user.followedByCurrentUser}
-        />
+        <ProfileHeaderWrapper user={user} sessionData={sessionData} />
       )}
 
       <div className="grow">

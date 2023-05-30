@@ -1,4 +1,3 @@
-import { getSession } from "@/lib/session";
 import Header from "./Header";
 import "./globals.css";
 import { retrieveCookiesSession } from "@/serverApiCalls/retrieveCookiesSession";
@@ -13,7 +12,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const data = await getSession();
+  const data = await retrieveCookiesSession();
   return (
     <html lang="en">
       <body>

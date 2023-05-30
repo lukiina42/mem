@@ -6,13 +6,9 @@ import { BsBookmarksFill, BsBookmarks } from "react-icons/bs";
 import { HiBellAlert, HiOutlineBellAlert } from "react-icons/hi2";
 import ProfileWrapper from "../profileSettings/ProfileWrapper";
 import { useNotificationSocket } from "@/hooks/useNotificationSocket";
-import { Session, User } from "next-auth";
+import { JWT } from "next-auth/jwt";
 
-export default function SidebarLinks({
-  userData,
-}: {
-  userData: Session | null;
-}) {
+export default function SidebarLinks({ userData }: { userData: JWT | null }) {
   const segment = useSelectedLayoutSegment();
 
   const { notification, setNotification, notificationTrigger } =

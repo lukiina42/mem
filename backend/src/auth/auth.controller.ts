@@ -1,4 +1,11 @@
-import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  ForbiddenException,
+  Get,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './local-auth.guard';
 import { JwtAuthGuard } from './jwt-auth.guard';
@@ -18,7 +25,12 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/profile')
-  getProfile() {
+  async getProfile(@Request() req) {
+    const user: { userId: number; email: string; roles: string[] } = req.user;
+    if (await this.authService.checkUserBanned(user.userId)) {
+      throw new ForbiddenException();
+    }
     return true;
   }
 }
+

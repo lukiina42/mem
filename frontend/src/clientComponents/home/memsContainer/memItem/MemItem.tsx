@@ -17,6 +17,7 @@ interface MemItemInterface {
   isHearted: boolean;
   amountOfHearts: number;
   imgMaxH?: number;
+  enableDelete?: boolean;
 }
 
 export default function MemItem({
@@ -28,6 +29,7 @@ export default function MemItem({
   isHearted,
   amountOfHearts,
   imgMaxH,
+  enableDelete,
 }: MemItemInterface) {
   return (
     <>
@@ -54,7 +56,7 @@ export default function MemItem({
           </Link>
           <div className="flex gap-2 items-center">
             <div className="text-sm">{mem.lastUpdateDate}</div>
-            {isOwnedByCurrentUser && (
+            {(isOwnedByCurrentUser || enableDelete) && (
               <BsFillTrashFill
                 size={30}
                 className="text-red-500 p-1 rounded-full hover:bg-gray-200 duration-150 transition-all hover:cursor-pointer"

@@ -3,14 +3,17 @@ import { NextRequestWithAuth, withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 
 //check jwt token every day
-const ONE_DAY = 1440 * 60 * 1000;
+const HALF_HOUR = (1440 * 60 * 1000) / 48;
 
 type checkProfileResponseType =
   | {
-      isAuthenticated: false;
+      authenticationResult: "unauthorized";
     }
   | {
-      isAuthenticated: true;
+      authenticationResult: "banned";
+    }
+  | {
+      authenticationResult: "ok";
       jwtLastCheck: string;
     };
 
@@ -21,10 +24,14 @@ const checkProfileJwt = async (
   const sessionToken = req.cookies.get("next-auth.session-token");
 
   //on localhost this saves around 20ms :)
-  //@ts-ignore
-  if (lastCheck && new Date() - new Date(lastCheck) < ONE_DAY && sessionToken) {
+  if (
+    lastCheck &&
+    //@ts-ignore
+    new Date() - new Date(lastCheck) < HALF_HOUR &&
+    sessionToken
+  ) {
     return {
-      isAuthenticated: true,
+      authenticationResult: "ok",
       jwtLastCheck: lastCheck,
     };
   }
@@ -32,7 +39,7 @@ const checkProfileJwt = async (
   const token = await getToken({ req });
   if (!token)
     return {
-      isAuthenticated: false,
+      authenticationResult: "unauthorized",
     };
   const jwtResponse = await fetch("http://localhost:8080/auth/profile", {
     method: "GET",
@@ -43,12 +50,16 @@ const checkProfileJwt = async (
   switch (jwtResponse.status) {
     case 200:
       return {
-        isAuthenticated: true,
+        authenticationResult: "ok",
         jwtLastCheck: new Date().toString(),
       };
     case 401:
       return {
-        isAuthenticated: false,
+        authenticationResult: "unauthorized",
+      };
+    case 403:
+      return {
+        authenticationResult: "banned",
       };
     default:
       throw new Error(
@@ -63,23 +74,30 @@ export default withAuth(
     const userJwtValid = await checkProfileJwt(req);
     const isAuthPage = req.nextUrl.pathname === "/";
 
+    if (userJwtValid.authenticationResult == "banned") {
+      let res = NextResponse.redirect(new URL("/banned", req.url));
+      return res;
+    }
+
     if (isAuthPage) {
-      if (userJwtValid.isAuthenticated) {
-        const res = NextResponse.redirect(new URL("/home", req.url));
-        res.cookies.set("jwtLastCheck", userJwtValid.jwtLastCheck);
-        return res;
+      let res;
+      switch (userJwtValid.authenticationResult) {
+        case "ok":
+          res = NextResponse.redirect(new URL("/home", req.url));
+          res.cookies.set("jwtLastCheck", userJwtValid.jwtLastCheck);
+          console.log("setting cookies");
+
+          return res;
+        case "unauthorized":
+          for (let i = 0; i < protectedRoutes.length; i++) {
+            const route = protectedRoutes[i];
+            if (req.nextUrl.pathname.startsWith(route)) {
+              return NextResponse.redirect(process.env.HOME_URL as string);
+            }
+          }
       }
 
       return null;
-    }
-
-    if (!userJwtValid.isAuthenticated) {
-      for (let i = 0; i < protectedRoutes.length; i++) {
-        const route = protectedRoutes[i];
-        if (req.nextUrl.pathname.startsWith(route)) {
-          return NextResponse.redirect(process.env.HOME_URL as string);
-        }
-      }
     }
   },
   {

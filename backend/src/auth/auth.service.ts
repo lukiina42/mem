@@ -31,4 +31,9 @@ export class AuthService {
       }),
     };
   }
+
+  async checkUserBanned(userId: number) {
+    return await this.usersService.checkUserBanned(userId);
+  }
 }
+

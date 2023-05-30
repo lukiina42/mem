@@ -1,29 +1,21 @@
 "use client";
 
 import { queryClient } from "@/lib/queryClient";
-import { SlUserFollow } from "react-icons/sl";
 import { QueryClientProvider } from "react-query";
 import ProfileHeader from "./ProfileHeader";
-import { SessionProvider } from "next-auth/react";
+import { JWT } from "next-auth/jwt";
+import { UserData } from "@/app/user/[id]/page";
 
 export default function ProfileHeaderWrapper({
-  username,
-  id,
-  isFollowedByCurrentUser,
+  user,
+  sessionData,
 }: {
-  username: string;
-  id: number;
-  isFollowedByCurrentUser: boolean;
+  user: UserData;
+  sessionData: JWT | null;
 }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <SessionProvider>
-        <ProfileHeader
-          username={username}
-          id={id}
-          isFollowedByCurrentUser={isFollowedByCurrentUser}
-        />
-      </SessionProvider>
+      <ProfileHeader user={user} sessionData={sessionData} />
     </QueryClientProvider>
   );
 }

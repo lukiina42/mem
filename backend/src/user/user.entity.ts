@@ -9,13 +9,20 @@ import {
   ManyToMany,
   JoinTable,
 } from 'typeorm';
+import { Role } from './roles/role.enum';
 
 @Entity()
 export class User {
-  constructor(username: string, email: string, password: string) {
+  constructor(
+    username: string,
+    email: string,
+    password: string,
+    roles: Role[],
+  ) {
     this.username = username;
     this.email = email;
     this.password = password;
+    this.roles = roles;
   }
 
   @PrimaryGeneratedColumn()
@@ -30,8 +37,11 @@ export class User {
   @Column()
   password: string;
 
-  @Column('text', { array: true })
+  @Column('text', { array: true, default: [] })
   roles: string[];
+
+  @Column({ default: false })
+  isBanned: boolean;
 
   @Column({ default: '', name: 'avatar_image_key' })
   avatarImageKey: string;
@@ -60,3 +70,4 @@ export class User {
   @OneToMany(() => Notification, (notification) => notification.notifiedUser)
   notifications: Notification[];
 }
+

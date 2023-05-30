@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -192,4 +196,28 @@ export class UsersService {
 
     await this.updateUser(followingUser);
   }
+
+  parseStringToId = (str: string) => {
+    try {
+      return parseInt(str);
+    } catch (ex) {
+      throw new BadRequestException('The string is not parseable to int');
+    }
+  };
+
+  async banUser(idString: string) {
+    const id = this.parseStringToId(idString);
+    const userToBan = await this.findOneByIdRaw(id);
+    if (!userToBan)
+      throw new NotFoundException('The user to be banned was not found');
+
+    userToBan.isBanned = userToBan.isBanned ? false : true;
+    await this.updateUser(userToBan);
+  }
+
+  async checkUserBanned(userId: number) {
+    const user = await this.findOneByIdRaw(userId);
+    return user.isBanned;
+  }
 }
+

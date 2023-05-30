@@ -1,9 +1,9 @@
 import Link from "next/link";
 import React from "react";
 import HeaderWrapper from "@/clientComponents/header/sidebarLinks/HeaderWrapper";
-import { Session, User } from "next-auth";
+import { JWT } from "next-auth/jwt";
 
-export default function Header({ userData }: { userData: Session | null }) {
+export default function Header({ userData }: { userData: JWT | null }) {
   return (
     <>
       <nav className="grow shadow-xl max-h-full flex flex-col justify-start items-end @container min-w-[64px] gap-12">

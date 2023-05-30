@@ -47,6 +47,7 @@ export default function SignupForm(props: SignupFormProps) {
       signUpToLoginChange();
     },
     onError: (e: Error) => {
+      console.log(e);
       const error = JSON.parse(e.message);
       switch (error.message) {
         case responseErrorMessage.EMAIL:

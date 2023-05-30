@@ -59,7 +59,9 @@ export class UsersController {
     const userByName = await this.userService.findOneByUsername(username);
     if (!userByEmail) {
       if (!userByName)
-        await this.userService.createUser(new User(username, email, password));
+        await this.userService.createUser(
+          new User(username, email, password, [Role.USER]),
+        );
       return;
     }
 
@@ -75,10 +77,10 @@ export class UsersController {
   }
 
   @Put('/avatar')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN)
+  @UseGuards(JwtAuthGuard)
   @HttpCode(204)
   @UseInterceptors(FileInterceptor('image'))
+  @HttpCode(204)
   async updateAvatar(
     @Request() req: JWTReqUser,
     @UploadedFile() image: Express.Multer.File,
@@ -92,4 +94,13 @@ export class UsersController {
   async followUser(@Param('id') id: string, @Request() req: JWTReqUser) {
     await this.userService.followUser(req.user.userId, parseInt(id));
   }
+
+  @Put('/ban/:id')
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN)
+  @HttpCode(204)
+  async banUser(@Param('id') id: string) {
+    await this.userService.banUser(id);
+  }
 }
+

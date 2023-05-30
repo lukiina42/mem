@@ -155,6 +155,7 @@ export default function MemsContainer({
               handleDeleteMemClick={handleDeleteMemClick}
               displayBorder={i !== mems.length - 1}
               handleHeartMemRequest={handleHeartMemRequest}
+              enableDelete={sessionData?.roles.some((role) => role == "admin")}
             />
           </InView>
         ) : (
@@ -165,6 +166,7 @@ export default function MemsContainer({
             handleDeleteMemClick={handleDeleteMemClick}
             displayBorder={i !== mems.length - 1}
             handleHeartMemRequest={handleHeartMemRequest}
+            enableDelete={sessionData?.roles.some((role) => role == "admin")}
           />
         );
       })}
