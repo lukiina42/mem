@@ -1,11 +1,12 @@
 import { Notification } from "@/types/notification";
 import { Session } from "next-auth";
+import { JWT } from "next-auth/jwt";
 import { useState, useEffect } from "react";
 import { Socket, io } from "socket.io-client";
 
 let socket: Socket | undefined = undefined;
 
-export function useNotificationSocket(userData: Session | null) {
+export function useNotificationSocket(userData: JWT | null) {
   const [isConnected, setIsConnected] = useState(false);
   const [notificationTrigger, setNotificationTrigger] = useState(false);
   const [notification, setNotification] = useState("");
@@ -28,7 +29,7 @@ export function useNotificationSocket(userData: Session | null) {
     if (userData?.user) {
       if (!socket) {
         socket = io("http://localhost:8080", {
-          query: { userId: userData.user.id },
+          query: { userId: userData.id },
         });
       }
       socket.on("connect", onConnect);

@@ -68,7 +68,6 @@ export const getMems = (variables: {
   requestUrl: string;
   requestingUser?: string;
 }): Promise<Mem[]> => {
-  console.log(variables.token);
   return fetch(
     `http://localhost:8080/mems${variables.requestUrl}?from=${
       variables.from

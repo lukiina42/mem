@@ -12,6 +12,7 @@ import { nanoid } from 'nanoid';
 import { User } from 'src/user/user.entity';
 import { mapMemsDbToDto, mapMemDbToDto } from 'src/mapper/memMapper';
 import { NotificationService } from 'src/notifications/notification.service';
+import { Role } from 'src/user/roles/role.enum';
 
 export interface MemDto extends Mem {
   imageUrl?: string;
@@ -206,9 +207,11 @@ export class MemsService {
     if (!memOwner) throw new BadRequestException('The user was not found');
 
     if (!memOwner.mems.some((mem) => mem.id === idNumber)) {
-      throw new BadRequestException(
-        'The user attempted to delete mem which is not theirs',
-      );
+      if (!memOwner.roles.includes(Role.ADMIN)) {
+        throw new BadRequestException(
+          'The user attempted to delete mem which is not theirs',
+        );
+      }
     }
     const memToDelete = await this.memRepository.findOneBy({ id: idNumber });
     if (!memToDelete)
@@ -252,3 +255,4 @@ export class MemsService {
     await this.usersService.updateUser(likedByUser);
   }
 }
+

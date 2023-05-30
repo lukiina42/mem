@@ -60,14 +60,26 @@ export const updateAvatar = (variables: {
     formData.append("image", variables.file as File);
   }
 
-  console.log(variables.token);
-
   return fetch(`http://localhost:8080/users/avatar`, {
     method: "PUT",
     headers: {
       Authorization: `Bearer ${variables.token}`,
     },
     body: formData,
+  })
+    .then((response) => handleResponseWithoutJson(response, 204))
+    .catch(handleError);
+};
+
+export const banUser = (variables: {
+  token: string;
+  bannedUserId: number;
+}): Promise<string | void> => {
+  return fetch(`http://localhost:8080/users/ban/${variables.bannedUserId}`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${variables.token}`,
+    },
   })
     .then((response) => handleResponseWithoutJson(response, 204))
     .catch(handleError);

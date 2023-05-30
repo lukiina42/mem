@@ -7,4 +7,5 @@ export interface User {
   mems: Mem[];
   heartedMems?: Mem[];
   avatarImageUrl?: string;
+  isBanned: false;
 }

@@ -30,8 +30,6 @@ export class MemsController {
     @Param('id') id: number,
     @Query() query: { requestingUserId: string },
   ) {
-    //is 0 if no user is logged in
-    console.log(query.requestingUserId);
     const userId = parseInt(query.requestingUserId);
     const mem = await this.memService.retrieveMemWithImageUrl(id, userId);
     if (!mem) throw new NotFoundException(`User with id ${id} was not found`);

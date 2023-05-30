@@ -18,6 +18,9 @@ import { UsersService } from './users.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { JWTReqUser } from 'src/types';
+import { Roles } from './roles/role.decorator';
+import { Role } from './roles/role.enum';
+import { RolesGuard } from './roles/roles.guard';
 
 @Controller('/users')
 export class UsersController {
@@ -56,7 +59,9 @@ export class UsersController {
     const userByName = await this.userService.findOneByUsername(username);
     if (!userByEmail) {
       if (!userByName)
-        await this.userService.createUser(new User(username, email, password));
+        await this.userService.createUser(
+          new User(username, email, password, [Role.USER]),
+        );
       return;
     }
 
@@ -75,6 +80,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @HttpCode(204)
   @UseInterceptors(FileInterceptor('image'))
+  @HttpCode(204)
   async updateAvatar(
     @Request() req: JWTReqUser,
     @UploadedFile() image: Express.Multer.File,
@@ -88,4 +94,13 @@ export class UsersController {
   async followUser(@Param('id') id: string, @Request() req: JWTReqUser) {
     await this.userService.followUser(req.user.userId, parseInt(id));
   }
+
+  @Put('/ban/:id')
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN)
+  @HttpCode(204)
+  async banUser(@Param('id') id: string) {
+    await this.userService.banUser(id);
+  }
 }
+
