@@ -35,4 +35,9 @@ export class NotificationsGateway implements OnGatewayConnection {
   getConnection(userId: string): Socket | undefined {
     return this.connections.get(userId);
   }
+
+  getConnetions() {
+    return this.connections;
+  }
 }
+

@@ -6,7 +6,7 @@ export const getMem = async (id: number) => {
 
   const response = await fetch(
     `http://localhost:8080/mems/${id}?requestingUserId=${
-      sessionData ? sessionData.id : 0
+      sessionData ? sessionData.sub : 0
     }`,
     {
       method: "GET",

@@ -26,10 +26,10 @@ export function useNotificationSocket(userData: JWT | null) {
       setNotification(notification.content);
     }
 
-    if (userData?.user) {
+    if (userData) {
       if (!socket) {
         socket = io("http://localhost:8080", {
-          query: { userId: userData.id },
+          query: { userId: userData.sub },
         });
       }
       socket.on("connect", onConnect);

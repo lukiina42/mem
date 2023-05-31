@@ -114,3 +114,4 @@ export class NotificationService {
     this.notificationRepository.remove(notification);
   }
 }
+
