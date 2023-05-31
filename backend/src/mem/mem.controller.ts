@@ -101,3 +101,4 @@ export class MemsController {
     return await this.memService.heartMem(req.user.userId, id);
   }
 }
+
