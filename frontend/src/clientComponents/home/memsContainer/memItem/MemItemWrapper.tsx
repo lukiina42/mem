@@ -34,8 +34,6 @@ export default function MemItemWrapper({
 
   const isOwnedByCurrentUser = user?.name === mem.owner.username;
 
-  const [commentsModalOpen, setCommentsModalOpen] = useState(false);
-
   return (
     <div
       className={`w-full flex mt-3 mr-1 pb-3 pr-2 ${
@@ -47,25 +45,11 @@ export default function MemItemWrapper({
         mem={mem}
         handleDeleteMemClick={handleDeleteMemClick}
         handleHeartClick={handleHeartClick}
-        setCommentsModal={setCommentsModalOpen}
         isHearted={isHearted}
         amountOfHearts={amountOfHearts}
         isOwnedByCurrentUser={isOwnedByCurrentUser}
         enableDelete={enableDelete}
       />
-      {commentsModalOpen && (
-        <ModalWrapper closeModal={() => setCommentsModalOpen(false)}>
-          <MemDetail
-            isHearted={isHearted}
-            amountOfHearts={amountOfHearts}
-            mem={mem}
-            handleHeartClick={handleHeartClick}
-            isOwnedByCurrentUser={isOwnedByCurrentUser}
-            handleDeleteMemClick={handleDeleteMemClick}
-            token={user?.token ? user.token : ""}
-          />
-        </ModalWrapper>
-      )}
     </div>
   );
 }

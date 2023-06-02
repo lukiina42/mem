@@ -1,13 +1,11 @@
 "use client";
 
 import { SessionProvider } from "next-auth/react";
-import { QueryClientProvider } from "react-query";
-import { queryClient } from "@/lib/queryClient";
 import { ToastContainer } from "react-toastify";
-import { Mem } from "@/types/mem";
 
 import HomeContent from "./HomeContent";
 import { DefaultHomeProps } from "@/app/home/page";
+import QueryProvider from "@/lib/reactQuery/QueryProvider";
 
 export default function HomeContentWrapper({
   mems,
@@ -16,13 +14,13 @@ export default function HomeContentWrapper({
 }: DefaultHomeProps) {
   return (
     <SessionProvider>
-      <QueryClientProvider client={queryClient}>
+      <QueryProvider>
         <HomeContent
           mems={mems}
           sessionData={sessionData}
           isUserFollowingAnyone={isUserFollowingAnyone}
         />
-      </QueryClientProvider>
+      </QueryProvider>
       <ToastContainer
         position="top-center"
         autoClose={false}

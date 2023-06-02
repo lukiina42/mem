@@ -1,10 +1,9 @@
 "use client";
 
-import { queryClient } from "@/lib/queryClient";
 import { Mem } from "@/types/mem";
-import { QueryClientProvider } from "react-query";
 import MemDetailWrapper from "./mem/Mem";
 import { JWT } from "next-auth/jwt";
+import QueryProvider from "@/lib/reactQuery/QueryProvider";
 
 interface MemDetailWrapperProps {
   mem: Mem;
@@ -13,8 +12,8 @@ interface MemDetailWrapperProps {
 
 export default function MemWrapper(props: MemDetailWrapperProps) {
   return (
-    <QueryClientProvider client={queryClient}>
+    <QueryProvider>
       <MemDetailWrapper mem={props.mem} sessionData={props.sessionData} />
-    </QueryClientProvider>
+    </QueryProvider>
   );
 }

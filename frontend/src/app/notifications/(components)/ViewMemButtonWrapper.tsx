@@ -1,10 +1,10 @@
 "use client";
 
-import { queryClient } from "@/lib/queryClient";
+import { queryClient } from "@/lib/reactQuery/queryClient";
 import { Notification } from "@/types/notification";
-import { QueryClientProvider, useQuery } from "react-query";
 import ViewMemButton from "./ViewMemButton";
 import { JWT } from "next-auth/jwt";
+import QueryProvider from "@/lib/reactQuery/QueryProvider";
 
 export default function ViewMemButtonWrapper({
   notification,
@@ -14,8 +14,8 @@ export default function ViewMemButtonWrapper({
   sessionData: JWT;
 }) {
   return (
-    <QueryClientProvider client={queryClient}>
+    <QueryProvider>
       <ViewMemButton sessionData={sessionData} notification={notification} />
-    </QueryClientProvider>
+    </QueryProvider>
   );
 }
