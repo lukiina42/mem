@@ -1,10 +1,9 @@
 "use client";
 
-import { queryClient } from "@/lib/queryClient";
 import LoginForm from "./login/LoginForm";
 import SignupForm from "./signup/SignupForm";
-import { QueryClientProvider } from "react-query";
 import ModalWrapper from "@/utilComponents/ModalWrapper";
+import QueryProvider from "@/lib/reactQuery/QueryProvider";
 
 interface FormsWrapperProps {
   resetMenu: () => void;
@@ -19,7 +18,7 @@ export default function FormsWrapper(props: FormsWrapperProps) {
     <>
       <ModalWrapper closeModal={resetMenu}>
         {/*content*/}
-        <QueryClientProvider client={queryClient}>
+        <QueryProvider>
           {showModal === "signup" ? (
             <SignupForm
               resetMenu={resetMenu}
@@ -28,7 +27,7 @@ export default function FormsWrapper(props: FormsWrapperProps) {
           ) : (
             <LoginForm resetMenu={resetMenu} redirect={redirect} />
           )}
-        </QueryClientProvider>
+        </QueryProvider>
       </ModalWrapper>
     </>
   );

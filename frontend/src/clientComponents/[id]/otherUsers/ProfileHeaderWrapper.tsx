@@ -1,10 +1,9 @@
 "use client";
 
-import { queryClient } from "@/lib/queryClient";
-import { QueryClientProvider } from "react-query";
 import ProfileHeader from "./ProfileHeader";
 import { JWT } from "next-auth/jwt";
 import { UserData } from "@/app/user/[id]/page";
+import QueryProvider from "@/lib/reactQuery/QueryProvider";
 
 export default function ProfileHeaderWrapper({
   user,
@@ -14,8 +13,8 @@ export default function ProfileHeaderWrapper({
   sessionData: JWT | null;
 }) {
   return (
-    <QueryClientProvider client={queryClient}>
+    <QueryProvider>
       <ProfileHeader user={user} sessionData={sessionData} />
-    </QueryClientProvider>
+    </QueryProvider>
   );
 }

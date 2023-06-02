@@ -1,10 +1,9 @@
 "use client";
 
 import LoggedUserInfo from "./userInfo/UserInfo";
-import { QueryClientProvider } from "react-query";
-import { queryClient } from "@/lib/queryClient";
 import { SessionProvider } from "next-auth/react";
 import { UserData } from "@/app/user/[id]/page";
+import QueryProvider from "@/lib/reactQuery/QueryProvider";
 
 export default function LoggedUserInfoWrapper({ user }: { user: UserData }) {
   return (
@@ -12,11 +11,11 @@ export default function LoggedUserInfoWrapper({ user }: { user: UserData }) {
       <div className="w-full h-12 flex items-center border-b-2">
         <div className="ml-4 text-lg font-bold">Your profile info</div>
       </div>
-      <QueryClientProvider client={queryClient}>
+      <QueryProvider>
         <SessionProvider>
           <LoggedUserInfo user={user} />
         </SessionProvider>
-      </QueryClientProvider>
+      </QueryProvider>
     </div>
   );
 }
