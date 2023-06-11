@@ -8,6 +8,7 @@ import {
   OneToMany,
   ManyToMany,
   JoinTable,
+  RelationId,
 } from 'typeorm';
 import { Role } from './roles/role.enum';
 
@@ -60,6 +61,9 @@ export class User {
   @ManyToMany(() => User, (user) => user.followedBy, { cascade: false })
   @JoinTable()
   following: User[];
+
+  @RelationId((user: User) => user.following)
+  followingids: number[];
 
   @ManyToMany(() => User, (user) => user.following)
   followedBy: User[];

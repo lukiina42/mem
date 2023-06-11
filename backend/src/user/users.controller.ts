@@ -29,19 +29,22 @@ export class UsersController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
   async getUser(@Param('id') id: string) {
-    let parsedId;
-    try {
-      parsedId = parseInt(id);
-    } catch (error) {
-      throw error;
-    }
-    const user = await this.userService.findOneByIdWithAvatar(parsedId);
+    const user = await this.userService.findOneByIdWithAvatar(id);
     return user;
   }
 
   @Get()
-  getAllUsers() {
-    return this.userService.findAll();
+  async getAllUsers() {
+    return await this.userService.findAll();
+  }
+
+  @Get('recommendation/potentialFriends')
+  @UseGuards(JwtAuthGuard)
+  async getPotentialFriends(@Request() req: JWTReqUser) {
+    const users = await this.userService.findPotentialFriendsOfUser(
+      req.user.userId,
+    );
+    return users;
   }
 
   @Post('')

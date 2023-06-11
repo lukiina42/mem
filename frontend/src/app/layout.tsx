@@ -18,10 +18,7 @@ export default async function RootLayout({
       <body>
         <main className="h-screen w-screen flex flex-row">
           <Header userData={data} />
-          <div className="lg:max-w-[50rem] lg:min-w-[50rem] min-w-0 w-3/4">
-            {children}
-          </div>
-          <div className="grow hidden lg:block">The right sidebar</div>
+          <div className="overflow-y-auto xl:w-[65%] w-[80%]">{children}</div>
         </main>
       </body>
     </html>
