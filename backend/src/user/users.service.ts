@@ -10,7 +10,7 @@ import { genSalt, hash, compare as comparePasswords } from 'bcrypt';
 import { S3Service } from 'src/s3/s3.service';
 import { nanoid } from 'nanoid';
 import { NotificationService } from 'src/notifications/notification.service';
-import { PotentialFriend } from './users.apiReturnTypes';
+import { PotentialFriend } from './users.api-return-types';
 
 @Injectable()
 export class UsersService {
@@ -89,7 +89,6 @@ export class UsersService {
   }
 
   async findPotentialFriendsOfUser(id: number): Promise<PotentialFriend[]> {
-    id = 2;
     const userWithFollowing = await this.usersRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.following', 'following')
@@ -100,7 +99,31 @@ export class UsersService {
     if (!userWithFollowing)
       throw new NotFoundException(`User with id ${id} was not found`);
 
+    if (userWithFollowing.following.length == 0) {
+      const usersWithMostFollowing: { id: string; count: string }[] =
+        await this.usersRepository
+          .createQueryBuilder('user')
+          .leftJoinAndSelect('user.following', 'following')
+          .groupBy('following.id') // here is where we grup by the tag so we can count
+          .addGroupBy('following.id')
+          .select('following.id, count(following.id)') // here is where we count :)
+          .orderBy('count(following.id)', 'DESC')
+          .limit(2) // here is the limit
+          .execute();
+      const usersWithAvatarImage: PotentialFriend[] = [];
+      for (let i = 0; i < usersWithMostFollowing.length; i++) {
+        const userFollowersAmount = usersWithMostFollowing[i];
+        usersWithAvatarImage.push({
+          ...(await this.findOneByIdWithAvatar(userFollowersAmount.id)),
+          commonFollowersPresent: false,
+          followersAmount: parseInt(userFollowersAmount.count),
+        });
+      }
+      return usersWithAvatarImage;
+    }
+
     const recommendedUsersMap = new Map<string, PotentialFriend>();
+
     for (let i = 0; i < userWithFollowing.following.length; i++) {
       const followedUser = userWithFollowing.following[i];
       for (let i = 0; i < followedUser.following.length; i++) {
@@ -114,9 +137,15 @@ export class UsersService {
             userFromMap
               ? {
                   ...userFromMap,
+                  commonFollowersPresent: true,
+                  //@ts-ignore
                   commonFollowersAmount: userFromMap.commonFollowersAmount + 1,
                 }
-              : { ...potentialRecommendation, commonFollowersAmount: 1 },
+              : {
+                  ...potentialRecommendation,
+                  commonFollowersPresent: true,
+                  commonFollowersAmount: 1,
+                },
           );
         }
       }
@@ -133,7 +162,11 @@ export class UsersService {
         );
       }
     }
-    return resultArray;
+    return resultArray.sort(
+      (user1, user2) =>
+        (user1.commonFollowersPresent && user1.commonFollowersAmount) -
+        (user2.commonFollowersPresent && user2.commonFollowersAmount),
+    );
   }
 
   async findOneByIdRaw(id: number): Promise<User> {

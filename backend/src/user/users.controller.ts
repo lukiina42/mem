@@ -34,8 +34,8 @@ export class UsersController {
   }
 
   @Get()
-  getAllUsers() {
-    return this.userService.findAll();
+  async getAllUsers() {
+    return await this.userService.findAll();
   }
 
   @Get('recommendation/potentialFriends')
