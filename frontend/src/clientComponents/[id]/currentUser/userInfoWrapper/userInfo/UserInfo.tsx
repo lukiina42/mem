@@ -10,7 +10,7 @@ import { useMutation } from "react-query";
 import ChangeAvatarForm from "./changeAvatarForm/ChangeAvatarForm";
 import { UserData } from "@/app/user/[id]/page";
 
-export default function LoggedUserInfo({ user }: { user: UserData }) {
+export default function LoggedUserInfo({ user, revalidate }: { user: UserData, revalidate: () => void }) {
   const [showProfileModal, setShowProfileModal] = React.useState(false);
   const [file, setFile] = React.useState<File | null>(null);
   const [imageDeleted, setImageDeleted] = React.useState(false);
@@ -36,9 +36,7 @@ export default function LoggedUserInfo({ user }: { user: UserData }) {
       setFile(null);
       setShowProfileModal(false);
       //revalidate the route to trigger refresh
-      fetch(
-        `/api/revalidate?secret=${process.env.REVALIDATION_TOKEN}&id=${user.id}`
-      );
+      revalidate()
     },
     onError: () => {
       displayToast(

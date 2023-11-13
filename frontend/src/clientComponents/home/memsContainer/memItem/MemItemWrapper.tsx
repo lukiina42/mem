@@ -1,12 +1,8 @@
 "use client";
 
 import { Mem } from "@/types/mem";
-import { User } from "next-auth";
-import { useState } from "react";
-import MemDetail from "./commentsModal/MemDetail";
 import MemItem from "./MemItem";
 import { useHeart } from "@/hooks/useHeart";
-import ModalWrapper from "@/utilComponents/ModalWrapper";
 import { JWT } from "next-auth/jwt";
 
 interface MemItemInterface {

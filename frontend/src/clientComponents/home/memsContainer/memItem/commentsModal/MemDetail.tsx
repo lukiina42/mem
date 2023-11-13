@@ -4,7 +4,7 @@ import { getComments } from "@/clientApiCalls/commentApi";
 import { Mem } from "@/types/mem";
 import LoadingSpinner from "@/utilComponents/Loading";
 import { useState } from "react";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import MemItem from "../MemItem";
 import RecursiveComment from "./recursiveComment/RecursiveComment";
 import NewCommentForm from "./newCommentForm/NewCommentForm";
@@ -31,11 +31,19 @@ export default function MemDetail({
   token,
   imgMaxH,
 }: MemCommentsProps) {
-  const { data, refetch, isLoading } = useQuery(`memComment${mem.id}`, () =>
+  const { data, isLoading } = useQuery(`memComment${mem.id}`, () =>
     getComments({ memId: mem.id })
   );
 
+  const queryClient = useQueryClient()
+
+  const refetch = () => {
+    queryClient.invalidateQueries(`memComment${mem.id}`)
+  }
+
   const [replyComment, setReplyComment] = useState<null | Comment>(null);
+
+  console.log(imgMaxH)
 
   return (
     <div className="h-[90vh] w-[80vw] min-w-[260px] min-h-[260px] max-w-[800px] bg-white flex rounded-lg">

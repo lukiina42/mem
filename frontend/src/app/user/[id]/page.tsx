@@ -3,6 +3,7 @@ import LoggedUserInfoWrapper from "@/clientComponents/[id]/currentUser/userInfoW
 import { User } from "@/types/user";
 import ProfileHeaderWrapper from "@/clientComponents/[id]/otherUsers/ProfileHeaderWrapper";
 import { retrieveProfileInfo } from "@/serverApiCalls/[profileId]";
+import { revalidateUser } from "@/app/actions";
 
 export interface UserDataDto extends User {
   followedBy?: User[];
@@ -23,7 +24,7 @@ export default async function profile({ params }: { params: { id: number } }) {
   return (
     <div className="h-full w-full flex flex-col overflow-y-auto">
       {isLoggedInUser ? (
-        <LoggedUserInfoWrapper user={user} />
+        <LoggedUserInfoWrapper user={user} revalidate={revalidateUser} />
       ) : (
         <ProfileHeaderWrapper user={user} sessionData={sessionData} />
       )}

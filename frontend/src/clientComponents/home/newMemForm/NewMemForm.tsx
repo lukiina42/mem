@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { ImFilePicture } from "react-icons/im";
 import { GrClose } from "react-icons/gr";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { createMem } from "@/clientApiCalls/memApi";
 import { useSession } from "next-auth/react";
 import { User } from "next-auth";
@@ -18,6 +18,7 @@ const getAmountOfRows = (input: string) => {
   return 3;
 };
 
+
 export default function NewTweetForm() {
   const [file, setFile] = useState<File | null>(null);
   const [inputContent, setInputContent] = useState("");
@@ -27,6 +28,8 @@ export default function NewTweetForm() {
 
   const user = data?.user as User;
 
+  const queryClient = useQueryClient()
+
   const fileSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       error && setError(false);
@@ -35,10 +38,11 @@ export default function NewTweetForm() {
   };
 
   const createMemMutation = useMutation(createMem, {
-    onSuccess: () => {
+    onSuccess: async () => {
       displayToast("You successfully memd", "bottom-center", "success");
       setFile(null);
       setInputContent("");
+      await queryClient.invalidateQueries("newMems")
     },
     onError: () => {
       displayToast(

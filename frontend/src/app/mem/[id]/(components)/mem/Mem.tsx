@@ -36,7 +36,7 @@ export default function MemDetailWrapper(props: MemDetailWrapperProps) {
       handleHeartClick={handleHeartClick}
       handleDeleteMemClick={() => {}}
       isOwnedByCurrentUser={sessionData?.name == mem.owner.username}
-      imgMaxH={480}
+      imgMaxH={360}
     />
   );
 }

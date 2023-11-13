@@ -69,7 +69,7 @@ export default function MemItem({
           <img // eslint-disable-line @next/next/no-img-element
             src={mem.imageUrl}
             alt="Some mem idk"
-            className="w-fit max-w-[100%]"
+            className="max-w-[100%] h-auto w-auto object-cover"
             style={{ maxHeight: imgMaxH ? `${imgMaxH}px` : "auto" }}
           />
         )}

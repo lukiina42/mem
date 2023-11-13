@@ -2,7 +2,7 @@
 
 import { Mem } from "@/types/mem";
 import { useSession } from "next-auth/react";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { deleteMem, getMems } from "@/clientApiCalls/memApi";
 import { useRouter } from "next/navigation";
 import ConfirmationModal from "@/utilComponents/ConfirmationModal";
@@ -93,7 +93,6 @@ export default function MemsContainer({
         "bottom-center",
         "success"
       );
-      router.refresh();
     },
     onError: () => {
       displayToast(

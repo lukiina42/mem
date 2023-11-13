@@ -6,7 +6,7 @@ export const retrieveProfileInfo = async (userId: number) => {
   const loggedInUserId = sessionData?.sub;
 
   const userResponse = await fetch(`http://localhost:8080/users/${userId}`, {
-    next: { revalidate: 0 },
+    next: { revalidate: 0, tags: ["profile"] },
     method: "GET",
     headers: {
       "Content-Type": "application/json",

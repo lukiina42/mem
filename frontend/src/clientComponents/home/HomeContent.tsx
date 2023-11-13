@@ -39,7 +39,7 @@ export default function HomeContent({
   return (
     <>
       <div className="w-full flex flex-col bg-white top-0">
-        <NewMemForm />
+        <NewMemForm/>
       </div>
       <div className="w-full flex bg-white top-0 border-b border-t mt-2">
         <MemType
