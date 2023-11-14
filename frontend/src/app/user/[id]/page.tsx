@@ -1,9 +1,9 @@
-import ProfileMemsWrapper from "@/clientComponents/[id]/profileMems/ProfileContentWrapper";
-import LoggedUserInfoWrapper from "@/clientComponents/[id]/currentUser/userInfoWrapper/UserInfoWrapper";
-import { User } from "@/types/user";
-import ProfileHeaderWrapper from "@/clientComponents/[id]/otherUsers/ProfileHeaderWrapper";
-import { retrieveProfileInfo } from "@/serverApiCalls/[profileId]";
-import { revalidateUser } from "@/app/actions";
+import ProfileMemsWrapper from '@/clientComponents/[id]/profileMems/ProfileContentWrapper';
+import LoggedUserInfoWrapper from '@/clientComponents/[id]/currentUser/userInfoWrapper/UserInfoWrapper';
+import { User } from '@/types/user';
+import ProfileHeaderWrapper from '@/clientComponents/[id]/otherUsers/ProfileHeaderWrapper';
+import { retrieveProfileInfo } from '@/serverApiCalls/[profileId]';
+import { revalidateUser } from '@/app/actions';
 
 export interface UserDataDto extends User {
   followedBy?: User[];

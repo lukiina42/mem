@@ -1,17 +1,11 @@
-import { Comment } from "@/types/comment";
-import {
-  handleError,
-  handleResponseWithJson,
-  handleResponseWithoutJson,
-} from "./apiUtils";
+import { Comment } from '@/types/comment';
+import { handleError, handleResponseWithJson, handleResponseWithoutJson } from './apiUtils';
 
-export const getComments = (variables: {
-  memId: number;
-}): Promise<Comment[]> => {
+export const getComments = (variables: { memId: number }): Promise<Comment[]> => {
   return fetch(`http://localhost:8080/comments/mem/${variables.memId}`, {
-    method: "GET",
+    method: 'GET',
     headers: {
-      "Content-type": "application/json",
+      'Content-type': 'application/json',
     },
   })
     .then((response) => handleResponseWithJson(response, 200))
@@ -37,10 +31,10 @@ export const createComment = (variables: {
       };
 
   return fetch(`http://localhost:8080/comments/create`, {
-    method: "POST",
+    method: 'POST',
     headers: {
       Authorization: `Bearer ${variables.token}`,
-      "Content-type": "application/json",
+      'Content-type': 'application/json',
     },
 
     body: JSON.stringify(body),

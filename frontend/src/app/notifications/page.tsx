@@ -1,5 +1,5 @@
-import { loadNotifications } from "@/serverApiCalls/notifications";
-import NotificationCard from "./(components)/NotificationCard";
+import { loadNotifications } from '@/serverApiCalls/notifications';
+import NotificationCard from './(components)/NotificationCard';
 
 export default async function page() {
   const { notifications, sessionData } = await loadNotifications();
@@ -7,7 +7,7 @@ export default async function page() {
   return (
     <div
       className="flex flex-col w-full overflow-y-auto"
-      style={{ height: "-webkit-fill-available" }}
+      style={{ height: '-webkit-fill-available' }}
     >
       <div className="font-bold text-xl h-16 pl-2 border-b-2 w-full flex items-center">
         Notifications
@@ -23,9 +23,7 @@ export default async function page() {
             />
           ))
         ) : (
-          <div className="font-bold text-lg mt-4 ml-4">
-            Currently no notifications!
-          </div>
+          <div className="font-bold text-lg mt-4 ml-4">Currently no notifications!</div>
         )}
       </div>
     </div>

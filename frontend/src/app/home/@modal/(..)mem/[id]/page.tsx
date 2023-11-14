@@ -1,6 +1,6 @@
-import { getMem } from "@/serverApiCalls/mem";
-import MemWrapper from "@/app/mem/[id]/(components)/MemWrapper";
-import Modal from "@/utilComponents/RouteModal";
+import { getMem } from '@/serverApiCalls/mem';
+import MemWrapper from '@/app/mem/[id]/(components)/MemWrapper';
+import Modal from '@/utilComponents/RouteModal';
 
 export default async function page({
   params,

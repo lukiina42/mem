@@ -1,7 +1,4 @@
-export async function handleResponseWithJson(
-  response: Response,
-  expectedSuccessCode: number
-) {
+export async function handleResponseWithJson(response: Response, expectedSuccessCode: number) {
   if (response.status === expectedSuccessCode) return response.json();
   if (response.status !== expectedSuccessCode) {
     // So, a server-side validation error occurred.
@@ -9,13 +6,10 @@ export async function handleResponseWithJson(
     const error = await response.text();
     throw new Error(error);
   }
-  throw new Error("Network response was not ok.");
+  throw new Error('Network response was not ok.');
 }
 
-export async function handleResponseWithoutJson(
-  response: Response,
-  expectedSuccessCode: number
-) {
+export async function handleResponseWithoutJson(response: Response, expectedSuccessCode: number) {
   if (response.status === expectedSuccessCode) return response.text();
   if (response.status !== expectedSuccessCode) {
     // So, a server-side validation error occurred.
@@ -23,12 +17,12 @@ export async function handleResponseWithoutJson(
     const error = await response.text();
     throw new Error(error);
   }
-  throw new Error("Network response was not ok.");
+  throw new Error('Network response was not ok.');
 }
 
 // In a real app, would likely call an error logging service.
 export function handleError(error: Error) {
   // eslint-disable-next-line no-console
-  console.error("API call failed. " + error);
+  console.error('API call failed. ' + error);
   throw error;
 }

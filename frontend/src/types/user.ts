@@ -1,4 +1,4 @@
-import { Mem } from "./mem";
+import { Mem } from './mem';
 
 export interface User {
   username: string;

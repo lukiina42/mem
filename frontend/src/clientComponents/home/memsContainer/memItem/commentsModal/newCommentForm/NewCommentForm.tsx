@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState } from 'react';
 
-import { useMutation } from "react-query";
-import LoadingSpinner from "@/utilComponents/Loading";
-import { displayToast } from "@/utilComponents/toast";
-import { createComment } from "@/clientApiCalls/commentApi";
-import { AiOutlineSend } from "react-icons/ai";
-import { Comment } from "@/types/comment";
+import { useMutation } from 'react-query';
+import LoadingSpinner from '@/utilComponents/Loading';
+import { displayToast } from '@/utilComponents/toast';
+import { createComment } from '@/clientApiCalls/commentApi';
+import { AiOutlineSend } from 'react-icons/ai';
+import { Comment } from '@/types/comment';
 
 interface NewCommentFormProps {
   token: string;
@@ -19,33 +19,31 @@ interface NewCommentFormProps {
 
 export default function NewCommentForm(props: NewCommentFormProps) {
   const { refetch, token, memId, replyComment, setReplyComment } = props;
-  const [inputContent, setInputContent] = useState("");
+  const [inputContent, setInputContent] = useState('');
 
   const createCommentMutation = useMutation(createComment, {
     onSuccess: () => {
-      setInputContent("");
+      setInputContent('');
       refetch();
       setReplyComment(null);
     },
     onError: () => {
       displayToast(
-        "Something went wrong while adding comment, please try again",
-        "bottom-center",
-        "error"
+        'Something went wrong while adding comment, please try again',
+        'bottom-center',
+        'error'
       );
     },
   });
 
-  const handleContentInputChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    if (event.target.value.endsWith("\n")) {
+  const handleContentInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    if (event.target.value.endsWith('\n')) {
       return;
     }
     setInputContent(event.target.value);
   };
 
-  const loading = createCommentMutation.status === "loading";
+  const loading = createCommentMutation.status === 'loading';
 
   const onSubmit = () => {
     if (!inputContent) return;
@@ -68,13 +66,8 @@ export default function NewCommentForm(props: NewCommentFormProps) {
     <div className="flex flex-col gap-1">
       {replyComment && (
         <div className="flex gap-4 items-center">
-          <div className="text-sm text-gray-500">
-            Answering to {replyComment.ownerUsername}
-          </div>
-          <div
-            onClick={() => setReplyComment(null)}
-            className="hover:cursor-pointer text-sm"
-          >
+          <div className="text-sm text-gray-500">Answering to {replyComment.ownerUsername}</div>
+          <div onClick={() => setReplyComment(null)} className="hover:cursor-pointer text-sm">
             X
           </div>
         </div>
@@ -88,18 +81,14 @@ export default function NewCommentForm(props: NewCommentFormProps) {
             value={inputContent}
             onChange={handleContentInputChange}
             onKeyDown={(e) => {
-              if (e.key == "Enter") onSubmit();
+              if (e.key == 'Enter') onSubmit();
             }}
           />
           <div className="absolute right-1">
             {loading ? (
               <LoadingSpinner />
             ) : (
-              <AiOutlineSend
-                className="hover:cursor-pointer mr-2"
-                onClick={onSubmit}
-                size={20}
-              />
+              <AiOutlineSend className="hover:cursor-pointer mr-2" onClick={onSubmit} size={20} />
             )}
           </div>
         </div>

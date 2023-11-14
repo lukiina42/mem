@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { User } from "next-auth";
+import { User } from 'next-auth';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function ProfileOptionsMenu({
-  setShowModal,
   signOut,
   redirect,
   setShowMenu,
   user,
 }: {
-  setShowModal(modal: "signup" | "login" | "none"): void;
   setShowMenu?: (i: boolean) => void;
   signedIn?: boolean;
   signOut?: () => void;
@@ -18,30 +18,32 @@ export default function ProfileOptionsMenu({
 }) {
   const signedIn = user !== null;
 
+  const router = useRouter();
+
   return (
     <div
       className={`absolute -top-[80%] left-[105%] bg-base-100 w-56 border-[2px] bg-white border-slate-200 shadow-lg rounded-lg flex flex-col justify-evenly`}
     >
       {!signedIn ? (
         <>
-          <div
-            onClick={() => {
-              setShowModal("signup");
-              setShowMenu!(false);
-            }}
-            className="font-bold rounded-t-lg border-blue-500 w-full text-center hover:cursor-pointer hover:bg-blue-300 py-2 transition-all duration-200"
-          >
-            Sign up
-          </div>
-          <div
-            onClick={() => {
-              setShowModal("login");
-              setShowMenu!(false);
-            }}
-            className="font-bold rounded-b-lg w-full text-center hover:cursor-pointer hover:bg-blue-300 py-2"
-          >
-            Log in
-          </div>
+          <Link href={{ pathname: `/signup` }}>
+            <div
+              onClick={() => {
+                setShowMenu!(false);
+              }}
+              className="font-bold rounded-t-lg border-blue-500 w-full text-center hover:cursor-pointer hover:bg-blue-300 py-2 transition-all duration-200"
+            >
+              Sign up
+            </div>
+          </Link>
+          <Link href={{ pathname: `/login` }}>
+            <div
+              className="font-bold rounded-b-lg w-full text-center hover:cursor-pointer hover:bg-blue-300 py-2"
+              onClick={() => setShowMenu!(false)}
+            >
+              Log in
+            </div>
+          </Link>
         </>
       ) : (
         <>
@@ -57,8 +59,8 @@ export default function ProfileOptionsMenu({
             }}
             className={`font-bold w-full text-center border-t ${
               user?.name?.length && user.name.length > 14
-                ? "border-t rounded-t-none"
-                : "rounded-t-lg border-none"
+                ? 'border-t rounded-t-none'
+                : 'rounded-t-lg border-none'
             } border-b hover:cursor-pointer hover:bg-blue-300 py-2 transition-all duration-200`}
           >
             Profile
@@ -67,7 +69,7 @@ export default function ProfileOptionsMenu({
             onClick={() => {
               setShowMenu!(false);
               signOut!();
-              redirect!("");
+              redirect!('');
             }}
             className="font-bold rounded-b-lg w-full text-center hover:cursor-pointer hover:bg-blue-300 py-2 transition-all duration-200"
           >

@@ -1,27 +1,24 @@
-import { UserData, UserDataDto } from "@/app/user/[id]/page";
-import { retrieveCookiesSession } from "./retrieveCookiesSession";
+import { UserData, UserDataDto } from '@/app/user/[id]/page';
+import { retrieveCookiesSession } from './retrieveCookiesSession';
 
 export const retrieveProfileInfo = async (userId: number) => {
   const sessionData = await retrieveCookiesSession();
   const loggedInUserId = sessionData?.sub;
 
   const userResponse = await fetch(`http://localhost:8080/users/${userId}`, {
-    next: { revalidate: 0, tags: ["profile"] },
-    method: "GET",
+    next: { revalidate: 0, tags: ['profile'] },
+    method: 'GET',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
   });
 
-  if (userResponse.status !== 200)
-    throw new Error("The profile fetch wasn't successful");
+  if (userResponse.status !== 200) throw new Error("The profile fetch wasn't successful");
   const userData: UserDataDto = await userResponse.json();
 
   const isFollowedByCurrentUser =
     loggedInUserId && userData.followedBy
-      ? userData.followedBy.find(
-          (user) => user.id === parseInt(loggedInUserId)
-        ) !== undefined
+      ? userData.followedBy.find((user) => user.id === parseInt(loggedInUserId)) !== undefined
       : false;
 
   delete userData.followedBy;
@@ -32,17 +29,16 @@ export const retrieveProfileInfo = async (userId: number) => {
   };
 
   let memsFetchUrl = `http://localhost:8080/mems/user/${userId}?from=0&to=9`;
-  memsFetchUrl += loggedInUserId ? `&requestingUser=${loggedInUserId}` : "";
+  memsFetchUrl += loggedInUserId ? `&requestingUser=${loggedInUserId}` : '';
 
   const memsResponse = await fetch(memsFetchUrl, {
     next: { revalidate: 0 },
-    method: "GET",
+    method: 'GET',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
   });
-  if (memsResponse.status !== 200)
-    throw new Error("The user mems fetch wasn't successful");
+  if (memsResponse.status !== 200) throw new Error("The user mems fetch wasn't successful");
 
   userDataDto.mems = await memsResponse.json();
 

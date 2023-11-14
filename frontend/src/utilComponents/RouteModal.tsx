@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useCallback, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useCallback, useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Modal({ children }: { children: React.ReactNode }) {
   const overlay = useRef();
@@ -23,14 +23,14 @@ export default function Modal({ children }: { children: React.ReactNode }) {
 
   const onKeyDown = useCallback(
     (e) => {
-      if (e.key === "Escape") onDismiss();
+      if (e.key === 'Escape') onDismiss();
     },
     [onDismiss]
   );
 
   useEffect(() => {
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
   }, [onKeyDown]);
 
   return (

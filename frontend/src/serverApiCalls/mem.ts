@@ -1,17 +1,15 @@
-import { Mem } from "@/types/mem";
-import { retrieveCookiesSession } from "./retrieveCookiesSession";
+import { Mem } from '@/types/mem';
+import { retrieveCookiesSession } from './retrieveCookiesSession';
 
 export const getMem = async (id: number) => {
   const sessionData = await retrieveCookiesSession();
 
   const response = await fetch(
-    `http://localhost:8080/mems/${id}?requestingUserId=${
-      sessionData ? sessionData.sub : 0
-    }`,
+    `http://localhost:8080/mems/${id}?requestingUserId=${sessionData ? sessionData.sub : 0}`,
     {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-type": "application/json",
+        'Content-type': 'application/json',
       },
     }
   );

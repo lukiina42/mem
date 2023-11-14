@@ -1,4 +1,4 @@
-import { ToastPosition, toast, ToastContent } from "react-toastify";
+import { ToastPosition, toast, ToastContent } from 'react-toastify';
 
 const defaultOptions = {
   autoClose: 7000,
@@ -12,22 +12,22 @@ const defaultOptions = {
 export const displayToast = (
   title: ToastContent,
   position: ToastPosition,
-  status: "success" | "error" | "info"
+  status: 'success' | 'error' | 'info'
 ) => {
   switch (status) {
-    case "success":
+    case 'success':
       toast.success(title, {
         position,
         ...defaultOptions,
       });
       break;
-    case "error":
+    case 'error':
       toast.error(title, {
         position,
         ...defaultOptions,
       });
       break;
-    case "info":
+    case 'info':
       toast.info(title, {
         position,
         ...defaultOptions,

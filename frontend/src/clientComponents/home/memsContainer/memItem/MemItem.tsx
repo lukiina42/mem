@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { Mem } from "@/types/mem";
-import { CgProfile } from "react-icons/cg";
-import { BsFillTrashFill } from "react-icons/bs";
-import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
-import { FaRegComment } from "react-icons/fa";
-import { Dispatch, SetStateAction, useState } from "react";
-import Link from "next/link";
+import { Mem } from '@/types/mem';
+import { CgProfile } from 'react-icons/cg';
+import { BsFillTrashFill } from 'react-icons/bs';
+import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
+import { FaRegComment } from 'react-icons/fa';
+import { Dispatch, SetStateAction, useState } from 'react';
+import Link from 'next/link';
 
 interface MemItemInterface {
   mem: Mem;
@@ -31,10 +31,7 @@ export default function MemItem({
 }: MemItemInterface) {
   return (
     <>
-      <Link
-        href={`user/${mem.owner.id}`}
-        className="min-w-[4rem] flex justify-center mt-2"
-      >
+      <Link href={`user/${mem.owner.id}`} className="min-w-[4rem] flex justify-center mt-2">
         {mem.owner.avatarImageUrl ? (
           <img // eslint-disable-line @next/next/no-img-element
             className="w-[3rem] h-[3rem] rounded-full object-cover"
@@ -48,9 +45,7 @@ export default function MemItem({
       <div className="flex flex-col gap-1 grow">
         <div className="flex justify-between">
           <Link href={`/user/${mem.owner.id}`}>
-            <div className="font-bold text-lg hover:underline">
-              {mem.owner.username}
-            </div>
+            <div className="font-bold text-lg hover:underline">{mem.owner.username}</div>
           </Link>
           <div className="flex gap-2 items-center">
             <div className="text-sm">{mem.lastUpdateDate}</div>
@@ -70,7 +65,7 @@ export default function MemItem({
             src={mem.imageUrl}
             alt="Some mem idk"
             className="max-w-[100%] h-auto w-auto object-cover"
-            style={{ maxHeight: imgMaxH ? `${imgMaxH}px` : "auto" }}
+            style={{ maxHeight: imgMaxH ? `${imgMaxH}px` : 'auto' }}
           />
         )}
         <div className="w-full h-8 flex mt-1">

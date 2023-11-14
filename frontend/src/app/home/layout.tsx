@@ -10,9 +10,7 @@ export default function Layout({
   return (
     <>
       <div className="flex">
-        <div className="lg:max-w-[45rem] lg:min-w-[45rem] min-w-0 w-full">
-          {children}
-        </div>
+        <div className="lg:max-w-[45rem] lg:min-w-[45rem] min-w-0 w-full">{children}</div>
         <div className="grow hidden lg:block">{users}</div>
       </div>
       {modal}

@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useHeartMutation } from "@/clientApiCalls/reactQuery/heartMutation";
-import MemDetail from "@/clientComponents/home/memsContainer/memItem/commentsModal/MemDetail";
-import { useHeart } from "@/hooks/useHeart";
-import { Mem } from "@/types/mem";
-import ModalWrapper from "@/utilComponents/ModalWrapper";
-import { JWT } from "next-auth/jwt";
+import { useHeartMutation } from '@/clientApiCalls/reactQuery/heartMutation';
+import MemDetail from '@/clientComponents/home/memsContainer/memItem/commentsModal/MemDetail';
+import { useHeart } from '@/hooks/useHeart';
+import { Mem } from '@/types/mem';
+import ModalWrapper from '@/utilComponents/ModalWrapper';
+import { JWT } from 'next-auth/jwt';
 
 interface MemDetailWrapperProps {
   mem: Mem;
@@ -30,7 +30,7 @@ export default function MemDetailWrapper(props: MemDetailWrapperProps) {
   return (
     <MemDetail
       mem={mem}
-      token={sessionData ? sessionData.token : ""}
+      token={sessionData ? sessionData.token : ''}
       isHearted={isHearted}
       amountOfHearts={amountOfHearts}
       handleHeartClick={handleHeartClick}

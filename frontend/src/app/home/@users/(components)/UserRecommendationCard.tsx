@@ -1,14 +1,12 @@
-import { PotentialFriend } from "@/types/user";
-import Link from "next/link";
-import { CgProfile } from "react-icons/cg";
+import { PotentialFriend } from '@/types/user';
+import Link from 'next/link';
+import { CgProfile } from 'react-icons/cg';
 
 interface UserRecommendationCardType {
   user: PotentialFriend;
 }
 
-export default function UserRecommendationCard(
-  props: UserRecommendationCardType
-) {
+export default function UserRecommendationCard(props: UserRecommendationCardType) {
   const { user } = props;
   const recommendationDescription = user.commonFollowersPresent
     ? `Followed by ${user.commonFollowersAmount} people you follow`

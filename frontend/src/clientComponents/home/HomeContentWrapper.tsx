@@ -1,11 +1,10 @@
-"use client";
+'use client';
 
-import { SessionProvider } from "next-auth/react";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer } from 'react-toastify';
 
-import HomeContent from "./HomeContent";
-import { DefaultHomeProps } from "@/app/home/page";
-import QueryProvider from "@/lib/reactQuery/QueryProvider";
+import HomeContent from './HomeContent';
+import { DefaultHomeProps } from '@/app/home/page';
+import QueryProvider from '@/lib/reactQuery/QueryProvider';
 
 export default function HomeContentWrapper({
   mems,
@@ -13,7 +12,7 @@ export default function HomeContentWrapper({
   isUserFollowingAnyone,
 }: DefaultHomeProps) {
   return (
-    <SessionProvider>
+    <>
       <QueryProvider>
         <HomeContent
           mems={mems}
@@ -33,6 +32,6 @@ export default function HomeContentWrapper({
         pauseOnHover
         theme="light"
       />
-    </SessionProvider>
+    </>
   );
 }

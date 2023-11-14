@@ -2,12 +2,12 @@
 const nextConfig = {
   experimental: {
     appDir: true,
-    serverActions: true
+    serverActions: true,
   },
   env: {
-    NEXTAUTH_SECRET: "SECRET",
-    HOME_URL: "http://localhost:3000",
-    REVALIDATION_TOKEN: "SUPER_SECRET_REVALIDATION_TOKEN",
+    NEXTAUTH_SECRET: 'SECRET',
+    HOME_URL: 'http://localhost:3000',
+    REVALIDATION_TOKEN: 'SUPER_SECRET_REVALIDATION_TOKEN',
   },
 };
 

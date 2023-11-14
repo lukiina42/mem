@@ -1,12 +1,12 @@
-import { Notification } from "@/types/notification";
-import { retrieveCookiesSession } from "./retrieveCookiesSession";
-import { JWT } from "next-auth/jwt";
+import { Notification } from '@/types/notification';
+import { retrieveCookiesSession } from './retrieveCookiesSession';
+import { JWT } from 'next-auth/jwt';
 
 export const loadNotifications = async () => {
   const sessionData = (await retrieveCookiesSession()) as JWT;
 
-  const response = await fetch("http://localhost:8080/notification", {
-    method: "GET",
+  const response = await fetch('http://localhost:8080/notification', {
+    method: 'GET',
     headers: {
       Authorization: `Bearer ${sessionData?.token}`,
     },

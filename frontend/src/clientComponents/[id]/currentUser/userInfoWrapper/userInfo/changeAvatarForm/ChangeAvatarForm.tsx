@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import React, { SetStateAction } from "react";
-import { FcDeleteRow } from "react-icons/fc";
-import { GrClose } from "react-icons/gr";
-import { CgProfile } from "react-icons/cg";
+import React, { SetStateAction } from 'react';
+import { FcDeleteRow } from 'react-icons/fc';
+import { GrClose } from 'react-icons/gr';
+import { CgProfile } from 'react-icons/cg';
 
 interface ChangeAvatarFormProps {
   setShowProfileModal: React.Dispatch<SetStateAction<boolean>>;
@@ -41,10 +41,7 @@ export default function ChangeAvatarForm(props: ChangeAvatarFormProps) {
         />
       </div>
       {(file !== null || avatarImageUrl) && (
-        <div
-          className="absolute top-12 right-12 group"
-          onClick={handleDeleteImageClick}
-        >
+        <div className="absolute top-12 right-12 group" onClick={handleDeleteImageClick}>
           <FcDeleteRow
             className="text-black hover:bg-blue-50 rounded-sm hover:cursor-pointer"
             size={25}
@@ -55,10 +52,7 @@ export default function ChangeAvatarForm(props: ChangeAvatarFormProps) {
         </div>
       )}
       <div className="flex flex-col gap-2 items-center justify-center h-full">
-        <label
-          htmlFor="file"
-          className="flex justify-center mt-2 hover:cursor-pointer"
-        >
+        <label htmlFor="file" className="flex justify-center mt-2 hover:cursor-pointer">
           {file ? (
             <div className="relative pb-2">
               <img // eslint-disable-line @next/next/no-img-element
@@ -74,10 +68,7 @@ export default function ChangeAvatarForm(props: ChangeAvatarFormProps) {
               src={avatarImageUrl}
             />
           ) : (
-            <CgProfile
-              size={150}
-              className="rounded-full bg-gray-400 text-gray-300"
-            />
+            <CgProfile size={150} className="rounded-full bg-gray-400 text-gray-300" />
           )}
         </label>
         <input
@@ -87,11 +78,7 @@ export default function ChangeAvatarForm(props: ChangeAvatarFormProps) {
           accept="image/*"
           className="hidden"
         ></input>
-        <button
-          disabled={isLoading}
-          onClick={handleSaveAvatar}
-          className="basic-button w-[4rem]"
-        >
+        <button disabled={isLoading} onClick={handleSaveAvatar} className="basic-button w-[4rem]">
           Save
         </button>
       </div>

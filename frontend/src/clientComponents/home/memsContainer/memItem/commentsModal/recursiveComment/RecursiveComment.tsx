@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { Comment } from "@/types/comment";
-import { BsReply } from "react-icons/bs";
-import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
-import { SetStateAction, Dispatch } from "react";
-import { CgProfile } from "react-icons/cg";
-import Link from "next/link";
+import { Comment } from '@/types/comment';
+import { BsReply } from 'react-icons/bs';
+import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
+import { SetStateAction, Dispatch } from 'react';
+import { CgProfile } from 'react-icons/cg';
+import Link from 'next/link';
 
 interface RecursiveCommentProps {
   comment: Comment;
@@ -17,14 +17,7 @@ interface RecursiveCommentProps {
 }
 
 export default function RecursiveComment(props: RecursiveCommentProps) {
-  const {
-    comment,
-    marginLeft,
-    isRoot,
-    isFirst,
-    setReplyComment,
-    replyComment,
-  } = props;
+  const { comment, marginLeft, isRoot, isFirst, setReplyComment, replyComment } = props;
 
   const leftDivsArray = [];
   for (let i = 0; i < marginLeft; i++) {
@@ -37,14 +30,11 @@ export default function RecursiveComment(props: RecursiveCommentProps) {
         <div className={`flex`}>
           {leftDivsArray.map((item, index) => {
             return (
-              <div
-                key={item}
-                className={`flex flex-col items-center ml-5 min-w-4 w-4`}
-              >
+              <div key={item} className={`flex flex-col items-center ml-5 min-w-4 w-4`}>
                 <>
                   <div
                     className={`h-1/2 w-full ${
-                      item == marginLeft - 1 && "border-b-[1px]"
+                      item == marginLeft - 1 && 'border-b-[1px]'
                     } border-l-[1px]`}
                   />
                   <div className="h-1/2 w-full border-l-[1px]" />
@@ -65,10 +55,8 @@ export default function RecursiveComment(props: RecursiveCommentProps) {
             <div className="flex flex-col">
               <div
                 className={`w-fit flex items-start px-3 py-2 gap-2 ${
-                  replyComment?.id === comment.id
-                    ? "bg-blue-100"
-                    : "bg-slate-100"
-                }  rounded-3xl ${isRoot && !isFirst && "mt-2"}`}
+                  replyComment?.id === comment.id ? 'bg-blue-100' : 'bg-slate-100'
+                }  rounded-3xl ${isRoot && !isFirst && 'mt-2'}`}
               >
                 <Link href={`/user/${comment.ownerId}`}>
                   <div className="font-bold hover:cursor-pointer hover:underline">

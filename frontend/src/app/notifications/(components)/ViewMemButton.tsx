@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { getMem } from "@/clientApiCalls/memApi";
-import { Notification } from "@/types/notification";
-import { useQuery } from "react-query";
-import { useState } from "react";
-import MemDetail from "@/clientComponents/home/memsContainer/memItem/commentsModal/MemDetail";
-import { useHeartMutation } from "@/clientApiCalls/reactQuery/heartMutation";
-import { useHeart } from "@/hooks/useHeart";
-import ModalWrapper from "@/utilComponents/ModalWrapper";
-import { JWT } from "next-auth/jwt";
+import { getMem } from '@/clientApiCalls/memApi';
+import { Notification } from '@/types/notification';
+import { useQuery } from 'react-query';
+import { useState } from 'react';
+import MemDetail from '@/clientComponents/home/memsContainer/memItem/commentsModal/MemDetail';
+import { useHeartMutation } from '@/clientApiCalls/reactQuery/heartMutation';
+import { useHeart } from '@/hooks/useHeart';
+import ModalWrapper from '@/utilComponents/ModalWrapper';
+import { JWT } from 'next-auth/jwt';
 
 export default function ViewMemButton({
   notification,

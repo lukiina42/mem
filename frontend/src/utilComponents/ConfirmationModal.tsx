@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 interface ConfirmationModalProps {
   title: string;
@@ -9,13 +9,7 @@ interface ConfirmationModalProps {
 }
 
 export default function ConfirmationModal(props: ConfirmationModalProps) {
-  const {
-    title,
-    handleCancel,
-    handleConfirm,
-    confirmButtonText,
-    cancelButtonText,
-  } = props;
+  const { title, handleCancel, handleConfirm, confirmButtonText, cancelButtonText } = props;
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none w-[100vw]">

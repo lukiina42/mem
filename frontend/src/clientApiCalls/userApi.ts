@@ -1,9 +1,5 @@
-import { User } from "@/types/user";
-import {
-  handleError,
-  handleResponseWithoutJson,
-  handleResponseWithJson,
-} from "./apiUtils";
+import { User } from '@/types/user';
+import { handleError, handleResponseWithoutJson, handleResponseWithJson } from './apiUtils';
 
 export const createUser = (variables: {
   email: string;
@@ -11,9 +7,9 @@ export const createUser = (variables: {
   username: string;
 }): Promise<string | void> => {
   return fetch(`http://localhost:8080/users`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(variables),
   })
@@ -26,9 +22,9 @@ export const loginUser = (variables: {
   password: string;
 }): Promise<{ token: string; user: User }> => {
   return fetch(`http://localhost:8080/auth/login`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
       username: variables.email,
@@ -41,9 +37,9 @@ export const loginUser = (variables: {
 
 export const getUser = (variables: { id: number }): Promise<User> => {
   return fetch(`http://localhost:8080/users/${variables.id}`, {
-    method: "GET",
+    method: 'GET',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
   })
     .then((response) => handleResponseWithJson(response, 200))
@@ -57,11 +53,11 @@ export const updateAvatar = (variables: {
   let formData = null;
   if (variables.file) {
     formData = new FormData();
-    formData.append("image", variables.file as File);
+    formData.append('image', variables.file as File);
   }
 
   return fetch(`http://localhost:8080/users/avatar`, {
-    method: "PUT",
+    method: 'PUT',
     headers: {
       Authorization: `Bearer ${variables.token}`,
     },
@@ -76,7 +72,7 @@ export const banUser = (variables: {
   bannedUserId: number;
 }): Promise<string | void> => {
   return fetch(`http://localhost:8080/users/ban/${variables.bannedUserId}`, {
-    method: "PUT",
+    method: 'PUT',
     headers: {
       Authorization: `Bearer ${variables.token}`,
     },
@@ -90,7 +86,7 @@ export const followUser = (variables: {
   token: string;
 }): Promise<string | void> => {
   return fetch(`http://localhost:8080/users/follow/${variables.followedId}`, {
-    method: "PUT",
+    method: 'PUT',
     headers: {
       Authorization: `Bearer ${variables.token}`,
     },

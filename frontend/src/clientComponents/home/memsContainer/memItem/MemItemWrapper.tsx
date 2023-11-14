@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Mem } from "@/types/mem";
-import MemItem from "./MemItem";
-import { useHeart } from "@/hooks/useHeart";
-import { JWT } from "next-auth/jwt";
+import { Mem } from '@/types/mem';
+import MemItem from './MemItem';
+import { useHeart } from '@/hooks/useHeart';
+import { JWT } from 'next-auth/jwt';
 
 interface MemItemInterface {
   mem: Mem;
@@ -31,11 +31,7 @@ export default function MemItemWrapper({
   const isOwnedByCurrentUser = user?.name === mem.owner.username;
 
   return (
-    <div
-      className={`w-full flex mt-3 mr-1 pb-3 pr-2 ${
-        displayBorder && "border-b"
-      }`}
-    >
+    <div className={`w-full flex mt-3 mr-1 pb-3 pr-2 ${displayBorder && 'border-b'}`}>
       <MemItem
         key={mem.id}
         mem={mem}

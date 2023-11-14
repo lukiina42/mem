@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { Mem } from "@/types/mem";
-import { useSession } from "next-auth/react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { deleteMem, getMems } from "@/clientApiCalls/memApi";
-import { useRouter } from "next/navigation";
-import ConfirmationModal from "@/utilComponents/ConfirmationModal";
-import React, { useEffect, useRef, useState } from "react";
-import { displayToast } from "@/utilComponents/toast";
-import MemItemWrapper from "./memItem/MemItemWrapper";
-import { useHeartMutation } from "@/clientApiCalls/reactQuery/heartMutation";
-import { InView } from "react-intersection-observer";
-import { JWT } from "next-auth/jwt";
+import { Mem } from '@/types/mem';
+import { useSession } from 'next-auth/react';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { deleteMem, getMems } from '@/clientApiCalls/memApi';
+import { useRouter } from 'next/navigation';
+import ConfirmationModal from '@/utilComponents/ConfirmationModal';
+import React, { useEffect, useRef, useState } from 'react';
+import { displayToast } from '@/utilComponents/toast';
+import MemItemWrapper from './memItem/MemItemWrapper';
+import { useHeartMutation } from '@/clientApiCalls/reactQuery/heartMutation';
+import { InView } from 'react-intersection-observer';
+import { JWT } from 'next-auth/jwt';
 
 export default function MemsContainer({
   mems,
@@ -20,7 +20,7 @@ export default function MemsContainer({
   sessionData,
 }: {
   mems: Mem[];
-  requestUrl: "/mems/home/newest" | "/" | string;
+  requestUrl: '/mems/home/newest' | '/' | string;
   requestingUserId?: number;
   sessionData: JWT | null;
 }) {
@@ -37,10 +37,7 @@ export default function MemsContainer({
   useEffect(() => {
     setLocalMems(mems);
     enableMoreMems.current = false;
-    const enableFetchTimeout = setTimeout(
-      () => (enableMoreMems.current = true),
-      500
-    );
+    const enableFetchTimeout = setTimeout(() => (enableMoreMems.current = true), 500);
     return () => clearTimeout(enableFetchTimeout);
   }, [mems]);
 
@@ -50,16 +47,14 @@ export default function MemsContainer({
 
   //continue here - pass the current number from which to fetch
   const { refetch } = useQuery(
-    ["fetch_additional_mems"],
+    ['fetch_additional_mems'],
     () =>
       getMems({
         token: sessionData!.token,
         requestUrl,
         from: localMems.length,
         to: localMems.length + 9,
-        requestingUser: requestUrl.startsWith("/user")
-          ? requestingUserId?.toString()
-          : "",
+        requestingUser: requestUrl.startsWith('/user') ? requestingUserId?.toString() : '',
       }),
     {
       refetchOnWindowFocus: false,
@@ -67,7 +62,7 @@ export default function MemsContainer({
       onSuccess: (data) => {
         let dataConverted: Mem[];
         //the home api call returns the mems in an object
-        if ("mems" in data) {
+        if ('mems' in data) {
           dataConverted = data.mems as Mem[];
         } else {
           dataConverted = data;
@@ -88,18 +83,10 @@ export default function MemsContainer({
 
   const deleteMemMutation = useMutation(deleteMem, {
     onSuccess: () => {
-      displayToast(
-        "The mem was successfully deleted",
-        "bottom-center",
-        "success"
-      );
+      displayToast('The mem was successfully deleted', 'bottom-center', 'success');
     },
     onError: () => {
-      displayToast(
-        "Something went wrong, please try again",
-        "bottom-center",
-        "error"
-      );
+      displayToast('Something went wrong, please try again', 'bottom-center', 'error');
     },
   });
 
@@ -122,11 +109,7 @@ export default function MemsContainer({
 
   const handleHeartMemRequest = (memId: number) => {
     if (!sessionData) {
-      displayToast(
-        "You must be logged in to do that xd",
-        "bottom-center",
-        "info"
-      );
+      displayToast('You must be logged in to do that xd', 'bottom-center', 'info');
     } else {
       heartMemMutation.mutate({ memId, token: sessionData!.token });
     }
@@ -154,7 +137,7 @@ export default function MemsContainer({
               handleDeleteMemClick={handleDeleteMemClick}
               displayBorder={i !== mems.length - 1}
               handleHeartMemRequest={handleHeartMemRequest}
-              enableDelete={sessionData?.roles.some((role) => role == "admin")}
+              enableDelete={sessionData?.roles.some((role) => role == 'admin')}
             />
           </InView>
         ) : (
@@ -165,7 +148,7 @@ export default function MemsContainer({
             handleDeleteMemClick={handleDeleteMemClick}
             displayBorder={i !== mems.length - 1}
             handleHeartMemRequest={handleHeartMemRequest}
-            enableDelete={sessionData?.roles.some((role) => role == "admin")}
+            enableDelete={sessionData?.roles.some((role) => role == 'admin')}
           />
         );
       })}

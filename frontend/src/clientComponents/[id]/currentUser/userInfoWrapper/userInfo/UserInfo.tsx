@@ -1,16 +1,22 @@
-"use client";
+'use client';
 
-import { updateAvatar } from "@/clientApiCalls/userApi";
-import ModalWrapper from "@/utilComponents/ModalWrapper";
-import { displayToast } from "@/utilComponents/toast";
-import { useSession } from "next-auth/react";
-import React from "react";
-import { CgProfile } from "react-icons/cg";
-import { useMutation } from "react-query";
-import ChangeAvatarForm from "./changeAvatarForm/ChangeAvatarForm";
-import { UserData } from "@/app/user/[id]/page";
+import { updateAvatar } from '@/clientApiCalls/userApi';
+import ModalWrapper from '@/utilComponents/ModalWrapper';
+import { displayToast } from '@/utilComponents/toast';
+import { useSession } from 'next-auth/react';
+import React from 'react';
+import { CgProfile } from 'react-icons/cg';
+import { useMutation } from 'react-query';
+import ChangeAvatarForm from './changeAvatarForm/ChangeAvatarForm';
+import { UserData } from '@/app/user/[id]/page';
 
-export default function LoggedUserInfo({ user, revalidate }: { user: UserData, revalidate: () => void }) {
+export default function LoggedUserInfo({
+  user,
+  revalidate,
+}: {
+  user: UserData;
+  revalidate: () => void;
+}) {
   const [showProfileModal, setShowProfileModal] = React.useState(false);
   const [file, setFile] = React.useState<File | null>(null);
   const [imageDeleted, setImageDeleted] = React.useState(false);
@@ -28,22 +34,14 @@ export default function LoggedUserInfo({ user, revalidate }: { user: UserData, r
 
   const updateAvatarMutation = useMutation(updateAvatar, {
     onSuccess: () => {
-      displayToast(
-        "Avatar was changed successfully",
-        "bottom-center",
-        "success"
-      );
+      displayToast('Avatar was changed successfully', 'bottom-center', 'success');
       setFile(null);
       setShowProfileModal(false);
       //revalidate the route to trigger refresh
-      revalidate()
+      revalidate();
     },
     onError: () => {
-      displayToast(
-        "Something went wrong, please try again",
-        "bottom-center",
-        "error"
-      );
+      displayToast('Something went wrong, please try again', 'bottom-center', 'error');
     },
   });
 
@@ -77,10 +75,7 @@ export default function LoggedUserInfo({ user, revalidate }: { user: UserData, r
                   src={user.avatarImageUrl}
                 />
               ) : (
-                <CgProfile
-                  size={55}
-                  className="rounded-full bg-gray-400 p-1 text-gray-300"
-                />
+                <CgProfile size={55} className="rounded-full bg-gray-400 p-1 text-gray-300" />
               )}
             </div>
             <div className="flex flex-col justify-between h-full hover:cursor-pointer duration-150 transition-all p-0.5 rounded-md">

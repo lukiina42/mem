@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Mem } from "@/types/mem";
-import MemDetailWrapper from "./mem/Mem";
-import { JWT } from "next-auth/jwt";
-import QueryProvider from "@/lib/reactQuery/QueryProvider";
+import { Mem } from '@/types/mem';
+import MemDetailWrapper from './mem/Mem';
+import { JWT } from 'next-auth/jwt';
+import QueryProvider from '@/lib/reactQuery/QueryProvider';
 
 interface MemDetailWrapperProps {
   mem: Mem;

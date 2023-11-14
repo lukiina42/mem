@@ -1,24 +1,23 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { SessionStrategy, User } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import { cookies } from "next/headers";
+import { NextApiRequest, NextApiResponse } from 'next';
+import { SessionStrategy, User } from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
 
 export const AuthOptions = (req: NextApiRequest, res: NextApiResponse) => {
   return {
     session: {
-      strategy: "jwt" as SessionStrategy,
+      strategy: 'jwt' as SessionStrategy,
     },
     providers: [
       //@ts-ignore
       CredentialsProvider({
-        name: "credentials",
+        name: 'credentials',
         //@ts-ignore
         async authorize(credentials, req) {
           if (!credentials) return;
           const response = await fetch(`http://localhost:8080/auth/login`, {
-            method: "POST",
+            method: 'POST',
             headers: {
-              "Content-Type": "application/json",
+              'Content-Type': 'application/json',
             },
             body: JSON.stringify({
               username: credentials.email,
@@ -35,9 +34,7 @@ export const AuthOptions = (req: NextApiRequest, res: NextApiResponse) => {
             roles: userData.user.roles,
           };
 
-          res.setHeader("Set-Cookie", [
-            `next-auth.session-token=${userData.token}`,
-          ]);
+          res.setHeader('Set-Cookie', [`next-auth.session-token=${userData.token}`]);
 
           return user;
         },
@@ -74,8 +71,8 @@ export const AuthOptions = (req: NextApiRequest, res: NextApiResponse) => {
       // },
     },
     pages: {
-      signIn: "/",
-      error: "/",
+      signIn: '/login',
+      error: '/login?authenticated=false',
     },
     secret: process.env.NEXTAUTH_SECRET,
   };

@@ -1,8 +1,8 @@
-import { Notification } from "@/types/notification";
-import Link from "next/link";
-import { CgProfile } from "react-icons/cg";
-import ViewMemButtonWrapper from "./ViewMemButtonWrapper";
-import { JWT } from "next-auth/jwt";
+import { Notification } from '@/types/notification';
+import Link from 'next/link';
+import { CgProfile } from 'react-icons/cg';
+import ViewMemButtonWrapper from './ViewMemButtonWrapper';
+import { JWT } from 'next-auth/jwt';
 
 export default function NotificationCard({
   notification,
@@ -14,7 +14,7 @@ export default function NotificationCard({
   sessionData: JWT;
 }) {
   return (
-    <div className={`flex w-full mt-2 ${borderTop && "border-t"}`}>
+    <div className={`flex w-full mt-2 ${borderTop && 'border-t'}`}>
       <Link
         href={`/user/${notification.trigerredBy.id}`}
         className="min-w-[4rem] flex justify-center mt-2"
@@ -38,17 +38,12 @@ export default function NotificationCard({
           </Link>
           <div className="flex flex-col gap-2 items-end justify-between h-8">
             <div className="text-sm">{notification.formattedCreatedDate}</div>
-            {!notification.seen && (
-              <div className="w-1 h-1 bg-red-500 rounded-full"></div>
-            )}
+            {!notification.seen && <div className="w-1 h-1 bg-red-500 rounded-full"></div>}
           </div>
         </div>
         <div className="mt-1">{notification.content}</div>
         {notification.relatesToMemId && (
-          <ViewMemButtonWrapper
-            notification={notification}
-            sessionData={sessionData}
-          />
+          <ViewMemButtonWrapper notification={notification} sessionData={sessionData} />
         )}
       </div>
     </div>

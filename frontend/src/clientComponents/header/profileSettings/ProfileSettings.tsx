@@ -1,18 +1,15 @@
-"use client";
+'use client';
 
-import React, { useEffect } from "react";
-import { MdOutlinePersonOutline } from "react-icons/md";
-import ProfileOptionsMenu from "./profileOptionsMenu/ProfileOptionsMenu";
-import FormsWrapper from "./forms/FormsWrapper";
-import { useRouter } from "next/navigation";
-import { useSession, signOut } from "next-auth/react";
-import { ToastContainer } from "react-toastify";
-import { useSelectedLayoutSegment } from "next/navigation";
+import React, { useEffect } from 'react';
+import { MdOutlinePersonOutline } from 'react-icons/md';
+import ProfileOptionsMenu from './profileOptionsMenu/ProfileOptionsMenu';
+import FormsWrapper from './forms/FormsWrapper';
+import { useRouter } from 'next/navigation';
+import { useSession, signOut } from 'next-auth/react';
+import { ToastContainer } from 'react-toastify';
+import { useSelectedLayoutSegment } from 'next/navigation';
 
 export default function Profile() {
-  const [showModal, setShowModal] = React.useState<"none" | "signup" | "login">(
-    "none"
-  );
   const [showMenu, setShowMenu] = React.useState(false);
 
   const segment = useSelectedLayoutSegment();
@@ -22,20 +19,19 @@ export default function Profile() {
   //jwt is invalid (unable to signOut in middleware)
   useEffect(() => {
     if (!segment && session?.user?.name) {
-      signOut();
+      signOut({
+        callbackUrl: '/signin',
+      });
     }
   }, [segment, session]);
 
   const resetMenu = () => {
-    setShowModal("none");
     setShowMenu(false);
   };
 
-  const signUpToLoginChange = () => setShowModal("login");
-
   const router = useRouter();
 
-  const username = session?.user?.name ? session.user.name : "";
+  const username = session?.user?.name ? session.user.name : '';
 
   return (
     <>
@@ -50,37 +46,24 @@ export default function Profile() {
           <MdOutlinePersonOutline size={30} />
           <span
             className={`tooltip origin-left left-[4.5rem] -bottom-2 group-hover:scale-100 @[200px]:hidden block ${
-              !username && "hidden"
+              !username && 'hidden'
             }`}
           >
             {username}
           </span>
         </div>
         {!session?.user ? (
-          <>
-            {showModal !== "none" ? (
-              <FormsWrapper
-                resetMenu={resetMenu}
-                showModal={showModal}
-                redirect={router.push}
-                signUpToLoginChange={signUpToLoginChange}
-              />
-            ) : null}
-            {showMenu && (
-              <ProfileOptionsMenu
-                setShowModal={setShowModal}
-                setShowMenu={setShowMenu}
-                user={null}
-              />
-            )}
-          </>
+          <>{showMenu && <ProfileOptionsMenu setShowMenu={setShowMenu} user={null} />}</>
         ) : (
           <>
             {showMenu && (
               <ProfileOptionsMenu
-                signOut={signOut}
+                signOut={() =>
+                  signOut({
+                    callbackUrl: '/signin',
+                  })
+                }
                 user={session.user}
-                setShowModal={setShowModal}
                 redirect={router.push}
                 setShowMenu={setShowMenu}
               />
@@ -88,7 +71,7 @@ export default function Profile() {
           </>
         )}
       </div>
-      {status !== "authenticated" && (
+      {status !== 'authenticated' && (
         <ToastContainer
           position="top-center"
           autoClose={false}

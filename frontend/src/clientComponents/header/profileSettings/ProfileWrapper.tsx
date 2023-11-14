@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import Profile from "./ProfileSettings";
+import Profile from './ProfileSettings';
 
 export default function ProfileWrapper() {
   return <Profile />;

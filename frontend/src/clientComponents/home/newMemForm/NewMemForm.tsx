@@ -1,34 +1,33 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 
-import { ImFilePicture } from "react-icons/im";
-import { GrClose } from "react-icons/gr";
-import { useMutation, useQueryClient } from "react-query";
-import { createMem } from "@/clientApiCalls/memApi";
-import { useSession } from "next-auth/react";
-import { User } from "next-auth";
-import LoadingSpinner from "@/utilComponents/Loading";
-import { displayToast } from "@/utilComponents/toast";
+import { ImFilePicture } from 'react-icons/im';
+import { GrClose } from 'react-icons/gr';
+import { useMutation, useQueryClient } from 'react-query';
+import { createMem } from '@/clientApiCalls/memApi';
+import { useSession } from 'next-auth/react';
+import { User } from 'next-auth';
+import LoadingSpinner from '@/utilComponents/Loading';
+import { displayToast } from '@/utilComponents/toast';
 
 //lazy solution
 const getAmountOfRows = (input: string) => {
-  const amountOfEnter = input.split("\n").length - 1;
+  const amountOfEnter = input.split('\n').length - 1;
   if (input.length < 35 && amountOfEnter < 2) return 2;
   return 3;
 };
 
-
 export default function NewTweetForm() {
   const [file, setFile] = useState<File | null>(null);
-  const [inputContent, setInputContent] = useState("");
+  const [inputContent, setInputContent] = useState('');
   const [error, setError] = useState(false);
 
   const { data } = useSession();
 
   const user = data?.user as User;
 
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   const fileSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -39,17 +38,13 @@ export default function NewTweetForm() {
 
   const createMemMutation = useMutation(createMem, {
     onSuccess: async () => {
-      displayToast("You successfully memd", "bottom-center", "success");
+      displayToast('You successfully memd', 'bottom-center', 'success');
       setFile(null);
-      setInputContent("");
-      await queryClient.invalidateQueries("newMems")
+      setInputContent('');
+      await queryClient.invalidateQueries('newMems');
     },
     onError: () => {
-      displayToast(
-        "Something went wrong, please try again",
-        "bottom-center",
-        "error"
-      );
+      displayToast('Something went wrong, please try again', 'bottom-center', 'error');
     },
   });
 
@@ -58,7 +53,7 @@ export default function NewTweetForm() {
     setInputContent(text);
   };
 
-  const loading = createMemMutation.status === "loading";
+  const loading = createMemMutation.status === 'loading';
 
   const onSubmit = () => {
     if (!inputContent && !file) {
@@ -82,23 +77,16 @@ export default function NewTweetForm() {
           <div className="font-bold text-lg">Insert some mem!</div>
           <textarea
             className={`text-xl active:border-none focus:outline-none py-2 resize-none ${
-              error ? "placeholder:text-red-300" : "placeholder:text-gray-400"
+              error ? 'placeholder:text-red-300' : 'placeholder:text-gray-400'
             }`}
             rows={getAmountOfRows(inputContent)}
-            placeholder={
-              error
-                ? "Insert image or text first"
-                : "Remember, only funny, no cringe"
-            }
+            placeholder={error ? 'Insert image or text first' : 'Remember, only funny, no cringe'}
             value={inputContent}
             onChange={(e) => handleContentInputChange(e.target.value)}
           />
           {file && (
             <div className="w-full h-full relative pb-2">
-              <div
-                className="absolute top-2 right-2"
-                onClick={() => setFile(null)}
-              >
+              <div className="absolute top-2 right-2" onClick={() => setFile(null)}>
                 <GrClose
                   className="text-black rounded-full p-1 hover:bg-blue-200 hover:cursor-pointer transition-all duration-150"
                   size={30}
@@ -126,11 +114,7 @@ export default function NewTweetForm() {
               className="hidden"
             ></input>
 
-            <button
-              className="basic-button w-24"
-              type="submit"
-              onClick={onSubmit}
-            >
+            <button className="basic-button w-24" type="submit" onClick={onSubmit}>
               Mem
             </button>
           </div>
