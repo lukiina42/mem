@@ -5,6 +5,8 @@ import { JWT } from 'next-auth/jwt';
 export const retrieveHomeMems = async () => {
   const sessionData = await retrieveCookiesSession();
 
+  console.log(sessionData?.token)
+
   const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/mems?from=0&to=9`, {
     method: 'GET',
     headers: {
