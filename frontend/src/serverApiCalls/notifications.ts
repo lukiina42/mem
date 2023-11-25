@@ -5,7 +5,7 @@ import { JWT } from 'next-auth/jwt';
 export const loadNotifications = async () => {
   const sessionData = (await retrieveCookiesSession()) as JWT;
 
-  const response = await fetch('${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/notification', {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/notification`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${sessionData?.token}`,

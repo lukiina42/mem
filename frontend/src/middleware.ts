@@ -91,10 +91,6 @@ export default withAuth(
         }
       }
       return null;
-    } else if (isAuthPage && userJwtValid.authenticationResult === 'unauthorized') {
-      if (req.nextUrl.pathname !== '/login') {
-        return NextResponse.redirect(new URL('/login', req.url));
-      }
     }
   },
   {
