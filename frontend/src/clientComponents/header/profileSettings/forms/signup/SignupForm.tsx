@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { displayToast } from '@/utilComponents/toast';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 interface FormData {
   email: string;
@@ -179,6 +180,8 @@ export default function SignupForm(props: SignupFormProps) {
         >
           Submit
         </button>
+
+        <div className='w-full flex justify-center gap-1 mt-3'>Již máte účet?<Link className='text-blue-500 hover:text-blue-700' href={"/login"}>Přihlašte se!</Link></div>
       </form>
     </div>
   );

@@ -7,6 +7,7 @@ import InputError from '../helper/InputError';
 import { signIn } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
 import { useRef } from 'react';
+import Link from 'next/link';
 
 interface FormData {
   email: string;
@@ -96,6 +97,8 @@ export default function LoginForm(props: { resetMenu?: () => void }) {
         >
           Submit
         </button>
+
+        <div className='w-full flex justify-center gap-1'>Nemáte účet?<Link className='text-blue-500 hover:text-blue-700' href={"/signup"}>Zaregistrujte se!</Link></div>
       </form>
     </div>
   );
