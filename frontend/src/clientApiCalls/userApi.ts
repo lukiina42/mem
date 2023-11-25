@@ -6,7 +6,7 @@ export const createUser = (variables: {
   password: string;
   username: string;
 }): Promise<string | void> => {
-  return fetch(`http://localhost:8080/users`, {
+  return fetch(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/users`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -21,7 +21,7 @@ export const loginUser = (variables: {
   email: string;
   password: string;
 }): Promise<{ token: string; user: User }> => {
-  return fetch(`http://localhost:8080/auth/login`, {
+  return fetch(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/auth/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ export const loginUser = (variables: {
 };
 
 export const getUser = (variables: { id: number }): Promise<User> => {
-  return fetch(`http://localhost:8080/users/${variables.id}`, {
+  return fetch(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/users/${variables.id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ export const updateAvatar = (variables: {
     formData.append('image', variables.file as File);
   }
 
-  return fetch(`http://localhost:8080/users/avatar`, {
+  return fetch(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/users/avatar`, {
     method: 'PUT',
     headers: {
       Authorization: `Bearer ${variables.token}`,
@@ -71,7 +71,7 @@ export const banUser = (variables: {
   token: string;
   bannedUserId: number;
 }): Promise<string | void> => {
-  return fetch(`http://localhost:8080/users/ban/${variables.bannedUserId}`, {
+  return fetch(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/users/ban/${variables.bannedUserId}`, {
     method: 'PUT',
     headers: {
       Authorization: `Bearer ${variables.token}`,
@@ -85,7 +85,7 @@ export const followUser = (variables: {
   followedId: number;
   token: string;
 }): Promise<string | void> => {
-  return fetch(`http://localhost:8080/users/follow/${variables.followedId}`, {
+  return fetch(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/users/follow/${variables.followedId}`, {
     method: 'PUT',
     headers: {
       Authorization: `Bearer ${variables.token}`,

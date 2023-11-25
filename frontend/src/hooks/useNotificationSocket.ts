@@ -28,7 +28,7 @@ export function useNotificationSocket(userData: JWT | null) {
 
     if (userData) {
       if (!socket) {
-        socket = io('http://localhost:8080', {
+        socket = io(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}`, {
           query: { userId: userData.sub },
         });
       }

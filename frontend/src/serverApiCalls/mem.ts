@@ -5,7 +5,7 @@ export const getMem = async (id: number) => {
   const sessionData = await retrieveCookiesSession();
 
   const response = await fetch(
-    `http://localhost:8080/mems/${id}?requestingUserId=${sessionData ? sessionData.sub : 0}`,
+    `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/mems/${id}?requestingUserId=${sessionData ? sessionData.sub : 0}`,
     {
       method: 'GET',
       headers: {

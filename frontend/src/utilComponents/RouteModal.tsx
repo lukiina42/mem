@@ -13,7 +13,7 @@ export default function Modal({ children }: { children: React.ReactNode }) {
   }, [router]);
 
   const onClick = useCallback(
-    (e) => {
+    (e: Event) => {
       if (e.target === overlay.current || e.target === wrapper.current) {
         if (onDismiss) onDismiss();
       }
@@ -22,7 +22,7 @@ export default function Modal({ children }: { children: React.ReactNode }) {
   );
 
   const onKeyDown = useCallback(
-    (e) => {
+    (e: any) => {
       if (e.key === 'Escape') onDismiss();
     },
     [onDismiss]
@@ -35,11 +35,14 @@ export default function Modal({ children }: { children: React.ReactNode }) {
 
   return (
     <div
+      //@ts-ignore
       ref={overlay}
       className="fixed z-10 left-0 right-0 top-0 bottom-0 mx-auto bg-black/60"
+      //@ts-ignore
       onClick={onClick}
     >
       <div
+        //@ts-ignore
         ref={wrapper}
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full sm:w-10/12 md:w-8/12 lg:w-1/2 p-6"
       >

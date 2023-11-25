@@ -5,7 +5,7 @@ export const retrieveProfileInfo = async (userId: number) => {
   const sessionData = await retrieveCookiesSession();
   const loggedInUserId = sessionData?.sub;
 
-  const userResponse = await fetch(`http://localhost:8080/users/${userId}`, {
+  const userResponse = await fetch(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/users/${userId}`, {
     next: { revalidate: 0, tags: ['profile'] },
     method: 'GET',
     headers: {
@@ -28,7 +28,7 @@ export const retrieveProfileInfo = async (userId: number) => {
     followedByCurrentUser: isFollowedByCurrentUser,
   };
 
-  let memsFetchUrl = `http://localhost:8080/mems/user/${userId}?from=0&to=9`;
+  let memsFetchUrl = `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/mems/user/${userId}?from=0&to=9`;
   memsFetchUrl += loggedInUserId ? `&requestingUser=${loggedInUserId}` : '';
 
   const memsResponse = await fetch(memsFetchUrl, {

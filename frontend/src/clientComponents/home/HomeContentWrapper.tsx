@@ -3,8 +3,8 @@
 import { ToastContainer } from 'react-toastify';
 
 import HomeContent from './HomeContent';
-import { DefaultHomeProps } from '@/app/home/page';
 import QueryProvider from '@/lib/reactQuery/QueryProvider';
+import { DefaultHomeProps } from '@/app/home/@main/page';
 
 export default function HomeContentWrapper({
   mems,

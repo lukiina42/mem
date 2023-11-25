@@ -14,7 +14,7 @@ export const AuthOptions = (req: NextApiRequest, res: NextApiResponse) => {
         //@ts-ignore
         async authorize(credentials, req) {
           if (!credentials) return;
-          const response = await fetch(`http://localhost:8080/auth/login`, {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/auth/login`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

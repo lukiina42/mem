@@ -2,7 +2,7 @@ import { Comment } from '@/types/comment';
 import { handleError, handleResponseWithJson, handleResponseWithoutJson } from './apiUtils';
 
 export const getComments = (variables: { memId: number }): Promise<Comment[]> => {
-  return fetch(`http://localhost:8080/comments/mem/${variables.memId}`, {
+  return fetch(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/comments/mem/${variables.memId}`, {
     method: 'GET',
     headers: {
       'Content-type': 'application/json',
@@ -30,7 +30,7 @@ export const createComment = (variables: {
         parentCommentId: variables.commentParentId,
       };
 
-  return fetch(`http://localhost:8080/comments/create`, {
+  return fetch(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/comments/create`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${variables.token}`,

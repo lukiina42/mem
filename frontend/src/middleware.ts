@@ -39,7 +39,7 @@ const checkProfileJwt = async (req: NextRequestWithAuth): Promise<checkProfileRe
     return {
       authenticationResult: 'unauthorized',
     };
-  const jwtResponse = await fetch('http://localhost:8080/auth/profile', {
+  const jwtResponse = await fetch(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/auth/profile`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token?.token}`,

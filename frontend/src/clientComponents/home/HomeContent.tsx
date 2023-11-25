@@ -5,8 +5,8 @@ import MemsContainer from './memsContainer/MemsContainer';
 import NewMemForm from './newMemForm/NewMemForm';
 import { useQuery } from 'react-query';
 import { getMems } from '@/clientApiCalls/memApi';
-import { DefaultHomeProps } from '@/app/home/page';
 import MemType from './memTypeButton/MemTypeButton';
+import { DefaultHomeProps } from '@/app/home/@main/page';
 
 export default function HomeContent({
   mems,

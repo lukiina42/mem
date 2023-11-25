@@ -15,7 +15,7 @@ export const createMem = (variables: {
   formData.append('content', variables.content);
   formData.append('userEmail', variables.userEmail);
 
-  return fetch(`http://localhost:8080/mems/upload`, {
+  return fetch(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/mems/upload`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${variables.token}`,
@@ -28,7 +28,7 @@ export const createMem = (variables: {
 };
 
 export const deleteMem = (variables: { memId: number; token: string }): Promise<string | void> => {
-  return fetch(`http://localhost:8080/mems/delete/${variables.memId}`, {
+  return fetch(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/mems/delete/${variables.memId}`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${variables.token}`,
@@ -41,7 +41,7 @@ export const deleteMem = (variables: { memId: number; token: string }): Promise<
 
 export const heartMem = (variables: { memId: number; token: string }): Promise<string | void> => {
   const { memId, token } = variables;
-  return fetch(`http://localhost:8080/mems/heart/${memId}`, {
+  return fetch(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/mems/heart/${memId}`, {
     method: 'PUT',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -59,7 +59,7 @@ export const getMems = (variables: {
   requestingUser?: string;
 }): Promise<Mem[]> => {
   return fetch(
-    `http://localhost:8080/mems${variables.requestUrl}?from=${variables.from}&to=${
+    `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/mems${variables.requestUrl}?from=${variables.from}&to=${
       variables.to
     }&requestingUser=${variables.requestingUser && variables.requestingUser}`,
     {
@@ -80,7 +80,7 @@ export const getMem = (variables: {
   requestUserId: string;
 }): Promise<Mem> => {
   return fetch(
-    `http://localhost:8080/mems/${variables.id}?requestingUserId=${variables.requestUserId}`,
+    `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/mems/${variables.id}?requestingUserId=${variables.requestUserId}`,
     {
       method: 'GET',
       headers: {
