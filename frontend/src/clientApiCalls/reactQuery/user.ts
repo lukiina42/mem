@@ -1,16 +1,10 @@
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { banUser, followUser } from '../userApi';
 
 ////heart mem
 export const useBanUserMutation = (onSuccess: () => void, onError: () => void) => {
-  return useMutation(banUser, {
-    onSuccess,
-    onError,
-  });
+  return useMutation({ mutationFn: banUser, onSuccess, onError });
 };
 
 export const useFollowUserMutation = (onSuccess: () => void, onError: () => void) =>
-  useMutation(followUser, {
-    onSuccess,
-    onError,
-  });
+  useMutation({ mutationFn: followUser, onSuccess, onError });

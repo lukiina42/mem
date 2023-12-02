@@ -1,5 +1,5 @@
 import { getMem } from '@/serverApiCalls/mem';
-import MemWrapper from './(components)/MemWrapper';
+import MemDetailWrapper from "@/app/mem/[id]/(components)/mem/Mem";
 
 export default async function page({
   params,
@@ -13,7 +13,7 @@ export default async function page({
   return (
     <div className="w-full h-full justify-center items-center flex-col gap-1">
       <div className="border-b h-8 items-center pl-2 text-xl font-bold">Mem detail</div>
-      <MemWrapper mem={mem} sessionData={sessionData} />
+      <MemDetailWrapper mem={mem} sessionData={sessionData} />
     </div>
   );
 }

@@ -59,9 +59,9 @@ export const getMems = (variables: {
   requestingUser?: string;
 }): Promise<Mem[]> => {
   return fetch(
-    `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/mems${variables.requestUrl}?from=${variables.from}&to=${
-      variables.to
-    }&requestingUser=${variables.requestingUser && variables.requestingUser}`,
+    `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/mems${variables.requestUrl}?from=${
+      variables.from
+    }&to=${variables.to}&requestingUser=${variables.requestingUser}`,
     {
       method: 'GET',
       headers: {

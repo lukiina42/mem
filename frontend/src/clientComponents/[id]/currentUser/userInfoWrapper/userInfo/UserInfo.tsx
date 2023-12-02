@@ -6,7 +6,7 @@ import { displayToast } from '@/utilComponents/toast';
 import { useSession } from 'next-auth/react';
 import React from 'react';
 import { CgProfile } from 'react-icons/cg';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import ChangeAvatarForm from './changeAvatarForm/ChangeAvatarForm';
 import { UserData } from '@/app/user/[id]/page';
 
@@ -32,7 +32,7 @@ export default function LoggedUserInfo({
     }
   };
 
-  const updateAvatarMutation = useMutation(updateAvatar, {
+  const updateAvatarMutation = useMutation({mutationFn: updateAvatar,
     onSuccess: () => {
       displayToast('Avatar was changed successfully', 'bottom-center', 'success');
       setFile(null);
@@ -95,7 +95,7 @@ export default function LoggedUserInfo({
             fileSelected={fileSelected}
             handleSaveAvatar={handleSaveAvatar}
             avatarImageUrl={user.avatarImageUrl}
-            isLoading={updateAvatarMutation.isLoading}
+            isLoading={updateAvatarMutation.isPending}
           />
         </ModalWrapper>
       )}

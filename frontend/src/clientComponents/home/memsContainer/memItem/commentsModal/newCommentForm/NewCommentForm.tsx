@@ -2,12 +2,12 @@
 
 import { Dispatch, SetStateAction, useState } from 'react';
 
-import { useMutation } from 'react-query';
 import LoadingSpinner from '@/utilComponents/Loading';
 import { displayToast } from '@/utilComponents/toast';
 import { createComment } from '@/clientApiCalls/commentApi';
 import { AiOutlineSend } from 'react-icons/ai';
 import { Comment } from '@/types/comment';
+import {useMutation} from "@tanstack/react-query";
 
 interface NewCommentFormProps {
   token: string;
@@ -21,7 +21,7 @@ export default function NewCommentForm(props: NewCommentFormProps) {
   const { refetch, token, memId, replyComment, setReplyComment } = props;
   const [inputContent, setInputContent] = useState('');
 
-  const createCommentMutation = useMutation(createComment, {
+  const createCommentMutation = useMutation({mutationFn: createComment,
     onSuccess: () => {
       setInputContent('');
       refetch();
@@ -43,7 +43,7 @@ export default function NewCommentForm(props: NewCommentFormProps) {
     setInputContent(event.target.value);
   };
 
-  const loading = createCommentMutation.status === 'loading';
+  const loading = createCommentMutation.isPending;
 
   const onSubmit = () => {
     if (!inputContent) return;

@@ -78,7 +78,11 @@ export default function ChangeAvatarForm(props: ChangeAvatarFormProps) {
           accept="image/*"
           className="hidden"
         ></input>
-        <button disabled={isLoading} onClick={handleSaveAvatar} className="basic-button w-[4rem] flex justify-center">
+        <button
+          disabled={isLoading}
+          onClick={handleSaveAvatar}
+          className="basic-button w-[4rem] flex justify-center"
+        >
           Save
         </button>
       </div>

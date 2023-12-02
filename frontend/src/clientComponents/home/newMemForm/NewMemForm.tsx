@@ -4,12 +4,12 @@ import { useState } from 'react';
 
 import { ImFilePicture } from 'react-icons/im';
 import { GrClose } from 'react-icons/gr';
-import { useMutation, useQueryClient } from 'react-query';
 import { createMem } from '@/clientApiCalls/memApi';
 import { useSession } from 'next-auth/react';
 import { User } from 'next-auth';
 import LoadingSpinner from '@/utilComponents/Loading';
 import { displayToast } from '@/utilComponents/toast';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 //lazy solution
 const getAmountOfRows = (input: string) => {
@@ -36,12 +36,13 @@ export default function NewTweetForm() {
     }
   };
 
-  const createMemMutation = useMutation(createMem, {
+  const createMemMutation = useMutation({
+    mutationFn: createMem,
     onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['newMems'] });
       displayToast('You successfully memd', 'bottom-center', 'success');
       setFile(null);
       setInputContent('');
-      await queryClient.invalidateQueries('newMems');
     },
     onError: () => {
       displayToast('Something went wrong, please try again', 'bottom-center', 'error');
@@ -53,7 +54,7 @@ export default function NewTweetForm() {
     setInputContent(text);
   };
 
-  const loading = createMemMutation.status === 'loading';
+  const loading = createMemMutation.status === 'pending';
 
   const onSubmit = () => {
     if (!inputContent && !file) {

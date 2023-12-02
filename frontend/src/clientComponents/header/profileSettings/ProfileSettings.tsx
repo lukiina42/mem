@@ -5,7 +5,6 @@ import { MdOutlinePersonOutline } from 'react-icons/md';
 import ProfileOptionsMenu from './profileOptionsMenu/ProfileOptionsMenu';
 import { useRouter } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
-import { ToastContainer } from 'react-toastify';
 import { useSelectedLayoutSegment } from 'next/navigation';
 
 export default function Profile() {
@@ -70,20 +69,6 @@ export default function Profile() {
           </>
         )}
       </div>
-      {status !== 'authenticated' && (
-        <ToastContainer
-          position="top-center"
-          autoClose={false}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        />
-      )}
     </>
   );
 }

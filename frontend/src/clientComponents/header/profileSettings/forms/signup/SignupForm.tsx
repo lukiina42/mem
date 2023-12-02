@@ -2,7 +2,7 @@
 
 import { useForm } from 'react-hook-form';
 import { CgClose } from 'react-icons/cg';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import { createUser } from '@/clientApiCalls/userApi';
 import InputError from '../helper/InputError';
@@ -40,7 +40,8 @@ export default function SignupForm(props: SignupFormProps) {
 
   const router = useRouter();
 
-  const createUserMutation = useMutation(createUser, {
+  const createUserMutation = useMutation({
+    mutationFn: createUser,
     onSuccess: () => {
       displayToast(
         'You were successfully signed up, you can now login',
@@ -181,7 +182,12 @@ export default function SignupForm(props: SignupFormProps) {
           Submit
         </button>
 
-        <div className='w-full flex justify-center gap-1 mt-3'>Již máte účet?<Link className='text-blue-500 hover:text-blue-700' href={"/login"}>Přihlašte se!</Link></div>
+        <div className="w-full flex justify-center gap-1 mt-3">
+          Již máte účet?
+          <Link className="text-blue-500 hover:text-blue-700" href={'/login'}>
+            Přihlašte se!
+          </Link>
+        </div>
       </form>
     </div>
   );

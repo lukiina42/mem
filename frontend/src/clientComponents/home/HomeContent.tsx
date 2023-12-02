@@ -3,28 +3,26 @@
 import { useState } from 'react';
 import MemsContainer from './memsContainer/MemsContainer';
 import NewMemForm from './newMemForm/NewMemForm';
-import { useQuery } from 'react-query';
 import { getMems } from '@/clientApiCalls/memApi';
 import MemType from './memTypeButton/MemTypeButton';
 import { DefaultHomeProps } from '@/app/home/@main/page';
+import { useQuery } from '@tanstack/react-query';
 
 export default function HomeContent({
   mems,
   sessionData,
   isUserFollowingAnyone,
 }: DefaultHomeProps) {
-  const {
-    data: newestMems,
-    refetch,
-    isLoading,
-  } = useQuery('newMems', () =>
-    getMems({
-      token: sessionData!.token,
-      requestUrl: '/home/newest',
-      from: 0,
-      to: 9,
-    })
-  );
+  const { data: newestMems, isLoading } = useQuery({
+    queryKey: ['newMems'],
+    queryFn: () =>
+      getMems({
+        token: sessionData!.token,
+        requestUrl: '/home/newest',
+        from: 0,
+        to: 9,
+      }),
+  });
 
   const [memsType, setMemsType] = useState<'Following' | 'Newest'>(
     isUserFollowingAnyone ? 'Following' : 'Newest'

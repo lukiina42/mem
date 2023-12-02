@@ -4,7 +4,7 @@ import { getComments } from '@/clientApiCalls/commentApi';
 import { Mem } from '@/types/mem';
 import LoadingSpinner from '@/utilComponents/Loading';
 import { useState } from 'react';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import MemItem from '../MemItem';
 import RecursiveComment from './recursiveComment/RecursiveComment';
 import NewCommentForm from './newCommentForm/NewCommentForm';
@@ -31,12 +31,17 @@ export default function MemDetail({
   token,
   imgMaxH,
 }: MemCommentsProps) {
-  const { data, isLoading } = useQuery(`memComment${mem.id}`, () => getComments({ memId: mem.id }));
+  const memDetailQueryKey = [`memComment`, mem.id];
+
+  const { data, isLoading } = useQuery({
+    queryKey: memDetailQueryKey,
+    queryFn: () => getComments({ memId: mem.id }),
+  });
 
   const queryClient = useQueryClient();
 
   const refetch = () => {
-    queryClient.invalidateQueries(`memComment${mem.id}`);
+    queryClient.invalidateQueries({ queryKey: memDetailQueryKey });
   };
 
   const [replyComment, setReplyComment] = useState<null | Comment>(null);

@@ -2,12 +2,12 @@ export default function Layout({
   modal,
   users,
   main,
-  children
+  children,
 }: {
   modal: React.ReactNode;
   users: React.ReactNode;
   main: React.ReactNode;
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <>

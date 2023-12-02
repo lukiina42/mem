@@ -2,7 +2,7 @@
 
 import { getMem } from '@/clientApiCalls/memApi';
 import { Notification } from '@/types/notification';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import MemDetail from '@/clientComponents/home/memsContainer/memItem/commentsModal/MemDetail';
 import { useHeartMutation } from '@/clientApiCalls/reactQuery/heartMutation';
@@ -17,17 +17,15 @@ export default function ViewMemButton({
   notification: Notification;
   sessionData: JWT;
 }) {
-  const {
-    data: mem,
-    refetch,
-    isLoading,
-  } = useQuery(`mem${notification.id}`, () =>
-    getMem({
-      id: notification.relatesToMemId!,
-      token: sessionData.token,
-      requestUserId: sessionData.sub!,
-    })
-  );
+  const { data: mem } = useQuery({
+    queryKey: [`mem`, notification.id],
+    queryFn: () =>
+      getMem({
+        id: notification.relatesToMemId!,
+        token: sessionData.token,
+        requestUserId: sessionData.sub!,
+      }),
+  });
 
   const heartMemMutation = useHeartMutation();
 

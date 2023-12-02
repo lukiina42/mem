@@ -1,6 +1,6 @@
 import { getMem } from '@/serverApiCalls/mem';
-import MemWrapper from '@/app/mem/[id]/(components)/MemWrapper';
 import Modal from '@/utilComponents/RouteModal';
+import MemDetailWrapper from "@/app/mem/[id]/(components)/mem/Mem";
 
 export default async function page({
   params,
@@ -13,7 +13,7 @@ export default async function page({
 
   return (
     <Modal>
-      <MemWrapper mem={mem} sessionData={sessionData} />
+      <MemDetailWrapper mem={mem} sessionData={sessionData} />
     </Modal>
   );
 }

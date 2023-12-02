@@ -1,7 +1,7 @@
-import HomeContentWrapper from '@/clientComponents/home/HomeContentWrapper';
 import { Mem } from '@/types/mem';
 import { retrieveHomeMems } from '@/serverApiCalls/home';
 import { JWT } from 'next-auth/jwt';
+import HomeContent from "@/clientComponents/home/HomeContent";
 
 const getMems = async () => {
   return await retrieveHomeMems();
@@ -22,7 +22,7 @@ export default async function page() {
         <div className="h-16 flex items-center font-bold text-xl ml-4">Home</div>
       </div>
       <div className="grow">
-        <HomeContentWrapper
+        <HomeContent
           mems={mems}
           sessionData={sessionData}
           isUserFollowingAnyone={isUserFollowingAnyone}

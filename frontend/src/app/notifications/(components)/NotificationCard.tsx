@@ -1,8 +1,8 @@
 import { Notification } from '@/types/notification';
 import Link from 'next/link';
 import { CgProfile } from 'react-icons/cg';
-import ViewMemButtonWrapper from './ViewMemButtonWrapper';
 import { JWT } from 'next-auth/jwt';
+import ViewMemButton from "@/app/notifications/(components)/ViewMemButton";
 
 export default function NotificationCard({
   notification,
@@ -43,7 +43,7 @@ export default function NotificationCard({
         </div>
         <div className="mt-1">{notification.content}</div>
         {notification.relatesToMemId && (
-          <ViewMemButtonWrapper notification={notification} sessionData={sessionData} />
+          <ViewMemButton notification={notification} sessionData={sessionData} />
         )}
       </div>
     </div>
