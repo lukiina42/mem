@@ -13,7 +13,7 @@ export default function LoggedUserInfoWrapper({
       <div className="w-full h-12 flex items-center border-b-2">
         <div className="ml-4 text-lg font-bold">Your profile info</div>
       </div>
-    <LoggedUserInfo user={user} revalidate={revalidate} />
+      <LoggedUserInfo user={user} revalidate={revalidate} />
     </div>
   );
 }

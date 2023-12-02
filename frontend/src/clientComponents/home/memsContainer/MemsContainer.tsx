@@ -1,18 +1,17 @@
 'use client';
 
 import { Mem } from '@/types/mem';
-import { useSession } from 'next-auth/react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteMem, getMems } from '@/clientApiCalls/memApi';
-import { useRouter } from 'next/navigation';
 import ConfirmationModal from '@/utilComponents/ConfirmationModal';
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { displayToast } from '@/utilComponents/toast';
 import MemItemWrapper from './memItem/MemItemWrapper';
 import { useHeartMutation } from '@/clientApiCalls/reactQuery/heartMutation';
 import { InView } from 'react-intersection-observer';
 import { JWT } from 'next-auth/jwt';
 import { QueryKeys } from '@/types/queryKeys';
+import LoadingSpinner from '@/utilComponents/Loading';
 
 export default function MemsContainer({
   mems,
@@ -25,60 +24,47 @@ export default function MemsContainer({
   requestingUserId?: number;
   sessionData: JWT | null;
 }) {
-  const router = useRouter();
-
-  console.log(mems)
-
-  const [localMems, setLocalMems] = useState(mems);
-  const [allMemsFetched, setAllMemsFetched] = useState(mems.length < 10);
-
-  const enableMoreMems = useRef(false);
+  const getMemsFunction = async (pageParam: number) => {
+    const data = await getMems({
+      token: sessionData!.token,
+      requestUrl,
+      from: pageParam,
+      to: pageParam + 9,
+      requestingUser: requestUrl.startsWith('/user') ? requestingUserId?.toString() : '',
+    });
+    let dataConverted: Mem[];
+    //the home api call returns the mems in an object
+    if ('mems' in data) {
+      dataConverted = data.mems as Mem[];
+    } else {
+      dataConverted = data;
+    }
+    return dataConverted;
+  };
 
   const queryClient = useQueryClient();
 
-  //the mems can be changed by user at home when he changes following to newest and vice versa
-  //I don't like using effect but I don't want to duplicate the same functionality in the parent components
-  //so I synchronize it this way
-  useEffect(() => {
-    setLocalMems(mems);
-    enableMoreMems.current = false;
-    const enableFetchTimeout = setTimeout(() => (enableMoreMems.current = true), 500);
-    return () => clearTimeout(enableFetchTimeout);
-  }, [mems]);
+  //continue here - pass the current number from which to fetch
+  const {
+    data: memsFromQuery,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: [...QueryKeys.memsPaginationQueryKey, requestUrl],
+    queryFn: async ({ pageParam = 0 }) => getMemsFunction(pageParam),
+    initialPageParam: undefined,
+    getNextPageParam: (lastPage, allPages) =>
+      lastPage?.length < 9 ? undefined : allPages?.flat().length,
+    initialData: {
+      pageParams: [undefined, 1],
+      pages: [mems],
+    },
+  });
 
   const handleSecondToLastMemInView = () => {
-    if (enableMoreMems.current) refetch();
+    if (hasNextPage) fetchNextPage();
   };
-
-  //continue here - pass the current number from which to fetch
-  const { refetch } = useQuery({
-    queryKey: QueryKeys.memsPaginationQueryKey,
-    queryFn: async () => {
-      const data = await getMems({
-        token: sessionData!.token,
-        requestUrl,
-        from: localMems.length,
-        to: localMems.length + 9,
-        requestingUser: requestUrl.startsWith('/user') ? requestingUserId?.toString() : '',
-      });
-      let dataConverted: Mem[];
-      //the home api call returns the mems in an object
-      if ('mems' in data) {
-        dataConverted = data.mems as Mem[];
-      } else {
-        dataConverted = data;
-      }
-      if (dataConverted.length == 0) {
-        setAllMemsFetched(true);
-      } else {
-        setLocalMems((currMems) => {
-          return [...currMems, ...dataConverted];
-        });
-      }
-    },
-    refetchOnWindowFocus: false,
-    enabled: false, // disable this query from automatically running
-  });
 
   ////delete mem
   const [memIdToDelete, setMemIdToDelete] = React.useState(0);
@@ -86,8 +72,10 @@ export default function MemsContainer({
   const deleteMemMutation = useMutation({
     mutationFn: deleteMem,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: QueryKeys.newMemsQueryKey });
-      await queryClient.invalidateQueries({ queryKey: QueryKeys.memsPaginationQueryKey });
+      await queryClient.invalidateQueries({ queryKey: [...QueryKeys.memsPaginationQueryKey, '/'] });
+      await queryClient.invalidateQueries({
+        queryKey: [...QueryKeys.memsPaginationQueryKey, '/home/newest'],
+      });
       displayToast('The mem was successfully deleted', 'bottom-center', 'success');
     },
     onError: () => {
@@ -120,6 +108,8 @@ export default function MemsContainer({
     }
   };
 
+  const allMems = memsFromQuery?.pages?.flat();
+
   return (
     <div className="flex flex-col gap-2 w-full">
       {memIdToDelete !== 0 && (
@@ -132,15 +122,15 @@ export default function MemsContainer({
           cancelButtonText="No, preserve funny (Chad)"
         />
       )}
-      {localMems.map((mem, i) => {
-        return i == mems.length - 2 ? (
+      {allMems.map((mem, i) => {
+        return i == allMems.length - 2 ? (
           <InView key={mem.id} as="div" onChange={handleSecondToLastMemInView}>
             <MemItemWrapper
               key={mem.id}
               mem={mem}
               user={sessionData}
               handleDeleteMemClick={handleDeleteMemClick}
-              displayBorder={i !== mems.length - 1}
+              displayBorder={i !== allMems.length - 1}
               handleHeartMemRequest={handleHeartMemRequest}
               enableDelete={sessionData?.roles.some((role) => role == 'admin')}
             />
@@ -151,17 +141,25 @@ export default function MemsContainer({
             mem={mem}
             user={sessionData}
             handleDeleteMemClick={handleDeleteMemClick}
-            displayBorder={i !== mems.length - 1}
+            displayBorder={i !== allMems.length - 1}
             handleHeartMemRequest={handleHeartMemRequest}
             enableDelete={sessionData?.roles.some((role) => role == 'admin')}
           />
         );
       })}
-      {allMemsFetched && (
-        <div className="w-full text-lg font-bold h-24 flex items-center justify-center p-2">
-          No more mems here!
-        </div>
-      )}
+
+      <div className="w-full text-lg font-bold h-24 flex items-center justify-center p-2">
+        {!hasNextPage ? (
+          'No more mems here!'
+        ) : (
+          <button
+            className="basic-button w-32 h-10 flex justify-center items-center"
+            onClick={() => fetchNextPage()}
+          >
+            {isFetchingNextPage ? <LoadingSpinner /> : 'Load more'}
+          </button>
+        )}
+      </div>
     </div>
   );
 }

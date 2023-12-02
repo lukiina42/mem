@@ -32,7 +32,8 @@ export default function LoggedUserInfo({
     }
   };
 
-  const updateAvatarMutation = useMutation({mutationFn: updateAvatar,
+  const updateAvatarMutation = useMutation({
+    mutationFn: updateAvatar,
     onSuccess: () => {
       displayToast('Avatar was changed successfully', 'bottom-center', 'success');
       setFile(null);

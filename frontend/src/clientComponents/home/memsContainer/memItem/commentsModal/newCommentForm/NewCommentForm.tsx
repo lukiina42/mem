@@ -7,7 +7,7 @@ import { displayToast } from '@/utilComponents/toast';
 import { createComment } from '@/clientApiCalls/commentApi';
 import { AiOutlineSend } from 'react-icons/ai';
 import { Comment } from '@/types/comment';
-import {useMutation} from "@tanstack/react-query";
+import { useMutation } from '@tanstack/react-query';
 
 interface NewCommentFormProps {
   token: string;
@@ -21,7 +21,8 @@ export default function NewCommentForm(props: NewCommentFormProps) {
   const { refetch, token, memId, replyComment, setReplyComment } = props;
   const [inputContent, setInputContent] = useState('');
 
-  const createCommentMutation = useMutation({mutationFn: createComment,
+  const createCommentMutation = useMutation({
+    mutationFn: createComment,
     onSuccess: () => {
       setInputContent('');
       refetch();

@@ -2,7 +2,7 @@ import { Notification } from '@/types/notification';
 import Link from 'next/link';
 import { CgProfile } from 'react-icons/cg';
 import { JWT } from 'next-auth/jwt';
-import ViewMemButton from "@/app/notifications/(components)/ViewMemButton";
+import ViewMemButton from '@/app/notifications/(components)/ViewMemButton';
 
 export default function NotificationCard({
   notification,

@@ -7,22 +7,24 @@ import { getMems } from '@/clientApiCalls/memApi';
 import MemType from './memTypeButton/MemTypeButton';
 import { DefaultHomeProps } from '@/app/home/@main/page';
 import { useQuery } from '@tanstack/react-query';
+import { QueryKeys } from '@/types/queryKeys';
 
 export default function HomeContent({
-  mems,
+  memsFollowing,
+  newestMems,
   sessionData,
   isUserFollowingAnyone,
 }: DefaultHomeProps) {
-  const { data: newestMems, isLoading } = useQuery({
-    queryKey: ['newMems'],
-    queryFn: () =>
-      getMems({
-        token: sessionData!.token,
-        requestUrl: '/home/newest',
-        from: 0,
-        to: 9,
-      }),
-  });
+  // const { data: newestMems, isLoading } = useQuery({
+  //   queryKey: QueryKeys.newMemsQueryKey,
+  //   queryFn: () =>
+  //     getMems({
+  //       token: sessionData!.token,
+  //       requestUrl: '/home/newest',
+  //       from: 0,
+  //       to: 9,
+  //     }),
+  // });
 
   const [memsType, setMemsType] = useState<'Following' | 'Newest'>(
     isUserFollowingAnyone ? 'Following' : 'Newest'
@@ -50,14 +52,14 @@ export default function HomeContent({
           memsType="Newest"
           handleMemsTypeChange={handleMemsTypeChange}
           isActive={memsType == 'Newest'}
-          disabled={isLoading}
+          disabled={false}
         />
       </div>
       <div className="w-full flex flex-col justify-center items-center pb-b">
         <MemsContainer
           sessionData={sessionData}
           requestUrl={memsType == 'Following' ? '/' : '/home/newest'}
-          mems={memsType == 'Following' || !isUserFollowingAnyone ? mems : newestMems!}
+          mems={memsType == 'Following' || !isUserFollowingAnyone ? memsFollowing : newestMems}
         />
       </div>
     </>

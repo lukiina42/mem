@@ -165,6 +165,8 @@ export class MemsService {
       .take(parsedTo - parsedFrom + 1)
       .getMany();
 
+    console.log(mems)
+
     return mapMemsDbToDto(mems, user, this.s3Service);
   }
 

@@ -16,7 +16,6 @@ import { NotificationsModule } from 'src/notifications/notifications.module';
     UsersModule,
     PassportModule,
     JwtModule.register({
-      secretOrPrivateKey: 'secretKey',
       secret: 'secretKey',
       signOptions: { expiresIn: '7d' },
     }),

@@ -104,7 +104,7 @@ export class UsersService {
         await this.usersRepository
           .createQueryBuilder('user')
           .leftJoinAndSelect('user.following', 'following')
-          .groupBy('following.id') // here is where we grup by the tag so we can count
+          .groupBy('following.id') // here is where we group by the tag so we can count
           .addGroupBy('following.id')
           .select('following.id, count(following.id)') // here is where we count :)
           .orderBy('count(following.id)', 'DESC')
@@ -113,11 +113,13 @@ export class UsersService {
       const usersWithAvatarImage: PotentialFriend[] = [];
       for (let i = 0; i < usersWithMostFollowing.length; i++) {
         const userFollowersAmount = usersWithMostFollowing[i];
-        usersWithAvatarImage.push({
-          ...(await this.findOneByIdWithAvatar(userFollowersAmount.id)),
-          commonFollowersPresent: false,
-          followersAmount: parseInt(userFollowersAmount.count),
-        });
+        if(userFollowersAmount.id !== null) {
+          usersWithAvatarImage.push({
+            ...(await this.findOneByIdWithAvatar(userFollowersAmount.id)),
+            commonFollowersPresent: false,
+            followersAmount: parseInt(userFollowersAmount.count),
+          });
+        }
       }
       return usersWithAvatarImage;
     }

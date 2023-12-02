@@ -10,6 +10,7 @@ import { User } from 'next-auth';
 import LoadingSpinner from '@/utilComponents/Loading';
 import { displayToast } from '@/utilComponents/toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { QueryKeys } from '@/types/queryKeys';
 
 //lazy solution
 const getAmountOfRows = (input: string) => {
@@ -38,8 +39,11 @@ export default function NewTweetForm() {
 
   const createMemMutation = useMutation({
     mutationFn: createMem,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['newMems'] });
+    onSuccess: async (result) => {
+      await queryClient.invalidateQueries({ queryKey: [...QueryKeys.memsPaginationQueryKey, '/'] });
+      await queryClient.invalidateQueries({
+        queryKey: [...QueryKeys.memsPaginationQueryKey, '/home/newest'],
+      });
       displayToast('You successfully memd', 'bottom-center', 'success');
       setFile(null);
       setInputContent('');

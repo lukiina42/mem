@@ -3,7 +3,7 @@ import LoggedUserInfoWrapper from '@/clientComponents/[id]/currentUser/userInfoW
 import { User } from '@/types/user';
 import { retrieveProfileInfo } from '@/serverApiCalls/[profileId]';
 import { revalidateUser } from '@/app/actions';
-import ProfileHeader from "@/clientComponents/[id]/otherUsers/ProfileHeader";
+import ProfileHeader from '@/clientComponents/[id]/otherUsers/ProfileHeader';
 
 export interface UserDataDto extends User {
   followedBy?: User[];
