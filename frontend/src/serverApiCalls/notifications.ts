@@ -1,5 +1,4 @@
 import { Notification } from '@/types/notification';
-import { JWT } from 'next-auth/jwt';
 import { getSession } from '@/lib/session';
 
 export const loadNotifications = async () => {

@@ -1,12 +1,12 @@
-'use client'
+'use client';
 
 import Link from 'next/link';
 import React from 'react';
 import HeaderWrapper from '@/clientComponents/header/sidebarLinks/HeaderWrapper';
-import Profile from "@/clientComponents/header/profileSettings/ProfileSettings";
-import {usePathname} from "next/navigation";
-import {useQuery} from "@tanstack/react-query";
-import {z} from "zod";
+import Profile from '@/clientComponents/header/profileSettings/ProfileSettings';
+import { usePathname } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+import { z } from 'zod';
 
 const sessionUserSchema = z.object({
   user: z.object({
@@ -19,27 +19,22 @@ const sessionUserSchema = z.object({
   token: z.string(),
 });
 
-    const isAuthPage = (url: string | null) =>
-      url === '/login' ||
-      url === '/signup' ||
-      url === '/';
+const isAuthPage = (url: string | null) => url === '/login' || url === '/signup' || url === '/';
 
 export default function Header() {
-  const location = usePathname()
+  const location = usePathname();
 
-  const sessionDataUnavailable = isAuthPage(location)
+  const sessionDataUnavailable = isAuthPage(location);
 
-  const {data: userData} = useQuery({
+  const { data: userData } = useQuery({
     queryKey: ['userData', location],
     queryFn: async () => {
-      const res = await fetch('http://localhost:3000/api/session', {
-
-      })
-      const data = await res.json()
-      return sessionUserSchema.parse(data)
+      const res = await fetch(`${process.env.NEXT_PUBLIC_NEXT_API_URL}/session`, {});
+      const data = await res.json();
+      return sessionUserSchema.parse(data);
     },
     enabled: !sessionDataUnavailable,
-  })
+  });
 
   return (
     <>

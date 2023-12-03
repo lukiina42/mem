@@ -1,12 +1,10 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { MdOutlinePersonOutline } from 'react-icons/md';
 import ProfileOptionsMenu from './profileOptionsMenu/ProfileOptionsMenu';
-import { useRouter } from 'next/navigation';
-import { signOut } from 'next-auth/react';
 import { useSelectedLayoutSegment } from 'next/navigation';
-import {SessionUser} from "@/app/api/login/route";
+import { SessionUser } from '@/app/api/login/route';
 
 export default function Profile({ userData }: { userData: SessionUser | null }) {
   const [showMenu, setShowMenu] = React.useState(false);
@@ -14,19 +12,13 @@ export default function Profile({ userData }: { userData: SessionUser | null }) 
   const segment = useSelectedLayoutSegment();
 
   //jwt is invalid (unable to signOut in middleware)
-  useEffect(() => {
-    if (!segment && userData?.user.username) {
-      signOut({
-        callbackUrl: '/signin',
-      });
-    }
-  }, [segment, userData]);
-
-  const resetMenu = () => {
-    setShowMenu(false);
-  };
-
-  const router = useRouter();
+  // useEffect(() => {
+  //   if (!segment && userData?.user.username) {
+  //     signOut({
+  //       callbackUrl: '/signin',
+  //     });
+  //   }
+  // }, [segment, userData]);
 
   const username = userData?.user?.username ? userData.user.username : '';
 
@@ -49,24 +41,10 @@ export default function Profile({ userData }: { userData: SessionUser | null }) 
             {username}
           </span>
         </div>
-        {showMenu &&
-          !userData?.user ? (
-            <ProfileOptionsMenu setShowMenu={setShowMenu} userData={null} />
+        {showMenu && !userData?.user ? (
+          <ProfileOptionsMenu setShowMenu={setShowMenu} userData={null} />
         ) : (
-          <>
-            {showMenu && (
-              <ProfileOptionsMenu
-                signOut={() =>
-                  signOut({
-                    callbackUrl: '/signin',
-                  })
-                }
-                userData={userData}
-                redirect={router.push}
-                setShowMenu={setShowMenu}
-              />
-            )}
-          </>
+          <>{showMenu && <ProfileOptionsMenu userData={userData} setShowMenu={setShowMenu} />}</>
         )}
       </div>
     </>

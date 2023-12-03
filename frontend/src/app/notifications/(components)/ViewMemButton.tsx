@@ -8,7 +8,6 @@ import MemDetail from '@/clientComponents/home/memsContainer/memItem/commentsMod
 import { useHeartMutation } from '@/clientApiCalls/reactQuery/heartMutation';
 import { useHeart } from '@/hooks/useHeart';
 import ModalWrapper from '@/utilComponents/ModalWrapper';
-import { JWT } from 'next-auth/jwt';
 import { SessionUser } from '@/app/api/login/route';
 
 export default function ViewMemButton({

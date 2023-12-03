@@ -1,20 +1,16 @@
 'use client';
 
-import { User } from 'next-auth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import {SessionUser} from "@/app/api/login/route";
+import { SessionUser } from '@/app/api/login/route';
+import { logout } from '@/clientApiCalls/logout';
 
 export default function ProfileOptionsMenu({
-  signOut,
-  redirect,
   setShowMenu,
   userData,
 }: {
   setShowMenu?: (i: boolean) => void;
   signedIn?: boolean;
-  signOut?: () => void;
-  redirect?: (url: string) => void;
   userData: SessionUser | null;
 }) {
   const signedIn = userData !== null;
@@ -53,24 +49,21 @@ export default function ProfileOptionsMenu({
               {userData?.user?.username}
             </div>
           )}
-          <div
-            onClick={() => {
-              redirect!(`/user/${userData.user.id}`);
-              setShowMenu!(false);
-            }}
+          <Link href={{ pathname: `/user/${userData.user.id}` }} onClick={() => {
+            setShowMenu!(false);
+          }}
             className={`font-bold w-full text-center border-t ${
-              userData?.user?.username?.length && userData.user?.username.length > 14
-                ? 'border-t rounded-t-none'
-                : 'rounded-t-lg border-none'
-            } border-b hover:cursor-pointer hover:bg-blue-300 py-2 transition-all duration-200`}
-          >
+                userData?.user?.username?.length && userData.user?.username.length > 14
+                    ? 'border-t rounded-t-none'
+                    : 'rounded-t-lg border-none'
+            } border-b hover:cursor-pointer hover:bg-blue-300 py-2 transition-all duration-200`}>
             Profile
-          </div>
+          </Link>
           <div
-            onClick={() => {
+            onClick={async () => {
               setShowMenu!(false);
-              signOut!();
-              redirect!('');
+              await logout();
+              router.push('/login');
             }}
             className="font-bold rounded-b-lg w-full text-center hover:cursor-pointer hover:bg-blue-300 py-2 transition-all duration-200"
           >

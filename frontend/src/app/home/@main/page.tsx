@@ -1,6 +1,5 @@
 import { Mem } from '@/types/mem';
 import { retrieveHomeMems } from '@/serverApiCalls/home';
-import { JWT } from 'next-auth/jwt';
 import HomeContent from '@/clientComponents/home/HomeContent';
 import { SessionUser } from '@/app/api/login/route';
 

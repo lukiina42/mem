@@ -1,6 +1,4 @@
 import { Notification } from '@/types/notification';
-import { Session } from 'next-auth';
-import { JWT } from 'next-auth/jwt';
 import { useState, useEffect } from 'react';
 import { Socket, io } from 'socket.io-client';
 import { SessionUser } from '@/app/api/login/route';

@@ -183,9 +183,9 @@ export default function SignupForm(props: SignupFormProps) {
         </button>
 
         <div className="w-full flex justify-center gap-1 mt-3">
-          Již máte účet?
+          Already have an account?
           <Link className="text-blue-500 hover:text-blue-700" href={'/login'}>
-            Přihlašte se!
+            Log in!
           </Link>
         </div>
       </form>

@@ -1,15 +1,15 @@
 import LoggedUserInfo from './userInfo/UserInfo';
 import { UserData } from '@/app/user/[id]/page';
-import {SessionUser} from "@/app/api/login/route";
+import { SessionUser } from '@/app/api/login/route';
 
 export default function LoggedUserInfoWrapper({
   user,
   revalidate,
-    sessionData
+  sessionData,
 }: {
   user: UserData;
   revalidate: () => void;
-    sessionData: SessionUser;
+  sessionData: SessionUser;
 }) {
   return (
     <div className="w-full flex flex-col items-center border-b-2">

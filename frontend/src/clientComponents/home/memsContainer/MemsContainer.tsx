@@ -9,7 +9,6 @@ import { displayToast } from '@/utilComponents/toast';
 import MemItemWrapper from './memItem/MemItemWrapper';
 import { useHeartMutation } from '@/clientApiCalls/reactQuery/heartMutation';
 import { InView } from 'react-intersection-observer';
-import { JWT } from 'next-auth/jwt';
 import { QueryKeys } from '@/types/queryKeys';
 import LoadingSpinner from '@/utilComponents/Loading';
 import { SessionUser } from '@/app/api/login/route';

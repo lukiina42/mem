@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import {encryptSession, sessionUserSchema} from '@/lib/session';
-import {cookies} from "next/headers";
+import { encryptSession, sessionUserSchema } from '@/lib/session';
+import { cookies } from 'next/headers';
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -34,14 +34,17 @@ export async function POST(request: Request, res: NextResponse) {
       password: parsedData.password,
     }),
   });
+
+  if (loginResponse.status === 401) {
+    return new Response('Wrong email or password', { status: 401 });
+  }
+
   const userData = await loginResponse.json();
 
   const user = sessionUserSchema.parse(userData);
 
   const encryptedSession = await encryptSession(user);
 
-  const response = NextResponse.json({message: "Welcome!"})
-  response.cookies.set("auth-session", encryptedSession)
-  cookies().set("auth-session", encryptedSession)
-  return response
+  cookies().set('auth-session', encryptedSession);
+  return new Response('Login successful', { status: 201 });
 }

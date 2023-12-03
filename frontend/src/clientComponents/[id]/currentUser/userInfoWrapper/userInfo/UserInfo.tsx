@@ -8,12 +8,12 @@ import { CgProfile } from 'react-icons/cg';
 import { useMutation } from '@tanstack/react-query';
 import ChangeAvatarForm from './changeAvatarForm/ChangeAvatarForm';
 import { UserData } from '@/app/user/[id]/page';
-import {SessionUser} from "@/app/api/login/route";
+import { SessionUser } from '@/app/api/login/route';
 
 export default function LoggedUserInfo({
   user,
   revalidate,
-    sessionData
+  sessionData,
 }: {
   user: UserData;
   revalidate: () => void;
@@ -48,10 +48,10 @@ export default function LoggedUserInfo({
 
   const handleSaveAvatar = () => {
     if (!file && !imageDeleted) return;
-      updateAvatarMutation.mutate({
-        file,
-        token: sessionData.token,
-      });
+    updateAvatarMutation.mutate({
+      file,
+      token: sessionData.token,
+    });
   };
 
   const handleDeleteImageClick = () => {

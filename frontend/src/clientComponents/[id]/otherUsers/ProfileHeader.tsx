@@ -3,7 +3,6 @@ import { UserData } from '@/app/user/[id]/page';
 import { useBanUserMutation, useFollowUserMutation } from '@/clientApiCalls/reactQuery/user';
 import LoadingSpinner from '@/utilComponents/Loading';
 import { displayToast } from '@/utilComponents/toast';
-import { JWT } from 'next-auth/jwt';
 import { useRouter } from 'next/navigation';
 import { BsFillFlagFill, BsFlag } from 'react-icons/bs';
 import { SlUserFollow, SlUserUnfollow } from 'react-icons/sl';

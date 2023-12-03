@@ -3,7 +3,6 @@
 import { Mem } from '@/types/mem';
 import MemItem from './MemItem';
 import { useHeart } from '@/hooks/useHeart';
-import { JWT } from 'next-auth/jwt';
 import { SessionUser } from '@/app/api/login/route';
 
 interface MemItemInterface {

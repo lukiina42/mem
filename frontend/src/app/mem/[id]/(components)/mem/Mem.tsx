@@ -4,8 +4,6 @@ import { useHeartMutation } from '@/clientApiCalls/reactQuery/heartMutation';
 import MemDetail from '@/clientComponents/home/memsContainer/memItem/commentsModal/MemDetail';
 import { useHeart } from '@/hooks/useHeart';
 import { Mem } from '@/types/mem';
-import ModalWrapper from '@/utilComponents/ModalWrapper';
-import { JWT } from 'next-auth/jwt';
 import { SessionUser } from '@/app/api/login/route';
 
 interface MemDetailWrapperProps {

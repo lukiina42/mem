@@ -9,7 +9,7 @@ import LoadingSpinner from '@/utilComponents/Loading';
 import { displayToast } from '@/utilComponents/toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QueryKeys } from '@/types/queryKeys';
-import {SessionUser} from "@/app/api/login/route";
+import { SessionUser } from '@/app/api/login/route';
 
 //lazy solution
 const getAmountOfRows = (input: string) => {
@@ -18,7 +18,7 @@ const getAmountOfRows = (input: string) => {
   return 3;
 };
 
-export default function NewTweetForm({userData}: {userData: SessionUser}) {
+export default function NewTweetForm({ userData }: { userData: SessionUser }) {
   const [file, setFile] = useState<File | null>(null);
   const [inputContent, setInputContent] = useState('');
   const [error, setError] = useState(false);

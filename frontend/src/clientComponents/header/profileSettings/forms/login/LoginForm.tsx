@@ -4,13 +4,10 @@ import { useForm } from 'react-hook-form';
 import { CgClose } from 'react-icons/cg';
 import InputError from '../helper/InputError';
 
-import { signIn } from 'next-auth/react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useMutation } from '@tanstack/react-query';
-import { heartMem } from '@/clientApiCalls/memApi';
-import { displayToast } from '@/utilComponents/toast';
 
 interface FormData {
   email: string;
@@ -25,15 +22,13 @@ export default function LoginForm(props: { resetMenu?: () => void }) {
     formState: { errors },
   } = useForm();
 
-  const searchParams = useSearchParams();
-
-  const failedLogin = searchParams?.get('authenticated') === 'false';
+  const [errorMessage, setErrorMessage] = useState('');
 
   const router = useRouter();
 
   const loginMutation = useMutation({
     mutationFn: (variables: FormData) =>
-      fetch(`http://localhost:3000/api/login/`, {
+      fetch(`${process.env.NEXT_PUBLIC_NEXT_API_URL}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -44,12 +39,23 @@ export default function LoginForm(props: { resetMenu?: () => void }) {
         }),
       }),
     onSuccess: (response) => {
-      router.push('/home');
-      displayToast('SUKCES LOGIN', 'bottom-center', 'error');
+      switch (response.status) {
+        case 201:
+          router.push('/home');
+          return;
+        case 401:
+          setErrorMessage('Incorrect credentials');
+          return;
+        case 400:
+          setErrorMessage('Wrong format of credentials');
+          return;
+        default:
+          setErrorMessage('Something went wrong, please try again');
+      }
     },
     onError: (error) => {
-      console.log(error);
-      displayToast('WRONG CREDENTIALS PROBABLY, please try again', 'bottom-center', 'error');
+      console.error(error);
+      setErrorMessage('Something went wrong, please try again');
     },
   });
 
@@ -106,7 +112,7 @@ export default function LoginForm(props: { resetMenu?: () => void }) {
           </div>
         </div>
 
-        {failedLogin && <p className="text-red-500">Wrong email or password, please try again</p>}
+        {errorMessage && <p className="text-red-500">{errorMessage}</p>}
 
         <button
           className="w-full bg-blue-500 hover:bg-blue-600 text-green-100 border py-3 px-6 font-semibold text-md rounded"
@@ -116,9 +122,9 @@ export default function LoginForm(props: { resetMenu?: () => void }) {
         </button>
 
         <div className="w-full flex justify-center gap-1">
-          Nemáte účet?
+          Don't have an account?
           <Link className="text-blue-500 hover:text-blue-700" href={'/signup'}>
-            Zaregistrujte se!
+            Sign up!
           </Link>
         </div>
       </form>
