@@ -122,7 +122,7 @@ export default function LoginForm(props: { resetMenu?: () => void }) {
         </button>
 
         <div className="w-full flex justify-center gap-1">
-          Don't have an account?
+          Don&apos;t have an account?
           <Link className="text-blue-500 hover:text-blue-700" href={'/signup'}>
             Sign up!
           </Link>
