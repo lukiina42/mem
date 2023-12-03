@@ -41,7 +41,7 @@ export default function LoginForm(props: { resetMenu?: () => void }) {
     onSuccess: (response) => {
       switch (response.status) {
         case 201:
-          router.push('/home');
+          window.location.reload()
           return;
         case 401:
           setErrorMessage('Incorrect credentials');
