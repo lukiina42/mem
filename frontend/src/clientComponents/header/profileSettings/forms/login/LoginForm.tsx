@@ -5,9 +5,12 @@ import { CgClose } from 'react-icons/cg';
 import InputError from '../helper/InputError';
 
 import { signIn } from 'next-auth/react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useRef } from 'react';
 import Link from 'next/link';
+import { useMutation } from '@tanstack/react-query';
+import { heartMem } from '@/clientApiCalls/memApi';
+import { displayToast } from '@/utilComponents/toast';
 
 interface FormData {
   email: string;
@@ -26,19 +29,33 @@ export default function LoginForm(props: { resetMenu?: () => void }) {
 
   const failedLogin = searchParams?.get('authenticated') === 'false';
 
-  const failedLoginRef = useRef(failedLogin);
+  const router = useRouter();
+
+  const loginMutation = useMutation({
+    mutationFn: (variables: FormData) =>
+      fetch(`http://localhost:3000/api/login/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: variables.email,
+          password: variables.password,
+        }),
+      }),
+    onSuccess: (response) => {
+      router.push('/home');
+      displayToast('SUKCES LOGIN', 'bottom-center', 'error');
+    },
+    onError: (error) => {
+      console.log(error);
+      displayToast('WRONG CREDENTIALS PROBABLY, please try again', 'bottom-center', 'error');
+    },
+  });
 
   const onSubmit = async (data: any) => {
     const formData: FormData = { ...data };
-    try {
-      signIn('credentials', {
-        callbackUrl: '/home',
-        email: formData.email,
-        password: formData.password,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    loginMutation.mutate(formData);
   };
 
   return (

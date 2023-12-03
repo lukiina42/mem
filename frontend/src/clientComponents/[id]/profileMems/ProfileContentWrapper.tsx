@@ -1,6 +1,7 @@
 import { Mem } from '@/types/mem';
 import MemsContainer from '@/clientComponents/home/memsContainer/MemsContainer';
 import { JWT } from 'next-auth/jwt';
+import { SessionUser } from '@/app/api/login/route';
 
 export default function ProfileMemsWrapper({
   mems,
@@ -10,7 +11,7 @@ export default function ProfileMemsWrapper({
   mems: Mem[];
   isLoggedInUser: boolean;
   userId: number;
-  sessionData: JWT | null;
+  sessionData: SessionUser;
 }) {
   return (
     <>

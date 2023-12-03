@@ -1,8 +1,12 @@
-import { retrieveCookiesSession } from './retrieveCookiesSession';
-import { PotentialFriend, User } from '@/types/user';
+import { PotentialFriend } from '@/types/user';
+import { getSession } from '@/lib/session';
 
 export const getPotentialFriends = async () => {
-  const sessionData = await retrieveCookiesSession();
+  const sessionData = await getSession();
+
+  if (!sessionData) {
+    throw new Error('User is not logged in');
+  }
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/users/recommendation/potentialFriends`,

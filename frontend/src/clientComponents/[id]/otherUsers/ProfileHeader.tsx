@@ -7,17 +7,18 @@ import { JWT } from 'next-auth/jwt';
 import { useRouter } from 'next/navigation';
 import { BsFillFlagFill, BsFlag } from 'react-icons/bs';
 import { SlUserFollow, SlUserUnfollow } from 'react-icons/sl';
+import { SessionUser } from '@/app/api/login/route';
 
 export default function ProfileHeader({
   user,
   sessionData,
 }: {
   user: UserData;
-  sessionData: JWT | null;
+  sessionData: SessionUser;
 }) {
   const router = useRouter();
 
-  const isAdmin = sessionData?.roles.some((role) => role == 'admin');
+  const isAdmin = sessionData?.user.roles.some((role) => role == 'admin');
 
   const followUserMutation = useFollowUserMutation(
     () => {

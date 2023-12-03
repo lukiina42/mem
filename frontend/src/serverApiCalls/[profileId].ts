@@ -1,9 +1,14 @@
 import { UserData, UserDataDto } from '@/app/user/[id]/page';
-import { retrieveCookiesSession } from './retrieveCookiesSession';
+import { getSession } from '@/lib/session';
 
 export const retrieveProfileInfo = async (userId: number) => {
-  const sessionData = await retrieveCookiesSession();
-  const loggedInUserId = sessionData?.sub;
+  const sessionData = await getSession();
+
+  if (!sessionData) {
+    throw new Error('User is not logged in');
+  }
+
+  const loggedInUserId = sessionData.user.id;
 
   const userResponse = await fetch(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/users/${userId}`, {
     next: { revalidate: 0, tags: ['profile'] },
@@ -18,7 +23,7 @@ export const retrieveProfileInfo = async (userId: number) => {
 
   const isFollowedByCurrentUser =
     loggedInUserId && userData.followedBy
-      ? userData.followedBy.find((user) => user.id === parseInt(loggedInUserId)) !== undefined
+      ? userData.followedBy.find((user) => user.id === loggedInUserId) !== undefined
       : false;
 
   delete userData.followedBy;
@@ -44,7 +49,7 @@ export const retrieveProfileInfo = async (userId: number) => {
 
   return {
     user: userDataDto,
-    isLoggedInUser: loggedInUserId ? parseInt(loggedInUserId) == userId : false,
+    isLoggedInUser: loggedInUserId ? loggedInUserId == userId : false,
     sessionData: sessionData,
   };
 };

@@ -15,17 +15,6 @@ export default function HomeContent({
   sessionData,
   isUserFollowingAnyone,
 }: DefaultHomeProps) {
-  // const { data: newestMems, isLoading } = useQuery({
-  //   queryKey: QueryKeys.newMemsQueryKey,
-  //   queryFn: () =>
-  //     getMems({
-  //       token: sessionData!.token,
-  //       requestUrl: '/home/newest',
-  //       from: 0,
-  //       to: 9,
-  //     }),
-  // });
-
   const [memsType, setMemsType] = useState<'Following' | 'Newest'>(
     isUserFollowingAnyone ? 'Following' : 'Newest'
   );
@@ -39,7 +28,7 @@ export default function HomeContent({
   return (
     <>
       <div className="w-full flex flex-col bg-white top-0">
-        <NewMemForm />
+        <NewMemForm userData={sessionData} />
       </div>
       <div className="w-full flex bg-white top-0 border-b border-t mt-2">
         <MemType

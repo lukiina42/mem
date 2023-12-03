@@ -3,25 +3,25 @@
 import { updateAvatar } from '@/clientApiCalls/userApi';
 import ModalWrapper from '@/utilComponents/ModalWrapper';
 import { displayToast } from '@/utilComponents/toast';
-import { useSession } from 'next-auth/react';
 import React from 'react';
 import { CgProfile } from 'react-icons/cg';
 import { useMutation } from '@tanstack/react-query';
 import ChangeAvatarForm from './changeAvatarForm/ChangeAvatarForm';
 import { UserData } from '@/app/user/[id]/page';
+import {SessionUser} from "@/app/api/login/route";
 
 export default function LoggedUserInfo({
   user,
   revalidate,
+    sessionData
 }: {
   user: UserData;
   revalidate: () => void;
+  sessionData: SessionUser;
 }) {
   const [showProfileModal, setShowProfileModal] = React.useState(false);
   const [file, setFile] = React.useState<File | null>(null);
   const [imageDeleted, setImageDeleted] = React.useState(false);
-
-  const sessionUser = useSession();
 
   const fileSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -48,12 +48,10 @@ export default function LoggedUserInfo({
 
   const handleSaveAvatar = () => {
     if (!file && !imageDeleted) return;
-    if (sessionUser?.data?.user?.token) {
       updateAvatarMutation.mutate({
         file,
-        token: sessionUser!.data!.user!.token,
+        token: sessionData.token,
       });
-    }
   };
 
   const handleDeleteImageClick = () => {

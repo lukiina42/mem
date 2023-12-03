@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { CgProfile } from 'react-icons/cg';
 import { JWT } from 'next-auth/jwt';
 import ViewMemButton from '@/app/notifications/(components)/ViewMemButton';
+import { SessionUser } from '@/app/api/login/route';
 
 export default function NotificationCard({
   notification,
@@ -11,7 +12,7 @@ export default function NotificationCard({
 }: {
   notification: Notification;
   borderTop: boolean;
-  sessionData: JWT;
+  sessionData: SessionUser;
 }) {
   return (
     <div className={`flex w-full mt-2 ${borderTop && 'border-t'}`}>

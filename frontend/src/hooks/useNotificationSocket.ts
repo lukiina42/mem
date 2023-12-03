@@ -3,10 +3,11 @@ import { Session } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 import { useState, useEffect } from 'react';
 import { Socket, io } from 'socket.io-client';
+import { SessionUser } from '@/app/api/login/route';
 
 let socket: Socket | undefined = undefined;
 
-export function useNotificationSocket(userData: JWT | null) {
+export function useNotificationSocket(userData: SessionUser) {
   const [isConnected, setIsConnected] = useState(false);
   const [notificationTrigger, setNotificationTrigger] = useState(false);
   const [notification, setNotification] = useState('');
@@ -29,7 +30,7 @@ export function useNotificationSocket(userData: JWT | null) {
     if (userData) {
       if (!socket) {
         socket = io(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}`, {
-          query: { userId: userData.sub },
+          query: { userId: userData.user.id },
         });
       }
       socket.on('connect', onConnect);

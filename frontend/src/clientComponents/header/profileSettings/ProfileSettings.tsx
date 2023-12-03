@@ -4,24 +4,23 @@ import React, { useEffect } from 'react';
 import { MdOutlinePersonOutline } from 'react-icons/md';
 import ProfileOptionsMenu from './profileOptionsMenu/ProfileOptionsMenu';
 import { useRouter } from 'next/navigation';
-import { useSession, signOut } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
 import { useSelectedLayoutSegment } from 'next/navigation';
+import {SessionUser} from "@/app/api/login/route";
 
-export default function Profile() {
+export default function Profile({ userData }: { userData: SessionUser | null }) {
   const [showMenu, setShowMenu] = React.useState(false);
 
   const segment = useSelectedLayoutSegment();
 
-  const { data: session, status } = useSession();
-
   //jwt is invalid (unable to signOut in middleware)
   useEffect(() => {
-    if (!segment && session?.user?.name) {
+    if (!segment && userData?.user.username) {
       signOut({
         callbackUrl: '/signin',
       });
     }
-  }, [segment, session]);
+  }, [segment, userData]);
 
   const resetMenu = () => {
     setShowMenu(false);
@@ -29,7 +28,7 @@ export default function Profile() {
 
   const router = useRouter();
 
-  const username = session?.user?.name ? session.user.name : '';
+  const username = userData?.user?.username ? userData.user.username : '';
 
   return (
     <>
@@ -50,8 +49,9 @@ export default function Profile() {
             {username}
           </span>
         </div>
-        {!session?.user ? (
-          <>{showMenu && <ProfileOptionsMenu setShowMenu={setShowMenu} user={null} />}</>
+        {showMenu &&
+          !userData?.user ? (
+            <ProfileOptionsMenu setShowMenu={setShowMenu} userData={null} />
         ) : (
           <>
             {showMenu && (
@@ -61,7 +61,7 @@ export default function Profile() {
                     callbackUrl: '/signin',
                   })
                 }
-                user={session.user}
+                userData={userData}
                 redirect={router.push}
                 setShowMenu={setShowMenu}
               />

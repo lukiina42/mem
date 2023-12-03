@@ -3,20 +3,21 @@
 import { User } from 'next-auth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import {SessionUser} from "@/app/api/login/route";
 
 export default function ProfileOptionsMenu({
   signOut,
   redirect,
   setShowMenu,
-  user,
+  userData,
 }: {
   setShowMenu?: (i: boolean) => void;
   signedIn?: boolean;
   signOut?: () => void;
   redirect?: (url: string) => void;
-  user: User | null;
+  userData: SessionUser | null;
 }) {
-  const signedIn = user !== null;
+  const signedIn = userData !== null;
 
   const router = useRouter();
 
@@ -47,18 +48,18 @@ export default function ProfileOptionsMenu({
         </>
       ) : (
         <>
-          {user?.name?.length && user.name.length > 14 && (
+          {userData?.user?.username?.length && userData.user?.username.length > 14 && (
             <div className="font-bold rounded-t-lg border-blue-500 w-full text-center py-2">
-              {user?.name}
+              {userData?.user?.username}
             </div>
           )}
           <div
             onClick={() => {
-              redirect!(`/user/${user.id}`);
+              redirect!(`/user/${userData.user.id}`);
               setShowMenu!(false);
             }}
             className={`font-bold w-full text-center border-t ${
-              user?.name?.length && user.name.length > 14
+              userData?.user?.username?.length && userData.user?.username.length > 14
                 ? 'border-t rounded-t-none'
                 : 'rounded-t-lg border-none'
             } border-b hover:cursor-pointer hover:bg-blue-300 py-2 transition-all duration-200`}

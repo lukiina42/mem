@@ -1,9 +1,12 @@
 import { Mem } from '@/types/mem';
-import { retrieveCookiesSession } from './retrieveCookiesSession';
-import { JWT } from 'next-auth/jwt';
+import { getSession } from '@/lib/session';
 
 export const retrieveHomeMems = async () => {
-  const sessionData = await retrieveCookiesSession();
+  const sessionData = await getSession();
+
+  if (!sessionData) {
+    throw new Error('User is not logged in');
+  }
 
   const responseFollowing = await fetch(
     `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/mems?from=0&to=9`,
@@ -47,6 +50,6 @@ export const retrieveHomeMems = async () => {
     memsFollowing,
     newestMems,
     isUserFollowingAnyone,
-    sessionData: sessionData as JWT,
+    sessionData: sessionData,
   };
 };

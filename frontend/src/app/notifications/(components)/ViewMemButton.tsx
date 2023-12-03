@@ -9,13 +9,14 @@ import { useHeartMutation } from '@/clientApiCalls/reactQuery/heartMutation';
 import { useHeart } from '@/hooks/useHeart';
 import ModalWrapper from '@/utilComponents/ModalWrapper';
 import { JWT } from 'next-auth/jwt';
+import { SessionUser } from '@/app/api/login/route';
 
 export default function ViewMemButton({
   notification,
   sessionData,
 }: {
   notification: Notification;
-  sessionData: JWT;
+  sessionData: SessionUser;
 }) {
   const { data: mem } = useQuery({
     queryKey: [`mem`, notification.id],
@@ -23,7 +24,7 @@ export default function ViewMemButton({
       getMem({
         id: notification.relatesToMemId!,
         token: sessionData.token,
-        requestUserId: sessionData.sub!,
+        requestUserId: sessionData.user.id.toString(),
       }),
   });
 

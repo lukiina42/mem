@@ -6,10 +6,11 @@ import { useHeart } from '@/hooks/useHeart';
 import { Mem } from '@/types/mem';
 import ModalWrapper from '@/utilComponents/ModalWrapper';
 import { JWT } from 'next-auth/jwt';
+import { SessionUser } from '@/app/api/login/route';
 
 interface MemDetailWrapperProps {
   mem: Mem;
-  sessionData: JWT | null;
+  sessionData: SessionUser;
 }
 
 export default function MemDetailWrapper(props: MemDetailWrapperProps) {
@@ -30,12 +31,12 @@ export default function MemDetailWrapper(props: MemDetailWrapperProps) {
   return (
     <MemDetail
       mem={mem}
-      token={sessionData ? sessionData.token : ''}
+      token={sessionData.token}
       isHearted={isHearted}
       amountOfHearts={amountOfHearts}
       handleHeartClick={handleHeartClick}
       handleDeleteMemClick={() => {}}
-      isOwnedByCurrentUser={sessionData?.name == mem.owner.username}
+      isOwnedByCurrentUser={sessionData.user.username == mem.owner.username}
       imgMaxH={360}
     />
   );

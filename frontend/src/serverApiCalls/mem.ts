@@ -1,12 +1,16 @@
 import { Mem } from '@/types/mem';
-import { retrieveCookiesSession } from './retrieveCookiesSession';
+import { getSession } from '@/lib/session';
 
 export const getMem = async (id: number) => {
-  const sessionData = await retrieveCookiesSession();
+  const sessionData = await getSession();
+
+  if (!sessionData) {
+    throw new Error('User is not logged in');
+  }
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/mems/${id}?requestingUserId=${
-      sessionData ? sessionData.sub : 0
+      sessionData ? sessionData.user.id : 0
     }`,
     {
       method: 'GET',

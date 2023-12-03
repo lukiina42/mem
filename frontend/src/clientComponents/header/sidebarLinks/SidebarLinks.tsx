@@ -4,18 +4,16 @@ import { useSelectedLayoutSegment } from 'next/navigation';
 import CustomLink from '../helper/CustomLink';
 import { BsBookmarksFill, BsBookmarks } from 'react-icons/bs';
 import { HiBellAlert, HiOutlineBellAlert } from 'react-icons/hi2';
-import ProfileWrapper from '../profileSettings/ProfileWrapper';
 import { useNotificationSocket } from '@/hooks/useNotificationSocket';
-import { JWT } from 'next-auth/jwt';
+import { SessionUser } from '@/app/api/login/route';
 
-export default function SidebarLinks({ userData }: { userData: JWT | null }) {
+export default function SidebarLinks({ userData }: { userData: SessionUser }) {
   const segment = useSelectedLayoutSegment();
 
   const { notification, setNotification, notificationTrigger } = useNotificationSocket(userData);
 
   //TODO REVALIDATE NOTIFICATIONS PATH IF NEW NOTIFICATION APPEARS
 
-  //the fact that user is logged in is secured in middleware
   return (
     <div className="flex flex-col gap-5 mt-4">
       {segment && (

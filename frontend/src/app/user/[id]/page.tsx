@@ -13,18 +13,14 @@ export interface UserData extends User {
   followedByCurrentUser: boolean;
 }
 
-async function getProfile(userId: number) {
-  return await retrieveProfileInfo(userId);
-}
-
 export default async function profile({ params }: { params: { id: number } }) {
-  const getProfileResponse = await getProfile(params.id);
+  const getProfileResponse = await retrieveProfileInfo(params.id);
   const { user, isLoggedInUser, sessionData } = getProfileResponse;
 
   return (
     <div className="h-full w-full flex flex-col overflow-y-auto">
       {isLoggedInUser ? (
-        <LoggedUserInfoWrapper user={user} revalidate={revalidateUser} />
+        <LoggedUserInfoWrapper user={user} sessionData={sessionData} revalidate={revalidateUser} />
       ) : (
         <ProfileHeader user={user} sessionData={sessionData} />
       )}

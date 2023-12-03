@@ -12,6 +12,7 @@ import { InView } from 'react-intersection-observer';
 import { JWT } from 'next-auth/jwt';
 import { QueryKeys } from '@/types/queryKeys';
 import LoadingSpinner from '@/utilComponents/Loading';
+import { SessionUser } from '@/app/api/login/route';
 
 export default function MemsContainer({
   mems,
@@ -22,11 +23,11 @@ export default function MemsContainer({
   mems: Mem[];
   requestUrl: '/mems/home/newest' | '/' | string;
   requestingUserId?: number;
-  sessionData: JWT | null;
+  sessionData: SessionUser;
 }) {
   const getMemsFunction = async (pageParam: number) => {
     const data = await getMems({
-      token: sessionData!.token,
+      token: sessionData.token,
       requestUrl,
       from: pageParam,
       to: pageParam + 9,
@@ -88,7 +89,7 @@ export default function MemsContainer({
   const handleDeleteMem = () => {
     deleteMemMutation.mutate({
       memId: memIdToDelete,
-      token: sessionData!.token,
+      token: sessionData.token,
     });
     setMemIdToDelete(0);
   };
@@ -128,22 +129,22 @@ export default function MemsContainer({
             <MemItemWrapper
               key={mem.id}
               mem={mem}
-              user={sessionData}
+              sessionData={sessionData}
               handleDeleteMemClick={handleDeleteMemClick}
               displayBorder={i !== allMems.length - 1}
               handleHeartMemRequest={handleHeartMemRequest}
-              enableDelete={sessionData?.roles.some((role) => role == 'admin')}
+              enableDelete={sessionData?.user.roles.some((role) => role == 'admin')}
             />
           </InView>
         ) : (
           <MemItemWrapper
             key={mem.id}
             mem={mem}
-            user={sessionData}
+            sessionData={sessionData}
             handleDeleteMemClick={handleDeleteMemClick}
             displayBorder={i !== allMems.length - 1}
             handleHeartMemRequest={handleHeartMemRequest}
-            enableDelete={sessionData?.roles.some((role) => role == 'admin')}
+            enableDelete={sessionData?.user.roles.some((role) => role == 'admin')}
           />
         );
       })}

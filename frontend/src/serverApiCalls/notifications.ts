@@ -1,9 +1,13 @@
 import { Notification } from '@/types/notification';
-import { retrieveCookiesSession } from './retrieveCookiesSession';
 import { JWT } from 'next-auth/jwt';
+import { getSession } from '@/lib/session';
 
 export const loadNotifications = async () => {
-  const sessionData = (await retrieveCookiesSession()) as JWT;
+  const sessionData = await getSession();
+
+  if (!sessionData) {
+    throw new Error('User is not logged in');
+  }
 
   const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/notification`, {
     method: 'GET',

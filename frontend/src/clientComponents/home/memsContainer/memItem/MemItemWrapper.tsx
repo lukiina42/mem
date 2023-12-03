@@ -4,10 +4,11 @@ import { Mem } from '@/types/mem';
 import MemItem from './MemItem';
 import { useHeart } from '@/hooks/useHeart';
 import { JWT } from 'next-auth/jwt';
+import { SessionUser } from '@/app/api/login/route';
 
 interface MemItemInterface {
   mem: Mem;
-  user: JWT | null;
+  sessionData: SessionUser;
   handleDeleteMemClick: (id: number) => void;
   displayBorder: boolean;
   handleHeartMemRequest: (memId: number) => void;
@@ -16,7 +17,7 @@ interface MemItemInterface {
 
 export default function MemItemWrapper({
   mem,
-  user,
+  sessionData,
   handleDeleteMemClick,
   displayBorder,
   handleHeartMemRequest,
@@ -28,7 +29,7 @@ export default function MemItemWrapper({
     handleHeartMemRequest
   );
 
-  const isOwnedByCurrentUser = user?.name === mem.owner.username;
+  const isOwnedByCurrentUser = sessionData?.user.username === mem.owner.username;
 
   return (
     <div className={`w-full flex mt-3 mr-1 pb-3 pr-2 ${displayBorder && 'border-b'}`}>
