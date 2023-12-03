@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form';
 import { CgClose } from 'react-icons/cg';
 import InputError from '../helper/InputError';
 
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Link from 'next/link';
 import { useMutation } from '@tanstack/react-query';
@@ -24,8 +23,6 @@ export default function LoginForm(props: { resetMenu?: () => void }) {
 
   const [errorMessage, setErrorMessage] = useState('');
 
-  const router = useRouter();
-
   const loginMutation = useMutation({
     mutationFn: (variables: FormData) =>
       fetch(`${process.env.NEXT_PUBLIC_NEXT_API_URL}/login`, {
@@ -41,7 +38,9 @@ export default function LoginForm(props: { resetMenu?: () => void }) {
     onSuccess: (response) => {
       switch (response.status) {
         case 201:
-          window.location.reload()
+          //router.push('/home')
+          //workaround to hit middleware each time user logs in.. with router it is not hit on first visit, idk why for now
+          window.location.reload();
           return;
         case 401:
           setErrorMessage('Incorrect credentials');

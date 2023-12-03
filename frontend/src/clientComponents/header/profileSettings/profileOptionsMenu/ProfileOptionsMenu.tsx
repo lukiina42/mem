@@ -49,14 +49,17 @@ export default function ProfileOptionsMenu({
               {userData?.user?.username}
             </div>
           )}
-          <Link href={{ pathname: `/user/${userData.user.id}` }} onClick={() => {
-            setShowMenu!(false);
-          }}
+          <Link
+            href={{ pathname: `/user/${userData.user.id}` }}
+            onClick={() => {
+              setShowMenu!(false);
+            }}
             className={`font-bold w-full text-center border-t ${
-                userData?.user?.username?.length && userData.user?.username.length > 14
-                    ? 'border-t rounded-t-none'
-                    : 'rounded-t-lg border-none'
-            } border-b hover:cursor-pointer hover:bg-blue-300 py-2 transition-all duration-200`}>
+              userData?.user?.username?.length && userData.user?.username.length > 14
+                ? 'border-t rounded-t-none'
+                : 'rounded-t-lg border-none'
+            } border-b hover:cursor-pointer hover:bg-blue-300 py-2 transition-all duration-200`}
+          >
             Profile
           </Link>
           <div

@@ -24,7 +24,10 @@ export default function MemsContainer({
   requestingUserId?: number;
   sessionData: SessionUser;
 }) {
+  const [loadMoreMems, setLoadMoreMems] = React.useState(false);
+
   const getMemsFunction = async (pageParam: number) => {
+    if (pageParam === 0) return [];
     const data = await getMems({
       token: sessionData.token,
       requestUrl,
@@ -52,14 +55,11 @@ export default function MemsContainer({
     isFetchingNextPage,
   } = useInfiniteQuery({
     queryKey: [...QueryKeys.memsPaginationQueryKey, requestUrl],
-    queryFn: async ({ pageParam = 0 }) => getMemsFunction(pageParam),
-    initialPageParam: undefined,
+    queryFn: async ({ pageParam }) => getMemsFunction(pageParam),
+    initialPageParam: 10,
     getNextPageParam: (lastPage, allPages) =>
-      lastPage?.length < 9 ? undefined : allPages?.flat().length,
-    initialData: {
-      pageParams: [undefined, 1],
-      pages: [mems],
-    },
+      lastPage?.length < 9 ? undefined : allPages?.flat().length + 10,
+    enabled: loadMoreMems,
   });
 
   const handleSecondToLastMemInView = () => {
@@ -108,7 +108,12 @@ export default function MemsContainer({
     }
   };
 
-  const allMems = memsFromQuery?.pages?.flat();
+  const allMems = [
+    ...mems,
+    ...(memsFromQuery?.pages !== undefined ? memsFromQuery?.pages.flat() : []),
+  ];
+
+  console.log(allMems);
 
   return (
     <div className="flex flex-col gap-2 w-full">
@@ -148,13 +153,25 @@ export default function MemsContainer({
         );
       })}
 
+      {/*Move this shit to different component*/}
       <div className="w-full text-lg font-bold h-24 flex items-center justify-center p-2">
-        {!hasNextPage ? (
+        {mems.length < 9 ? (
           'No more mems here!'
+        ) : loadMoreMems ? (
+          hasNextPage ? (
+            <button
+              className="basic-button w-32 h-10 flex justify-center items-center"
+              onClick={() => fetchNextPage()}
+            >
+              {isFetchingNextPage ? <LoadingSpinner /> : 'Load more'}
+            </button>
+          ) : (
+            'No more mems here!'
+          )
         ) : (
           <button
             className="basic-button w-32 h-10 flex justify-center items-center"
-            onClick={() => fetchNextPage()}
+            onClick={() => setLoadMoreMems(true)}
           >
             {isFetchingNextPage ? <LoadingSpinner /> : 'Load more'}
           </button>
