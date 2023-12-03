@@ -11,7 +11,9 @@
     "format:fix": "prettier \"./**/*.{js,jsx,ts,tsx,json,css}\" --list-different --write",
     "stylelint": "stylelint \"./src/**/*.css\"",
     "stylelint:fix": "stylelint \"./src/**/*.css\" --fix",
-    "fix": "run-s stylelint:fix format:fix"
+    "fix": "run-s stylelint:fix format:fix",
+    "typecheck": "tsc --noEmit --incremental false",
+    "check": "pnpm format:fix && pnpm run typecheck"
   },
   "dependencies": {
     "@tailwindcss/container-queries": "^0.1.0",

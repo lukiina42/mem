@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import { ImFilePicture } from 'react-icons/im';
 import { GrClose } from 'react-icons/gr';
@@ -58,7 +58,7 @@ export default function NewTweetForm() {
     setInputContent(text);
   };
 
-  const loading = createMemMutation.status === 'pending';
+  const loading = createMemMutation.isPending;
 
   const onSubmit = () => {
     if (!inputContent && !file) {
@@ -75,9 +75,6 @@ export default function NewTweetForm() {
 
   return (
     <div className="h-fit w-full flex justify-center items-center">
-      {loading ? (
-        <LoadingSpinner />
-      ) : (
         <div className="relative flex flex-col h-full w-4/5 pb-1">
           <div className="font-bold text-lg">Insert some mem!</div>
           <textarea
@@ -119,12 +116,12 @@ export default function NewTweetForm() {
               className="hidden"
             ></input>
 
-            <button className="basic-button w-24" type="submit" onClick={onSubmit}>
-              Mem
-            </button>
+            <button disabled={loading} className="basic-button w-24 h-10 flex justify-center items-center" type="submit" onClick={onSubmit}>
+                {loading ? <LoadingSpinner /> : 'Mem'}
+              </button>
+
           </div>
         </div>
-      )}
     </div>
   );
 }

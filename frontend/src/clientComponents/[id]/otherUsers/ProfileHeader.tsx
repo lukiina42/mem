@@ -77,7 +77,7 @@ export default function ProfileHeader({
       <div className="flex gap-1">
         {sessionData?.token && (
           <div className="relative mr-4 hover:cursor-pointer group" onClick={handleFollowClick}>
-            {followUserMutation.isLoading ? (
+            {followUserMutation.isPending ? (
               <LoadingSpinner />
             ) : user.followedByCurrentUser ? (
               <SlUserUnfollow size={25} />
