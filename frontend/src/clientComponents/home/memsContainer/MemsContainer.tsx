@@ -18,11 +18,13 @@ export default function MemsContainer({
   requestUrl,
   requestingUserId,
   sessionData,
+  revalidateMems
 }: {
   mems: Mem[];
   requestUrl: '/mems/home/newest' | '/' | string;
   requestingUserId?: number;
   sessionData: SessionUser;
+  revalidateMems: () => Promise<void>
 }) {
   const [loadMoreMems, setLoadMoreMems] = React.useState(false);
 
@@ -77,6 +79,7 @@ export default function MemsContainer({
         queryKey: [...QueryKeys.memsPaginationQueryKey, '/home/newest'],
       });
       displayToast('The mem was successfully deleted', 'bottom-center', 'success');
+      await revalidateMems()
     },
     onError: () => {
       displayToast('Something went wrong, please try again', 'bottom-center', 'error');

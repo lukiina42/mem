@@ -14,6 +14,7 @@ export default function HomeContent({
   newestMems,
   sessionData,
   isUserFollowingAnyone,
+  revalidateMems
 }: DefaultHomeProps) {
   const [memsType, setMemsType] = useState<'Following' | 'Newest'>(
     isUserFollowingAnyone ? 'Following' : 'Newest'
@@ -28,7 +29,7 @@ export default function HomeContent({
   return (
     <>
       <div className="w-full flex flex-col bg-white top-0">
-        <NewMemForm userData={sessionData} />
+        <NewMemForm userData={sessionData} revalidateMems={revalidateMems} />
       </div>
       <div className="w-full flex bg-white top-0 border-b border-t mt-2">
         <MemType
@@ -49,6 +50,7 @@ export default function HomeContent({
           sessionData={sessionData}
           requestUrl={memsType == 'Following' ? '/' : '/home/newest'}
           mems={memsType == 'Following' || !isUserFollowingAnyone ? memsFollowing : newestMems}
+          revalidateMems={revalidateMems}
         />
       </div>
     </>

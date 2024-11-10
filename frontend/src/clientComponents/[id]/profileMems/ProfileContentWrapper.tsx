@@ -1,6 +1,7 @@
 import { Mem } from '@/types/mem';
 import MemsContainer from '@/clientComponents/home/memsContainer/MemsContainer';
 import { SessionUser } from '@/app/api/login/route';
+import { revalidateMems } from '@/app/actions';
 
 export default function ProfileMemsWrapper({
   mems,
@@ -15,7 +16,7 @@ export default function ProfileMemsWrapper({
   return (
     <>
       <div className="w-full flex flex-col justify-center items-center pb-b">
-        <MemsContainer mems={mems} requestUrl={`/user/${userId}`} sessionData={sessionData} />
+        <MemsContainer revalidateMems={revalidateMems} mems={mems} requestUrl={`/user/${userId}`} sessionData={sessionData} />
       </div>
     </>
   );

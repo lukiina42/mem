@@ -32,6 +32,7 @@ export const retrieveHomeMems = async () => {
   const responseNewest = await fetch(
     `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/mems/home/newest?from=0&to=9`,
     {
+      next: {tags: ['mems']},
       method: 'GET',
       headers: {
         Authorization: `Bearer ${sessionData?.token}`,

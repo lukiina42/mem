@@ -10,6 +10,7 @@ import { displayToast } from '@/utilComponents/toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QueryKeys } from '@/types/queryKeys';
 import { SessionUser } from '@/app/api/login/route';
+import { useRouter } from 'next/navigation';
 
 //lazy solution
 const getAmountOfRows = (input: string) => {
@@ -18,7 +19,13 @@ const getAmountOfRows = (input: string) => {
   return 3;
 };
 
-export default function NewTweetForm({ userData }: { userData: SessionUser }) {
+type Props = {
+  userData: SessionUser;
+  revalidateMems: () => Promise<void>
+}
+
+export default function NewTweetForm({ userData, revalidateMems }: Props) {
+  const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
   const [inputContent, setInputContent] = useState('');
   const [error, setError] = useState(false);
@@ -55,7 +62,7 @@ export default function NewTweetForm({ userData }: { userData: SessionUser }) {
 
   const loading = createMemMutation.isPending;
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (!inputContent && !file) {
       setError(true);
       return;
@@ -66,11 +73,12 @@ export default function NewTweetForm({ userData }: { userData: SessionUser }) {
       userEmail: userData.user.email as string,
       token: userData.token,
     });
+    await revalidateMems()
   };
 
   return (
     <div className="h-fit w-full flex justify-center items-center">
-      <div className="relative flex flex-col h-full w-4/5 pb-1">
+      <div className="relative flex flex-col h-full w-4/5 pb-1 z-0">
         <div className="font-bold text-lg">Insert some mem!</div>
         <textarea
           className={`text-xl active:border-none focus:outline-none py-2 resize-none ${

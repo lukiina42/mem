@@ -2,12 +2,14 @@ import { Mem } from '@/types/mem';
 import { retrieveHomeMems } from '@/serverApiCalls/home';
 import HomeContent from '@/clientComponents/home/HomeContent';
 import { SessionUser } from '@/app/api/login/route';
+import { revalidateMems } from '@/app/actions';
 
 export interface DefaultHomeProps {
   memsFollowing: Mem[];
   newestMems: Mem[];
   sessionData: SessionUser;
   isUserFollowingAnyone: boolean;
+  revalidateMems: () => Promise<void>
 }
 
 export default async function page() {
@@ -22,6 +24,7 @@ export default async function page() {
           newestMems={newestMems}
           sessionData={sessionData}
           isUserFollowingAnyone={isUserFollowingAnyone}
+          revalidateMems={revalidateMems}
         />
       </div>
     </div>
