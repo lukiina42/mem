@@ -156,10 +156,10 @@ export default function SignupForm(props: SignupFormProps) {
             type="password"
             {...register('password', {
               required: true,
-              minLength: 5,
+              minLength: 8,
             })}
           />
-          {errors.password && <InputError type={errors.password.type} min={5} />}
+          {errors.password && <InputError type={errors.password.type} min={8} />}
 
           <label className="text-gray-600 font-medium mt-4">Password (again)</label>
           <input
@@ -169,7 +169,6 @@ export default function SignupForm(props: SignupFormProps) {
             type="password"
             {...register('passwordAgain', {
               required: true,
-              minLength: 5,
             })}
           />
           {errors.passwordAgain && <InputError type={errors.passwordAgain.type} min={5} />}
