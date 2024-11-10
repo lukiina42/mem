@@ -12,13 +12,6 @@ import { QueryKeys } from '@/types/queryKeys';
 import { SessionUser } from '@/app/api/login/route';
 import { useRouter } from 'next/navigation';
 
-//lazy solution
-const getAmountOfRows = (input: string) => {
-  const amountOfEnter = input.split('\n').length - 1;
-  if (input.length < 35 && amountOfEnter < 2) return 2;
-  return 3;
-};
-
 type Props = {
   userData: SessionUser;
   revalidateMems: () => Promise<void>
@@ -78,13 +71,12 @@ export default function NewTweetForm({ userData, revalidateMems }: Props) {
 
   return (
     <div className="h-fit w-full flex justify-center items-center">
-      <div className="relative flex flex-col h-full w-4/5 pb-1 z-0">
+      <div className="relative flex flex-col h-full w-[90%] pb-1 z-0">
         <div className="font-bold text-lg">Insert some mem!</div>
         <textarea
-          className={`text-xl active:border-none focus:outline-none py-2 resize-none ${
+          className={`text-xl active:border-none focus:outline-none py-1 resize-none ${
             error ? 'placeholder:text-red-300' : 'placeholder:text-gray-400'
           }`}
-          rows={getAmountOfRows(inputContent)}
           placeholder={error ? 'Insert image or text first' : 'Remember, only funny, no cringe'}
           value={inputContent}
           onChange={(e) => handleContentInputChange(e.target.value)}
