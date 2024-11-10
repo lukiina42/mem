@@ -7,6 +7,7 @@ import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import { FaRegComment } from 'react-icons/fa';
 import { Dispatch, SetStateAction, useState } from 'react';
 import Link from 'next/link';
+import CustomImage from './CustomImage';
 
 interface MemItemInterface {
   mem: Mem;
@@ -61,12 +62,7 @@ export default function MemItem({
         <div>{mem.content}</div>
         {/* dunno if I should have some min w here, small pictures are kinda small ngl xd */}
         {mem.imageUrl && (
-          <img // eslint-disable-line @next/next/no-img-element
-            src={mem.imageUrl}
-            alt="Some mem idk"
-            className="max-w-[100%] h-auto w-auto object-cover"
-            style={{ maxHeight: imgMaxH ? `${imgMaxH}px` : 'auto' }}
-          />
+          <CustomImage url={mem.imageUrl} imgMaxH={640} />
         )}
         <div className="w-full h-8 flex mt-1">
           <div className="flex gap-1 items-center">

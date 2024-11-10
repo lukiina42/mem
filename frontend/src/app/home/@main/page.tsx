@@ -15,10 +15,7 @@ export default async function page() {
     await retrieveHomeMems();
 
   return (
-    <div className="h-full w-full flex flex-col overflow-y-auto">
-      <div className="w-full border-b-2">
-        <div className="h-16 flex items-center font-bold text-xl ml-4">Home</div>
-      </div>
+    <div className="h-full w-full flex flex-col overflow-y-auto pt-4">
       <div className="grow">
         <HomeContent
           memsFollowing={memsFollowing}

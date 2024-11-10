@@ -41,6 +41,7 @@ export default function MemItemWrapper({
         amountOfHearts={amountOfHearts}
         isOwnedByCurrentUser={isOwnedByCurrentUser}
         enableDelete={enableDelete}
+        imgMaxH={320}
       />
     </div>
   );

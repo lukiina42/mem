@@ -3,7 +3,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
     <>
       <div className="flex">
         <div className="lg:max-w-[45rem] lg:min-w-[45rem] min-w-0 w-full">{children}</div>
-        <div className="grow hidden lg:block">What is up my fribbers?</div>
+        <div className="grow hidden lg:block"></div>
       </div>
     </>
   );
