@@ -38,7 +38,7 @@ export default function Header() {
 
   return (
     <>
-      <nav className="grow shadow-xl z-0 max-h-full flex flex-col justify-start items-end @container min-w-[64px] gap-12">
+      <nav className="grow shadow-xl z-0 max-h-full flex flex-col justify-start items-end @container min-w-[64px] gap-12 pr-0 lg:pr-4">
         <div className="flex flex-col gap-5 mt-5">
           <Link href="/home">
             <div className="ml-4 w-full flex justify-center">

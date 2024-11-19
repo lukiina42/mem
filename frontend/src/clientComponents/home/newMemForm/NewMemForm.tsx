@@ -11,6 +11,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QueryKeys } from '@/types/queryKeys';
 import { SessionUser } from '@/app/api/login/route';
 import { useRouter } from 'next/navigation';
+import {BeatLoader} from "react-spinners";
 
 type Props = {
   userData: SessionUser;
@@ -117,7 +118,12 @@ export default function NewTweetForm({ userData, revalidateMems }: Props) {
             type="submit"
             onClick={onSubmit}
           >
-            {loading ? <LoadingSpinner /> : 'Mem'}
+            {loading ? <BeatLoader
+                size={8}
+                color={'white'}
+                cssOverride={{ alignItems: 'center' }}
+                aria-label="Loading Spinner"
+            /> : 'Mem'}
           </button>
         </div>
       </div>

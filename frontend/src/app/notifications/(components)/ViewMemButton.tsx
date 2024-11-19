@@ -59,6 +59,7 @@ export default function ViewMemButton({
             isOwnedByCurrentUser={false}
             handleDeleteMemClick={() => {}}
             token={sessionData.token}
+            imgMaxH={480}
           />
         </ModalWrapper>
       )}

@@ -12,7 +12,7 @@ export default async function page({
 
   return (
     <div className="w-full h-full justify-center items-center flex-col gap-1">
-      <div className="border-b h-8 items-center pl-2 text-xl font-bold">Mem detail</div>
+      <div className="border-b items-center p-3 text-xl font-bold">Mem detail</div>
       <MemDetailWrapper mem={mem} sessionData={sessionData} />
     </div>
   );

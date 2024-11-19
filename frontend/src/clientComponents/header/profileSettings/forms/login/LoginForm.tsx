@@ -7,6 +7,7 @@ import InputError from '../helper/InputError';
 import { useState } from 'react';
 import Link from 'next/link';
 import { useMutation } from '@tanstack/react-query';
+import {BeatLoader} from "react-spinners";
 
 interface FormData {
   email: string;
@@ -57,6 +58,8 @@ export default function LoginForm(props: { resetMenu?: () => void }) {
       setErrorMessage('Something went wrong, please try again');
     },
   });
+
+  const isLoading = loginMutation.isPending;
 
   const onSubmit = async (data: any) => {
     const formData: FormData = { ...data };
@@ -117,7 +120,13 @@ export default function LoginForm(props: { resetMenu?: () => void }) {
           className="w-full bg-blue-500 hover:bg-blue-600 text-green-100 border py-3 px-6 font-semibold text-md rounded"
           type="submit"
         >
-          Submit
+          {isLoading ?
+              <BeatLoader
+                size={10}
+                color={'white'}
+                cssOverride={{ alignItems: 'center' }}
+                aria-label="Loading Spinner"
+              /> : "Submit"}
         </button>
 
         <div className="w-full flex justify-center gap-1">

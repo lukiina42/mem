@@ -27,8 +27,8 @@ export default function MemItem({
   handleHeartClick,
   isHearted,
   amountOfHearts,
-  imgMaxH,
   enableDelete,
+  imgMaxH
 }: MemItemInterface) {
   return (
     <>
@@ -62,7 +62,7 @@ export default function MemItem({
         <div>{mem.content}</div>
         {/* dunno if I should have some min w here, small pictures are kinda small ngl xd */}
         {mem.imageUrl && (
-          <CustomImage url={mem.imageUrl} imgMaxH={640} />
+          <CustomImage url={mem.imageUrl} imgMaxH={imgMaxH} />
         )}
         <div className="w-full h-8 flex mt-1">
           <div className="flex gap-1 items-center">

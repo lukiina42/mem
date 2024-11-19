@@ -17,8 +17,7 @@ export default async function page() {
     await retrieveHomeMems();
 
   return (
-    <div className="h-full w-full flex flex-col overflow-y-auto pt-4">
-      <div className="grow">
+    <div className="h-full w-full flex flex-col overflow-y-auto pt-4 shadow-xl">
         <HomeContent
           memsFollowing={memsFollowing}
           newestMems={newestMems}
@@ -26,7 +25,6 @@ export default async function page() {
           isUserFollowingAnyone={isUserFollowingAnyone}
           revalidateMems={revalidateMems}
         />
-      </div>
     </div>
   );
 }

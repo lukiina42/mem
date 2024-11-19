@@ -22,10 +22,10 @@ module.exports = {
       // => @media (min-width: 768px) { ... }
 
       lg: "1204px",
-      // => @media (min-width: 1024px) { ... }
+      // => @media (min-width: 1204px) { ... }
 
       xl: "1620px",
-      // => @media (min-width: 1280px) { ... }
+      // => @media (min-width: 1620px) { ... }
     },
   },
   plugins: [require("@tailwindcss/container-queries")],
