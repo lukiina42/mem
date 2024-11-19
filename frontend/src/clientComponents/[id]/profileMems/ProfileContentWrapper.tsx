@@ -16,7 +16,7 @@ export default function ProfileMemsWrapper({
   return (
     <>
       <div className="w-full flex flex-col justify-center items-center pb-b">
-        <MemsContainer revalidateMems={revalidateMems} mems={mems} requestUrl={`/user/${userId}`} sessionData={sessionData} />
+        <MemsContainer revalidateMems={revalidateMems} mems={mems} requestUrl={`mems/user/${userId}`} sessionData={sessionData} />
       </div>
     </>
   );

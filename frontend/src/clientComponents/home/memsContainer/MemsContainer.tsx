@@ -4,14 +4,21 @@ import { Mem } from '@/types/mem';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteMem, getMems } from '@/clientApiCalls/memApi';
 import ConfirmationModal from '@/utilComponents/ConfirmationModal';
-import React from 'react';
+import React, {useState} from 'react';
 import { displayToast } from '@/utilComponents/toast';
 import MemItemWrapper from './memItem/MemItemWrapper';
 import { useHeartMutation } from '@/clientApiCalls/reactQuery/heartMutation';
-import { InView } from 'react-intersection-observer';
 import { QueryKeys } from '@/types/queryKeys';
-import LoadingSpinner from '@/utilComponents/Loading';
 import { SessionUser } from '@/app/api/login/route';
+import MemsPagination from "@/clientComponents/home/memsContainer/memsPagination/MemsPagination";
+
+interface Props {
+  mems: Mem[];
+  requestUrl: 'home/newest' | '' | string;
+  requestingUserId ? : number;
+  sessionData: SessionUser;
+  revalidateMems: () => Promise<void>
+}
 
 export default function MemsContainer({
   mems,
@@ -19,14 +26,10 @@ export default function MemsContainer({
   requestingUserId,
   sessionData,
   revalidateMems
-}: {
-  mems: Mem[];
-  requestUrl: '/mems/home/newest' | '/' | string;
-  requestingUserId?: number;
-  sessionData: SessionUser;
-  revalidateMems: () => Promise<void>
-}) {
-  const [loadMoreMems, setLoadMoreMems] = React.useState(false);
+}: Props ) {
+  const [loadedMoreMems, setLoadedMoreMems] = useState(false);
+
+  const queryClient = useQueryClient();
 
   const getMemsFunction = async (pageParam: number) => {
     if (pageParam === 0) return [];
@@ -35,7 +38,7 @@ export default function MemsContainer({
       requestUrl,
       from: pageParam,
       to: pageParam + 9,
-      requestingUser: requestUrl.startsWith('/user') ? requestingUserId?.toString() : '',
+      requestingUser: requestingUserId?.toString() ?? '',
     });
     let dataConverted: Mem[];
     //the home api call returns the mems in an object
@@ -46,8 +49,6 @@ export default function MemsContainer({
     }
     return dataConverted;
   };
-
-  const queryClient = useQueryClient();
 
   //continue here - pass the current number from which to fetch
   const {
@@ -60,13 +61,9 @@ export default function MemsContainer({
     queryFn: async ({ pageParam }) => getMemsFunction(pageParam),
     initialPageParam: 10,
     getNextPageParam: (lastPage, allPages) =>
-      lastPage?.length < 9 ? undefined : allPages?.flat().length + 10,
-    enabled: loadMoreMems,
+        lastPage?.length < 9 ? undefined : allPages?.flat().length + 10,
+    enabled: loadedMoreMems,
   });
-
-  const handleSecondToLastMemInView = () => {
-    if (hasNextPage) fetchNextPage();
-  };
 
   ////delete mem
   const [memIdToDelete, setMemIdToDelete] = React.useState(0);
@@ -116,8 +113,6 @@ export default function MemsContainer({
     ...(memsFromQuery?.pages !== undefined ? memsFromQuery?.pages.flat() : []),
   ];
 
-  console.log(allMems);
-
   return (
     <div className="flex flex-col gap-2 w-full">
       {memIdToDelete !== 0 && (
@@ -130,20 +125,7 @@ export default function MemsContainer({
           cancelButtonText="No, preserve funny (Chad)"
         />
       )}
-      {allMems.map((mem, i) => {
-        return i == allMems.length - 2 ? (
-          <InView key={mem.id} as="div" onChange={handleSecondToLastMemInView}>
-            <MemItemWrapper
-              key={mem.id}
-              mem={mem}
-              sessionData={sessionData}
-              handleDeleteMemClick={handleDeleteMemClick}
-              displayBorder={i !== allMems.length - 1}
-              handleHeartMemRequest={handleHeartMemRequest}
-              enableDelete={sessionData?.user.roles.some((role) => role == 'admin')}
-            />
-          </InView>
-        ) : (
+      {allMems.map((mem, i) => (
           <MemItemWrapper
             key={mem.id}
             mem={mem}
@@ -153,33 +135,9 @@ export default function MemsContainer({
             handleHeartMemRequest={handleHeartMemRequest}
             enableDelete={sessionData?.user.roles.some((role) => role == 'admin')}
           />
-        );
-      })}
-
-      {/*Move this shit to different component*/}
-      <div className="w-full text-lg font-bold h-24 flex items-center justify-center p-2">
-        {mems.length < 9 ? (
-          'No more mems here!'
-        ) : loadMoreMems ? (
-          hasNextPage ? (
-            <button
-              className="basic-button w-32 h-10 flex justify-center items-center"
-              onClick={() => fetchNextPage()}
-            >
-              {isFetchingNextPage ? <LoadingSpinner /> : 'Load more'}
-            </button>
-          ) : (
-            'No more mems here!'
-          )
-        ) : (
-          <button
-            className="basic-button w-32 h-10 flex justify-center items-center"
-            onClick={() => setLoadMoreMems(true)}
-          >
-            {isFetchingNextPage ? <LoadingSpinner /> : 'Load more'}
-          </button>
-        )}
-      </div>
+        ))
+      }
+      <MemsPagination ssrMemsLength={mems.length} hasNextPage={hasNextPage} fetchNextPage={fetchNextPage} isFetchingNextPage={isFetchingNextPage} setLoadedMoreMems={setLoadedMoreMems} loadedMoreMems={loadedMoreMems} />
     </div>
   );
 }

@@ -48,7 +48,7 @@ export default function HomeContent({
       <div className="w-full flex flex-col justify-center items-center pb-b">
         <MemsContainer
           sessionData={sessionData}
-          requestUrl={memsType == 'Following' ? '/' : '/home/newest'}
+          requestUrl={memsType == 'Following' ? 'mems' : 'mems/home/newest'}
           mems={memsType == 'Following' || !isUserFollowingAnyone ? memsFollowing : newestMems}
           revalidateMems={revalidateMems}
         />

@@ -25,7 +25,6 @@ export default function CustomImage({url, imgMaxH}: MemItemInterface) {
   return (
     <img
       onLoad={(e) => {
-        console.log('loaded')
         const target = e.target as HTMLImageElement;
         setDimensions({
           naturalWidth: target.naturalWidth,
